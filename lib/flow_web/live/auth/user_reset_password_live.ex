@@ -1,4 +1,4 @@
-defmodule FlowWeb.UserResetPasswordLive do
+defmodule FlowWeb.Auth.UserResetPasswordLive do
   use FlowWeb, :live_view
 
   alias Flow.Accounts

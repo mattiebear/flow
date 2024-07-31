@@ -10,6 +10,7 @@ defmodule Flow.Accounts.User do
     field :confirmed_at, :utc_datetime
 
     has_many :positions, Flow.Skills.Position
+    has_many :techniques, Flow.Skills.Technique
 
     timestamps(type: :utc_datetime)
   end

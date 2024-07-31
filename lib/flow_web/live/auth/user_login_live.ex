@@ -1,4 +1,4 @@
-defmodule FlowWeb.UserLoginLive do
+defmodule FlowWeb.Auth.UserLoginLive do
   use FlowWeb, :live_view
 
   def render(assigns) do

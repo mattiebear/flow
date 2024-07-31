@@ -1,4 +1,4 @@
-defmodule FlowWeb.UserConfirmationInstructionsLive do
+defmodule FlowWeb.Auth.UserConfirmationInstructionsLive do
   use FlowWeb, :live_view
 
   alias Flow.Accounts

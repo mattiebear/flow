@@ -1,4 +1,4 @@
-defmodule FlowWeb.UserForgotPasswordLive do
+defmodule FlowWeb.Auth.UserForgotPasswordLive do
   use FlowWeb, :live_view
 
   alias Flow.Accounts

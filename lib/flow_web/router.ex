@@ -45,9 +45,15 @@ defmodule FlowWeb.Router do
     end
   end
 
-  ## Authentication routes
-
+  # Authentication controllers
   scope "/", FlowWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    post "/users/log_in", UserSessionController, :create
+  end
+
+  # Authentication live views
+  scope "/", FlowWeb.Auth do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     live_session :redirect_if_user_is_authenticated,
@@ -57,11 +63,10 @@ defmodule FlowWeb.Router do
       live "/users/reset_password", UserForgotPasswordLive, :new
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
     end
-
-    post "/users/log_in", UserSessionController, :create
   end
 
-  scope "/", FlowWeb do
+  # Authenticated live views
+  scope "/", FlowWeb.Auth do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
@@ -71,6 +76,7 @@ defmodule FlowWeb.Router do
     end
   end
 
+  # Unauthenticated routes
   scope "/", FlowWeb do
     pipe_through [:browser]
 
@@ -78,8 +84,8 @@ defmodule FlowWeb.Router do
 
     live_session :current_user,
       on_mount: [{FlowWeb.UserAuth, :mount_current_user}] do
-      live "/users/confirm/:token", UserConfirmationLive, :edit
-      live "/users/confirm", UserConfirmationInstructionsLive, :new
+      live "/users/confirm/:token", Auth.UserConfirmationLive, :edit
+      live "/users/confirm", Auth.UserConfirmationInstructionsLive, :new
     end
   end
 end

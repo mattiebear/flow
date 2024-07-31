@@ -1,4 +1,4 @@
-defmodule FlowWeb.UserRegistrationLive do
+defmodule FlowWeb.Auth.UserRegistrationLive do
   use FlowWeb, :live_view
 
   alias Flow.Accounts
