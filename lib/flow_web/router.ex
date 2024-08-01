@@ -45,38 +45,35 @@ defmodule FlowWeb.Router do
     end
   end
 
-  # Authentication controllers
+  # Unauthenticated routes
   scope "/", FlowWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     post "/users/log_in", UserSessionController, :create
-  end
-
-  # Authentication live views
-  scope "/", FlowWeb.Auth do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{FlowWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/users/register", UserRegistrationLive, :new
-      live "/users/log_in", UserLoginLive, :new
-      live "/users/reset_password", UserForgotPasswordLive, :new
-      live "/users/reset_password/:token", UserResetPasswordLive, :edit
+      live "/users/register", Auth.UserRegistrationLive, :new
+      live "/users/log_in", Auth.UserLoginLive, :new
+      live "/users/reset_password", Auth.UserForgotPasswordLive, :new
+      live "/users/reset_password/:token", Auth.UserResetPasswordLive, :edit
     end
   end
 
-  # Authenticated live views
-  scope "/", FlowWeb.Auth do
+  # Authenticated routes
+  scope "/", FlowWeb do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
       on_mount: [{FlowWeb.UserAuth, :ensure_authenticated}] do
-      live "/users/settings", UserSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/users/settings", Auth.UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", Auth.UserSettingsLive, :confirm_email
+
+      live "/techniques", Skills.TechniquesLive, :index
     end
   end
 
-  # Unauthenticated routes
+  # Open routes
   scope "/", FlowWeb do
     pipe_through [:browser]
 
