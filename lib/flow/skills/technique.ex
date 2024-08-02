@@ -2,12 +2,13 @@ defmodule Flow.Skills.Technique do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "techniques" do
+  schema "skills_techniques" do
     field :name, :string
 
     belongs_to :user, Flow.Accounts.User
 
     has_many :situations, Flow.Skills.Situation
+    has_many :steps, Flow.Skills.Step
     has_many :positions, through: [:situations, :position]
 
     timestamps(type: :utc_datetime)

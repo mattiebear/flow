@@ -2,7 +2,7 @@ defmodule Flow.Skills.Position do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "positions" do
+  schema "skills_positions" do
     field :name, :string
 
     belongs_to :user, Flow.Accounts.User
