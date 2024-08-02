@@ -18,7 +18,7 @@ defmodule FlowWeb.Router do
   end
 
   scope "/", FlowWeb do
-    pipe_through :browser
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     get "/", PageController, :home
   end
@@ -73,6 +73,8 @@ defmodule FlowWeb.Router do
       live "/techniques/:id", Skills.Techniques.IndexLive, :show
       live "/techniques/new", Skills.Techniques.IndexLive, :new
       live "/techniques/:id/edit", Skills.Techniques.IndexLive, :edit
+
+      live "/training", Training.Sessions.IndexLive, :index
     end
   end
 
