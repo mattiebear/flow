@@ -1,4 +1,4 @@
-defmodule FlowWeb.Skills.Techniques.IndexLive do
+defmodule FlowWeb.Training.SessionLive.Index do
   use FlowWeb, :live_view
 
   def mount(_params, _session, socket) do

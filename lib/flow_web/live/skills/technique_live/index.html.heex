@@ -1,0 +1,8 @@
+<h1>Techniques</h1>
+
+<.modal :if={@live_action in [:new, :edit]} id="technique-form-modal" show on_cancel={JS.patch(~p"/techniques")}>
+  <.live_component
+    module={FlowWeb.Skills.TechniqueLive.FormComponent}
+    id={@changeset.id || :new}
+  />
+</.modal>

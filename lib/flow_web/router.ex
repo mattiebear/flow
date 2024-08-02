@@ -69,12 +69,12 @@ defmodule FlowWeb.Router do
       live "/users/settings", Auth.UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", Auth.UserSettingsLive, :confirm_email
 
-      live "/techniques", Skills.Techniques.IndexLive, :index
-      live "/techniques/:id", Skills.Techniques.IndexLive, :show
-      live "/techniques/new", Skills.Techniques.IndexLive, :new
-      live "/techniques/:id/edit", Skills.Techniques.IndexLive, :edit
+      live "/techniques", Skills.TechniqueLive.Index, :index
+      live "/techniques/new", Skills.TechniqueLive.Index, :new
+      live "/techniques/:id", Skills.TechniqueLive.Index, :show
+      live "/techniques/:id/edit", Skills.TechniqueLive.Index, :edit
 
-      live "/training", Training.Sessions.IndexLive, :index
+      live "/training", Training.SessionLive.Index, :index
     end
   end
 
