@@ -7,6 +7,9 @@ defmodule Flow.Skills.Position do
 
     belongs_to :user, Flow.Accounts.User
 
+    has_many :situations, Flow.Skills.Situation
+    has_many :techniques, through: [:situations, :technique]
+
     timestamps(type: :utc_datetime)
   end
 
