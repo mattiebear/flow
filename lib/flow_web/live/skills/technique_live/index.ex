@@ -15,13 +15,13 @@ defmodule FlowWeb.Skills.TechniqueLive.Index do
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "My Techniques")
-    |> assign(:changeset, %Technique{})
+    |> assign(:technique, %Technique{})
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "Add Technique")
-    |> assign(:changeset, %Technique{})
+    |> assign(:technique, %Technique{})
   end
 
   defp apply_action(socket, :edit, %{"id" => _id}) do
@@ -29,6 +29,6 @@ defmodule FlowWeb.Skills.TechniqueLive.Index do
 
     socket
     |> assign(:page_title, "Edit Technique")
-    |> assign(:changeset, %Technique{})
+    |> assign(:technique, %Technique{})
   end
 end

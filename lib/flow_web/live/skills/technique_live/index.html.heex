@@ -1,8 +1,34 @@
-<h1>Techniques</h1>
+<div class="flex gap-x-1">
+  <div class="w-[150px]">
+    <h2>Techniques</h2>
+    <ul>
+      <li>Technique 1</li>
+      <li>Technique 2</li>
+      <li>Technique 3</li>
+    </ul>
+  </div>
 
-<.modal :if={@live_action in [:new, :edit]} id="technique-form-modal" show on_cancel={JS.patch(~p"/techniques")}>
+  <div class="flex-1">
+    <div class="max-w-screen-md mx-auto">
+      <div class="flex justify-end">
+        <.link patch={~p"/techniques/new"}>
+          <.button>Add technique</.button>
+        </.link>
+      </div>
+    </div>
+  </div>
+</div>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="technique-form-modal"
+  show
+  on_cancel={JS.patch(~p"/techniques")}
+>
   <.live_component
     module={FlowWeb.Skills.TechniqueLive.FormComponent}
-    id={@changeset.id || :new}
+    id={@technique.id || :new}
+    technique={@technique}
+    title={@page_title}
   />
 </.modal>
