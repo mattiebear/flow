@@ -8,7 +8,7 @@ defmodule Flow.Skills.Step do
 
     belongs_to :technique, Flow.Skills.Technique
 
-    has_many :steps, Flow.Skills.Step
+    has_many :details, Flow.Skills.Detail
 
     timestamps(type: :utc_datetime)
   end
