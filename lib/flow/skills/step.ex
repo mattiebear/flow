@@ -8,6 +8,8 @@ defmodule Flow.Skills.Step do
 
     belongs_to :technique, Flow.Skills.Technique
 
+    has_many :steps, Flow.Skills.Step
+
     timestamps(type: :utc_datetime)
   end
 
@@ -15,6 +17,7 @@ defmodule Flow.Skills.Step do
   def changeset(step, attrs) do
     step
     |> cast(attrs, [:order, :description])
+    |> cast_assoc(:steps, with: &Flow.Skills.Step.changeset/2)
     |> validate_required([:order, :description])
   end
 end

@@ -3,7 +3,7 @@ defmodule Flow.Repo.Migrations.CreatePositions do
 
   def change do
     create table(:skills_positions) do
-      add :name, :string
+      add :name, :string, null: false
       add :user_id, references(:accounts_users, on_delete: :delete_all)
 
       timestamps(type: :utc_datetime)

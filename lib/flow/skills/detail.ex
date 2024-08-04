@@ -4,7 +4,8 @@ defmodule Flow.Skills.Detail do
 
   schema "skills_details" do
     field :description, :string
-    field :step_id, :id
+
+    belongs_to :step, Flow.Sills.Step
 
     timestamps(type: :utc_datetime)
   end
