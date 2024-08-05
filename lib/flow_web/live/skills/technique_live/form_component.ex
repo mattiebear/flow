@@ -14,14 +14,19 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
         <:subtitle>Update a technique in your library</:subtitle>
       </.header>
 
-      <.simple_form for={@form} id="technique-form">
-        <.input field={@form[:name]} type="text" label="Name" />
+      <.simple_form for={@form} id="technique-form" phx-target={@myself} phx-change="validate">
+        <.input field={@form[:name]} type="text" label="Name" phx-debounce />
 
         <h3>Steps</h3>
 
         <div>
           <.inputs_for :let={step} field={@form[:steps]}>
-            <.input field={step[:description]} type="textarea" label={"Step #{step.index + 1}"} />
+            <.input
+              field={step[:description]}
+              type="textarea"
+              label={"Step #{step.index + 1}"}
+              phx-debounce
+            />
             <.button
               type="button"
               phx-click="add-detail"
@@ -31,13 +36,16 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
               Add Detail
             </.button>
 
-            <.inputs_for :let={detail} field={step[:details]}>
-              <.input
-                field={detail[:description]}
-                type="textarea"
-                label={"Detail #{detail.index + 1}"}
-              />
-            </.inputs_for>
+            <div class="pl-8">
+              <.inputs_for :let={detail} field={step[:details]}>
+                <.input
+                  field={detail[:description]}
+                  type="textarea"
+                  label={"Detail #{detail.index + 1}"}
+                  phx-debounce
+                />
+              </.inputs_for>
+            </div>
           </.inputs_for>
         </div>
 
@@ -99,7 +107,37 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
     {:noreply, socket}
   end
 
+  def handle_event("validate", %{"technique" => technique_params}, socket) do
+    changeset =
+      socket.assigns.technique
+      |> Skills.change_technique(technique_params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign_form(socket, changeset)}
+  end
+
+  def handle_event("save", %{"technique" => technique_params}, socket) do
+    save_technique(socket, socket.assigns.action, technique_params)
+  end
+
+  defp save_technique(socket, :new, technique_params) do
+    case Skills.create_user_technique(socket.assigns.user, technique_params) do
+      {:ok, technique} ->
+        notify_parent({:saved, technique})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Technique added")
+         |> push_patch(to: ~p"/techniques/#{technique}")}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
   defp assign_form(socket, changeset) do
     assign(socket, :form, to_form(changeset))
   end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

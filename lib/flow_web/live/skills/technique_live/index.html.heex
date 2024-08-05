@@ -2,9 +2,6 @@
   <div class="w-[150px]">
     <h2>Techniques</h2>
     <ul>
-      <li>Technique 1</li>
-      <li>Technique 2</li>
-      <li>Technique 3</li>
     </ul>
   </div>
 
@@ -29,6 +26,8 @@
     module={FlowWeb.Skills.TechniqueLive.FormComponent}
     id={@technique.id || :new}
     technique={@technique}
+    action={@live_action}
     title={@page_title}
+    user={@user}
   />
 </.modal>
