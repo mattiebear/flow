@@ -7,7 +7,11 @@ defmodule FlowWeb.Skills.TechniqueLive.Index do
   def mount(_params, _session, socket) do
     techniques = Skills.list_user_techniques(socket.assigns.current_user)
 
-    {:ok, stream(socket, :techniques, techniques)}
+    socket = socket
+      |> assign(:technique, nil)
+      |> stream(:techniques, techniques)
+   
+    {:ok, socket}
   end
 
   def handle_params(params, _url, socket) do
@@ -21,26 +25,29 @@ defmodule FlowWeb.Skills.TechniqueLive.Index do
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "My Techniques")
-    |> assign(:technique, %Technique{})
+    |> assign(:draft, %Technique{})
   end
 
-  defp apply_action(socket, :show, _params) do
+  defp apply_action(socket, :show, %{"id" => id}) do
+    technique = Skills.get_user_technique(socket.assigns.current_user, id)
+
     socket
-    |> assign(:page_title, "My Techniques")
-    |> assign(:technique, %Technique{})
+    |> assign(:page_title, technique.name)
+    |> assign(:technique, technique)
+    |> assign(:draft, %Technique{})
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "Add Technique")
-    |> assign(:technique, %Technique{})
+    |> assign(:draft, %Technique{})
   end
 
-  defp apply_action(socket, :edit, %{"id" => _id}) do
-    # technique = Skills.get_user_technique(user, id)
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    technique = Skills.get_user_technique(socket.assigns.current_user, id)
 
     socket
     |> assign(:page_title, "Edit Technique")
-    |> assign(:technique, %Technique{})
+    |> assign(:draft, technique)
   end
 end

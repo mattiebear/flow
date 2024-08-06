@@ -17,6 +17,22 @@
           <.button>Add technique</.button>
         </.link>
       </div>
+
+      <div :if={@technique}>
+        <h2 class="text-lg"><%= @technique.name %></h2>
+
+        <ol>
+          <li :for={step <- @technique.steps}>
+            <%= step.description %>
+
+            <ul :if={length(step.details) > 0}>
+              <li :for={detail <- step.details}>
+                <%= detail.description %>
+              </li>
+            </ul>
+          </li>
+        </ol>
+      </div>
     </div>
   </div>
 </div>
@@ -30,7 +46,7 @@
   <.live_component
     module={FlowWeb.Skills.TechniqueLive.FormComponent}
     id={@technique.id || :new}
-    technique={@technique}
+    technique={@draft}
     action={@live_action}
     title={@page_title}
     current_user={@current_user}
