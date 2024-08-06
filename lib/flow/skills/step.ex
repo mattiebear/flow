@@ -4,7 +4,6 @@ defmodule Flow.Skills.Step do
 
   schema "skills_steps" do
     field :description, :string
-    field :order, :integer
 
     belongs_to :technique, Flow.Skills.Technique
 
@@ -16,8 +15,8 @@ defmodule Flow.Skills.Step do
   @doc false
   def changeset(step, attrs) do
     step
-    |> cast(attrs, [:order, :description])
-    |> cast_assoc(:steps, with: &Flow.Skills.Step.changeset/2)
-    |> validate_required([:order, :description])
+    |> cast(attrs, [:description])
+    |> cast_assoc(:details, with: &Flow.Skills.Detail.changeset/2)
+    |> validate_required([:description])
   end
 end

@@ -4,8 +4,8 @@ defmodule FlowWeb.Skills.TechniqueLive.Index do
   # alias Flow.Skills
   alias Flow.Skills.Technique
 
-  def mount(_params, session, socket) do
-    {:ok, assign(socket, :user, session.current_user)}
+  def mount(_params, _session, socket) do
+    {:ok, socket}
   end
 
   def handle_params(params, _url, socket) do
@@ -18,6 +18,12 @@ defmodule FlowWeb.Skills.TechniqueLive.Index do
   end
 
   defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:page_title, "My Techniques")
+    |> assign(:technique, %Technique{})
+  end
+
+  defp apply_action(socket, :show, _params) do
     socket
     |> assign(:page_title, "My Techniques")
     |> assign(:technique, %Technique{})

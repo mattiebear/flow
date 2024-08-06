@@ -14,7 +14,14 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
         <:subtitle>Update a technique in your library</:subtitle>
       </.header>
 
-      <.simple_form for={@form} id="technique-form" phx-target={@myself} phx-change="validate">
+      <.simple_form
+        for={@form}
+        id="technique-form"
+        autocomplete="off"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
+      >
         <.input field={@form[:name]} type="text" label="Name" phx-debounce />
 
         <h3>Steps</h3>
@@ -27,14 +34,6 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
               label={"Step #{step.index + 1}"}
               phx-debounce
             />
-            <.button
-              type="button"
-              phx-click="add-detail"
-              phx-target={@myself}
-              phx-value-index={step.index}
-            >
-              Add Detail
-            </.button>
 
             <div class="pl-8">
               <.inputs_for :let={detail} field={step[:details]}>
@@ -45,6 +44,15 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
                   phx-debounce
                 />
               </.inputs_for>
+
+              <.button
+                type="button"
+                phx-click="add-detail"
+                phx-target={@myself}
+                phx-value-index={step.index}
+              >
+                Add Detail
+              </.button>
             </div>
           </.inputs_for>
         </div>
@@ -121,13 +129,13 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
   end
 
   defp save_technique(socket, :new, technique_params) do
-    case Skills.create_user_technique(socket.assigns.user, technique_params) do
+    case Skills.create_user_technique(socket.assigns.current_user, technique_params) do
       {:ok, technique} ->
         notify_parent({:saved, technique})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Technique added")
+         |> put_flash(:info, "Added \"#{technique.name}\"")
          |> push_patch(to: ~p"/techniques/#{technique}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
