@@ -1,11 +1,13 @@
 defmodule FlowWeb.Skills.TechniqueLive.Index do
   use FlowWeb, :live_view
 
-  # alias Flow.Skills
+  alias Flow.Skills
   alias Flow.Skills.Technique
 
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    techniques = Skills.list_user_techniques(socket.assigns.current_user)
+
+    {:ok, stream(socket, :techniques, techniques)}
   end
 
   def handle_params(params, _url, socket) do
@@ -13,8 +15,7 @@ defmodule FlowWeb.Skills.TechniqueLive.Index do
   end
 
   def handle_info({FlowWeb.Skills.TechniqueLive.FormComponent, {:saved, technique}}, socket) do
-    dbg(technique)
-    {:noreply, socket}
+    {:noreply, stream_insert(socket, :techniques, technique)}
   end
 
   defp apply_action(socket, :index, _params) do

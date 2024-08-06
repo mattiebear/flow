@@ -2,10 +2,13 @@
 #
 #     mix run priv/repo/seeds.exs
 #
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     Flow.Repo.insert!(%Flow.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+
+alias Flow.Accounts.User
+alias Flow.Repo
+
+%User{}
+|> User.registration_changeset(%{
+  email: "user@example.com",
+  password: "password1234"
+})
+|> Repo.insert()

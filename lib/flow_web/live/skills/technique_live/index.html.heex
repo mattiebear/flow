@@ -1,7 +1,12 @@
 <div class="flex gap-x-1">
   <div class="w-[150px]">
-    <h2>Techniques</h2>
-    <ul>
+    <h2 class="font-bold">Techniques</h2>
+    <ul id="techniques" phx-update="stream">
+      <li :for={{dom_id, technique} <- @streams.techniques} id={dom_id}>
+        <.link patch={~p"/techniques/#{technique}"} class="text-blue-500">
+          <%= technique.name %>
+        </.link>
+      </li>
     </ul>
   </div>
 
