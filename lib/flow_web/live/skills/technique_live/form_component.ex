@@ -14,6 +14,20 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
         <:subtitle>Update a technique in your library</:subtitle>
       </.header>
 
+      <form
+        class="flex flex-col relative"
+        phx-change="search_position"
+        phx-target={@myself}
+        phx-debounce
+      >
+        <label for="position">Select position</label>
+        <div class="flex flex-row">
+          <input type="text" name="position" id="position" />
+
+          <.button>Add</.button>
+        </div>
+      </form>
+
       <.simple_form
         for={@form}
         id="technique-form"
@@ -73,12 +87,14 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
     socket =
       socket
       |> assign(assigns)
+      |> assign(:position_input, "")
+      |> assign(:positions, [])
       |> assign_form(changeset)
 
     {:ok, socket}
   end
 
-  def handle_event("add-step", _params, socket) do
+  def handle_event("add_step", _params, socket) do
     socket =
       update(socket, :form, fn %{source: changeset} ->
         existing = Changeset.get_assoc(changeset, :steps)
@@ -89,7 +105,7 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
     {:noreply, socket}
   end
 
-  def handle_event("add-detail", %{"index" => index}, socket) do
+  def handle_event("add_detail", %{"index" => index}, socket) do
     index = String.to_integer(index)
 
     socket =
@@ -113,6 +129,12 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
       end)
 
     {:noreply, socket}
+  end
+
+  def handle_event("search_position", %{"position" => search}, socket) do
+    positions = Skills.search_user_positions(socket.assigns.current_user, search)
+
+    {:noreply, assign(socket, :position_input, search)}
   end
 
   def handle_event("validate", %{"technique" => technique_params}, socket) do

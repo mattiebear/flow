@@ -7,10 +7,11 @@ defmodule FlowWeb.Skills.TechniqueLive.Index do
   def mount(_params, _session, socket) do
     techniques = Skills.list_user_techniques(socket.assigns.current_user)
 
-    socket = socket
+    socket =
+      socket
       |> assign(:technique, nil)
       |> stream(:techniques, techniques)
-   
+
     {:ok, socket}
   end
 

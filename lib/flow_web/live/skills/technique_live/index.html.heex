@@ -45,7 +45,7 @@
 >
   <.live_component
     module={FlowWeb.Skills.TechniqueLive.FormComponent}
-    id={@technique.id || :new}
+    id={if @technique, do: @technique.id, else: :new}
     technique={@draft}
     action={@live_action}
     title={@page_title}

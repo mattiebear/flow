@@ -4,10 +4,11 @@ defmodule Flow.Skills do
   alias Ecto.Changeset
   alias Flow.Accounts.User
   alias Flow.Repo
+  alias Flow.Skills.Position
   alias Flow.Skills.Technique
 
   def list_user_techniques(%User{} = user) do
-    query = from t in Technique, where: t.user_id == ^user.id 
+    query = from t in Technique, where: t.user_id == ^user.id
     Repo.all(query)
   end
 
@@ -25,5 +26,13 @@ defmodule Flow.Skills do
 
   def change_technique(%Technique{} = technique, attrs \\ %{}) do
     Technique.changeset(technique, attrs)
+  end
+
+  def search_user_positions(%User{} = user, _search \\ "") do
+    # TODO: Update query to handle search
+    # TODO: Update to be debounced
+    query = from p in Position, where: p.user_id == ^user.id
+
+    Repo.all(query)
   end
 end
