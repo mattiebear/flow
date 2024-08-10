@@ -16,13 +16,16 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
 
       <form
         class="flex flex-col relative"
+        id="position-form"
+        autocomplete="off"
         phx-change="search_position"
+        phx-submit="create_position"
         phx-target={@myself}
         phx-debounce
       >
         <label for="position">Select position</label>
-        <div class="flex flex-row">
-          <input type="text" name="position" id="position" />
+        <div class="flex flex-row relative">
+          <input type="text" name="name" id="position-name" />
 
           <.button>Add</.button>
         </div>
@@ -87,7 +90,6 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
     socket =
       socket
       |> assign(assigns)
-      |> assign(:position_input, "")
       |> assign(:positions, [])
       |> assign_form(changeset)
 
@@ -131,10 +133,17 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
     {:noreply, socket}
   end
 
-  def handle_event("search_position", %{"position" => search}, socket) do
+  def handle_event("create_position", params, socket) do
+    IO.puts("create_position")
+    dbg(params)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("search_position", %{"name" => search}, socket) do
     positions = Skills.search_user_positions(socket.assigns.current_user, search)
 
-    {:noreply, assign(socket, :position_input, search)}
+    {:noreply, assign(socket, :positions, positions)}
   end
 
   def handle_event("validate", %{"technique" => technique_params}, socket) do
