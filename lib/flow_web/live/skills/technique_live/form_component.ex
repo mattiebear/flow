@@ -4,6 +4,7 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
   alias Ecto.Changeset
   alias Flow.Skills
   alias Flow.Skills.Detail
+  alias Flow.Skills.Position
   alias Flow.Skills.Step
 
   def render(assigns) do
@@ -14,30 +15,24 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
         <:subtitle>Update a technique in your library</:subtitle>
       </.header>
 
-      <form
-        class="flex flex-col relative"
+      <.simple_form
+        for={@position_form}
         id="position-form"
         autocomplete="off"
+        phx-target={@myself}
         phx-change="search_position"
         phx-submit="create_position"
-        phx-target={@myself}
-        phx-debounce
       >
-        <label for="position">Select position</label>
-        <div class="flex flex-row relative">
-          <input type="text" name="name" id="position-name" />
-
-          <.button>Add</.button>
-        </div>
-      </form>
+        <div class="flex flex-row gap-x-1 relative"></div>
+      </.simple_form>
 
       <.simple_form
-        for={@form}
+        for={@technique_form}
         id="technique-form"
         autocomplete="off"
         phx-target={@myself}
-        phx-change="validate"
-        phx-submit="save"
+        phx-change="validate_technique"
+        phx-submit="save_technique"
       >
         <.input field={@form[:name]} type="text" label="Name" phx-debounce />
 
@@ -85,20 +80,22 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
   end
 
   def update(%{technique: technique} = assigns, socket) do
-    changeset = Skills.change_technique(technique)
+    technique_changeset = Skills.change_technique(technique)
+    position_changeset = Skills.change_position(%Position{})
 
     socket =
       socket
       |> assign(assigns)
       |> assign(:positions, [])
-      |> assign_form(changeset)
+      |> assign_technique_form(technique_changeset)
+      |> assign_position_form(position_changeset)
 
     {:ok, socket}
   end
 
   def handle_event("add_step", _params, socket) do
     socket =
-      update(socket, :form, fn %{source: changeset} ->
+      update(socket, :techinque_form, fn %{source: changeset} ->
         existing = Changeset.get_assoc(changeset, :steps)
         changeset = Changeset.put_assoc(changeset, :steps, existing ++ [%Step{}])
         to_form(changeset)

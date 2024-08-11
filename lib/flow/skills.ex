@@ -35,4 +35,8 @@ defmodule Flow.Skills do
 
     Repo.all(query)
   end
+
+  def change_position(%Position{} = position, attrs \\ %{}) do
+    Position.changeset(position, attrs)
+  end
 end
