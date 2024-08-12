@@ -30,10 +30,16 @@ defmodule Flow.Skills do
 
   def search_user_positions(%User{} = user, _search \\ "") do
     # TODO: Update query to handle search
-    # TODO: Update to be debounced
     query = from p in Position, where: p.user_id == ^user.id
 
     Repo.all(query)
+  end
+
+  def create_user_position(%User{} = user, attrs) do
+    %Position{}
+    |> Position.changeset(attrs)
+    |> Changeset.put_assoc(:user, user)
+    |> Repo.insert()
   end
 
   def change_position(%Position{} = position, attrs \\ %{}) do

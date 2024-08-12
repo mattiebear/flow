@@ -20,10 +20,31 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
         id="position-form"
         autocomplete="off"
         phx-target={@myself}
-        phx-change="search_position"
-        phx-submit="create_position"
+        phx-change="search_positions"
+        phx-submit="save_position"
       >
-        <div class="flex flex-row gap-x-1 relative"></div>
+        <div class="flex flex-row gap-x-1 relative">
+          <.input field={@position_form[:name]} type="text" phx-debounce />
+          <.button type="submit">Create Position</.button>
+
+          <div
+            :if={length(@positions) > 0}
+            class="border border-black border-solid rounded drop-shadow bg-slate-50 left-0 top-[55px] absolute"
+          >
+            <ul role="listbox">
+              <li
+                :for={position <- @positions}
+                role="option"
+                class="p-2 bg-slate-100 cursor-pointer hover:bg-slate-200"
+                phx-target={@myself}
+                phx-click="add_position"
+                phx-value-id={position.id}
+              >
+                <%= position.name %>
+              </li>
+            </ul>
+          </div>
+        </div>
       </.simple_form>
 
       <.simple_form
@@ -34,12 +55,12 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
         phx-change="validate_technique"
         phx-submit="save_technique"
       >
-        <.input field={@form[:name]} type="text" label="Name" phx-debounce />
+        <.input field={@technique_form[:name]} type="text" label="Name" phx-debounce />
 
         <h3>Steps</h3>
 
         <div>
-          <.inputs_for :let={step} field={@form[:steps]}>
+          <.inputs_for :let={step} field={@technique_form[:steps]}>
             <.input
               field={step[:description]}
               type="textarea"
@@ -108,7 +129,7 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
     index = String.to_integer(index)
 
     socket =
-      update(socket, :form, fn %{source: changeset} ->
+      update(socket, :technique_form, fn %{source: changeset} ->
         existing = Changeset.get_assoc(changeset, :steps)
 
         steps =
@@ -130,29 +151,45 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
     {:noreply, socket}
   end
 
-  def handle_event("create_position", params, socket) do
-    IO.puts("create_position")
-    dbg(params)
+  def handle_event("add_position", %{"id" => _id}, socket) do
+    changeset = Skills.change_position(%Position{})
+
+    socket = socket
+      |> assign(:positions, [])
+      |> assign_position_form(changeset)
 
     {:noreply, socket}
   end
 
-  def handle_event("search_position", %{"name" => search}, socket) do
-    positions = Skills.search_user_positions(socket.assigns.current_user, search)
+  def handle_event("save_position", %{"position" => position_params}, socket) do
+    # TODO: First check if a position exists with that name, and if it does use that instead
+    case Skills.create_user_position(socket.assigns.current_user, position_params) do
+      {:ok, _position} ->
+        {:noreply, socket}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_position_form(socket, changeset)}
+    end
+
+    {:noreply, socket}
+  end
+
+  def handle_event("search_positions", %{"position" => position_params}, socket) do
+    positions = Skills.search_user_positions(socket.assigns.current_user, position_params["name"])
 
     {:noreply, assign(socket, :positions, positions)}
   end
 
-  def handle_event("validate", %{"technique" => technique_params}, socket) do
+  def handle_event("validate_technique", %{"technique" => technique_params}, socket) do
     changeset =
       socket.assigns.technique
       |> Skills.change_technique(technique_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign_form(socket, changeset)}
+    {:noreply, assign_technique_form(socket, changeset)}
   end
 
-  def handle_event("save", %{"technique" => technique_params}, socket) do
+  def handle_event("save_technique", %{"technique" => technique_params}, socket) do
     save_technique(socket, socket.assigns.action, technique_params)
   end
 
@@ -167,12 +204,16 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
          |> push_patch(to: ~p"/techniques/#{technique}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+        {:noreply, assign_technique_form(socket, changeset)}
     end
   end
 
-  defp assign_form(socket, changeset) do
-    assign(socket, :form, to_form(changeset))
+  defp assign_position_form(socket, changeset) do
+    assign(socket, :position_form, to_form(changeset))
+  end
+
+  defp assign_technique_form(socket, changeset) do
+    assign(socket, :technique_form, to_form(changeset))
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
