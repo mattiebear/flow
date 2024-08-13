@@ -1,4 +1,4 @@
-defmodule Flow.Skills.Situation do
+efmodule Flow.Skills.Situation do
   use Ecto.Schema
   import Ecto.Changeset
 

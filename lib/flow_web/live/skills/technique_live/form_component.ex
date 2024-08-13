@@ -151,10 +151,15 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
     {:noreply, socket}
   end
 
-  def handle_event("add_position", %{"id" => _id}, socket) do
+  def handle_event("add_position", %{"id" => id}, socket) do
     changeset = Skills.change_position(%Position{})
+    # position = Skills.get_user_position(socket.assigns.current_user, id)
+socket = update(socket, :technique_form, fn %{source: changeset} -> 
 
-    socket = socket
+        existing = Changeset.get_assoc(changeset, :situations)
+        changeset = Changeset.put_assoc(changeset, :situations, existing ++ [%Situation{position_id: id}])
+        to_form(changeset)
+  end)
       |> assign(:positions, [])
       |> assign_position_form(changeset)
 
