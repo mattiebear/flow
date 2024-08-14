@@ -4,6 +4,7 @@ defmodule Flow.Skills.Position do
 
   schema "skills_positions" do
     field :name, :string
+    field :description, :string
 
     belongs_to :user, Flow.Accounts.User
 
