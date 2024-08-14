@@ -8,7 +8,7 @@ defmodule Flow.Skills.Technique do
     belongs_to :user, Flow.Accounts.User
 
     has_many :situations, Flow.Skills.Situation
-    has_many :steps, Flow.Skills.Step
+    has_many :steps, Flow.Skills.Step, preload_order: [asc: :position], on_replace: :delete
     has_many :positions, through: [:situations, :position]
 
     timestamps(type: :utc_datetime)
@@ -19,7 +19,11 @@ defmodule Flow.Skills.Technique do
     technique
     |> cast(attrs, [:name])
     |> cast_assoc(:situations, with: &Flow.Skills.Situation.changeset/2)
-    |> cast_assoc(:steps, with: &Flow.Skills.Step.changeset/2)
+    |> cast_assoc(:steps,
+      with: &Flow.Skills.Step.changeset/3,
+      sort_param: :steps_order,
+      drop_param: :steps_delete
+    )
     |> validate_required([:name])
   end
 end
