@@ -17,7 +17,7 @@ defmodule Flow.Skills.Position do
   @doc false
   def changeset(position, attrs) do
     position
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:description, :name])
     |> validate_required([:name])
     |> unsafe_validate_unique([:name, :email], Flow.Repo)
     |> unique_constraint([:name, :user_id])

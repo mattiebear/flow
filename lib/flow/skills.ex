@@ -28,10 +28,8 @@ defmodule Flow.Skills do
     Technique.changeset(technique, attrs)
   end
 
-  def search_user_positions(%User{} = user, _search \\ "") do
-    # TODO: Update query to handle search
+  def list_user_positions(%User{} = user) do
     query = from p in Position, where: p.user_id == ^user.id
-
     Repo.all(query)
   end
 
