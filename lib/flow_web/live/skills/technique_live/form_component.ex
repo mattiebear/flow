@@ -43,7 +43,11 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
               </.inputs_for>
 
               <label>
-                <input type="checkbox" name={"technique[steps][#{step.index}][details_order][]"} class="hidden" />
+                <input
+                  type="checkbox"
+                  name={"technique[steps][#{step.index}][details_order][]"}
+                  class="hidden"
+                />
                 <.icon name="hero-plus-circle" /> Add detail
               </label>
             </div>
