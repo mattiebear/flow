@@ -12,19 +12,32 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
       </.header>
 
       <.simple_form
-        for={@technique_form}
+        for={@form}
         id="technique-form"
         autocomplete="off"
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@technique_form[:name]} type="text" label="Name" phx-debounce />
+        <.input field={@form[:name]} type="text" label="Name" phx-debounce />
+
+        <h3>Positions</h3>
+
+        <.inputs_for :let={situation} field={@form[:situations]}>
+          <input type="hidden" name="technique[situations_order][]" value={situation.index} />
+
+          <.input field={situation[:position_id]} type="select" options={@position_options} />
+        </.inputs_for>
+
+        <label>
+          <input type="checkbox" name="technique[situations_order][]" class="hidden" />
+          <.icon name="hero-plus-circle" /> Add position
+        </label>
 
         <h3>Steps</h3>
 
         <div>
-          <.inputs_for :let={step} field={@technique_form[:steps]}>
+          <.inputs_for :let={step} field={@form[:steps]}>
             <input type="hidden" name="technique[steps_order][]" value={step.index} />
 
             <.input
@@ -36,7 +49,11 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
 
             <div class="pl-8">
               <.inputs_for :let={detail} field={step[:details]}>
-                <input type="hidden" name={"technique[steps][#{step.index}][details_order][]"} value={detail.index} />
+                <input
+                  type="hidden"
+                  name={"technique[steps][#{step.index}][details_order][]"}
+                  value={detail.index}
+                />
 
                 <.input
                   field={detail[:description]}
@@ -47,7 +64,6 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
               </.inputs_for>
 
               <label>
-
                 <input
                   type="checkbox"
                   name={"technique[steps][#{step.index}][details_order][]"}
@@ -74,12 +90,13 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
 
   def update(%{technique: technique} = assigns, socket) do
     changeset = Skills.change_technique(technique)
-    positions = Skills.list_user_positions(assigns.current_user) 
+    positions = Skills.list_user_positions(assigns.current_user)
+    position_options = Enum.map(positions, fn position -> {position.name, position.id} end)
 
     socket =
       socket
       |> assign(assigns)
-      |> assign(:positions, positions)
+      |> assign(:position_options, position_options)
       |> assign_form(changeset)
 
     {:ok, socket}
@@ -114,7 +131,7 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
   end
 
   defp assign_form(socket, changeset) do
-    assign(socket, :technique_form, to_form(changeset))
+    assign(socket, :form, to_form(changeset))
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
