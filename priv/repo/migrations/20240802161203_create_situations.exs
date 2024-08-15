@@ -4,6 +4,7 @@ defmodule Flow.Repo.Migrations.CreateSituations do
   def change do
     create table(:skills_situations) do
       add :placement, :integer, null: false, default: 0
+      add :order, :integer, null: false
 
       add :technique_id, references(:skills_techniques, on_delete: :delete_all)
       add :position_id, references(:skills_positions, on_delete: :delete_all)

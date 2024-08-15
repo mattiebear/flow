@@ -73,13 +73,14 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
   end
 
   def update(%{technique: technique} = assigns, socket) do
-    technique_changeset = Skills.change_technique(technique)
+    changeset = Skills.change_technique(technique)
+    positions = Skills.list_user_positions(assigns.current_user) 
 
     socket =
       socket
       |> assign(assigns)
-      |> assign(:positions, [])
-      |> assign_form(technique_changeset)
+      |> assign(:positions, positions)
+      |> assign_form(changeset)
 
     {:ok, socket}
   end

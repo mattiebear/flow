@@ -4,18 +4,18 @@ defmodule Flow.Skills.Detail do
 
   schema "skills_details" do
     field :description, :string
-    field :position, :integer
+    field :order, :integer
 
-    belongs_to :step, Flow.Sills.Step
+    belongs_to :step, Flow.Skills.Step
 
     timestamps(type: :utc_datetime)
   end
 
   @doc false
-  def changeset(detail, attrs, position) do
+  def changeset(detail, attrs, order) do
     detail
     |> cast(attrs, [:description])
-    |> change(position: position)
+    |> change(order: order)
     |> validate_required([:description])
   end
 end

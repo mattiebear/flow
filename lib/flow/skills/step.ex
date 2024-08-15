@@ -4,20 +4,20 @@ defmodule Flow.Skills.Step do
 
   schema "skills_steps" do
     field :description, :string
-    field :position, :integer
+    field :order, :integer
 
     belongs_to :technique, Flow.Skills.Technique
 
-    has_many :details, Flow.Skills.Detail, preload_order: [asc: :position], on_replace: :delete
+    has_many :details, Flow.Skills.Detail, preload_order: [asc: :order], on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end
 
   @doc false
-  def changeset(step, attrs, position) do
+  def changeset(step, attrs, order) do
     step
     |> cast(attrs, [:description])
-    |> change(position: position)
+    |> change(order: order)
     |> cast_assoc(:details,
       with: &Flow.Skills.Detail.changeset/3,
       sort_param: :details_order,
