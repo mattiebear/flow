@@ -25,6 +25,8 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
 
         <div>
           <.inputs_for :let={step} field={@technique_form[:steps]}>
+            <input type="hidden" name="technique[steps_order][]" value={step.index} />
+
             <.input
               field={step[:description]}
               type="textarea"
@@ -34,6 +36,8 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
 
             <div class="pl-8">
               <.inputs_for :let={detail} field={step[:details]}>
+                <input type="hidden" name={"technique[steps][#{step.index}][details_order][]"} value={detail.index} />
+
                 <.input
                   field={detail[:description]}
                   type="textarea"
@@ -43,6 +47,7 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
               </.inputs_for>
 
               <label>
+
                 <input
                   type="checkbox"
                   name={"technique[steps][#{step.index}][details_order][]"}
