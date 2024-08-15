@@ -16,7 +16,7 @@ defmodule Flow.Skills.Situation do
   @doc false
   def changeset(situation, attrs, order) do
     situation
-    |> cast(attrs, [:placement])
+    |> cast(attrs, [:placement, :position_id])
     |> change(order: order)
     |> validate_required([:placement])
     |> unsafe_validate_unique([:position_id, :technique_id], Flow.Repo)

@@ -21,7 +21,7 @@ defmodule Flow.Skills do
 
   def get_user_technique(%User{} = user, id) do
     Repo.get_by!(Technique, user_id: user.id, id: id)
-    |> Repo.preload(steps: :details)
+    |> Repo.preload(steps: :details, situations: :position)
   end
 
   def change_technique(%Technique{} = technique, attrs \\ %{}) do
