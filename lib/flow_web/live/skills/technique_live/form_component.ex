@@ -26,8 +26,18 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
         <.inputs_for :let={situation} field={@form[:situations]}>
           <input type="hidden" name="technique[situations_order][]" value={situation.index} />
 
-          <.input field={situation[:position_id]} type="select" label="Position" options={@position_options} />
-          <.input field={situation[:placement]} type="select" label="Placement" options={placement_options()} /> 
+          <.input
+            field={situation[:position_id]}
+            type="select"
+            label="Position"
+            options={@position_options}
+          />
+          <.input
+            field={situation[:placement]}
+            type="select"
+            label="Placement"
+            options={placement_options()}
+          />
         </.inputs_for>
 
         <label>
@@ -151,7 +161,7 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
-  
+
   defp placement_options do
     [{"None", "none"}, {"Within", "within"}, {"Against", "against"}]
   end

@@ -21,7 +21,8 @@ defmodule Flow.Skills.Technique do
     |> cast_assoc(:situations,
       with: &Flow.Skills.Situation.changeset/3,
       sort_param: :situations_order,
-      drop_param: :situations_delete)
+      drop_param: :situations_delete
+    )
     |> cast_assoc(:steps,
       with: &Flow.Skills.Step.changeset/3,
       sort_param: :steps_order,

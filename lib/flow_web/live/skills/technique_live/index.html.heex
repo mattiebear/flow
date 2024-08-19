@@ -23,11 +23,11 @@
 
         <h3>Positions</h3>
         <ol>
-          <li :for={situation <- @technique.situations} >
+          <li :for={situation <- @technique.situations}>
             <%= "#{situation.position.name} (#{situation.placement})" %>
           </li>
         </ol>
-        
+
         <h3>Steps</h3>
         <ol>
           <li :for={step <- @technique.steps}>

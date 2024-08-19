@@ -6,6 +6,6 @@ defmodule FlowWeb.Training.SessionLive.Index do
   end
 
   def handle_params(_params, _url, socket) do
-    {:noreply, socket} 
+    {:noreply, socket}
   end
 end
