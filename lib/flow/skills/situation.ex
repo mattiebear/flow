@@ -2,7 +2,6 @@ defmodule Flow.Skills.Situation do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @primary_key false
   schema "skills_situations" do
     field :placement, Ecto.Enum, values: [none: 0, within: 1, against: 2]
     field :order, :integer

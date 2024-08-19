@@ -131,6 +131,21 @@ defmodule FlowWeb.Skills.TechniqueLive.FormComponent do
     end
   end
 
+  defp save_technique(socket, :edit, technique_params) do
+    case Skills.update_technique(socket.assigns.technique, technique_params) do
+      {:ok, technique} ->
+        notify_parent({:saved, technique})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Updated \"#{technique.name}\"")
+         |> push_patch(to: ~p"/techniques/#{technique}")}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
   defp assign_form(socket, changeset) do
     assign(socket, :form, to_form(changeset))
   end

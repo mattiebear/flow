@@ -70,6 +70,21 @@ defmodule FlowWeb.Skills.PositionLive.FormComponent do
     end
   end
 
+  defp save_position(socket, :edit, position_params) do
+    case Skills.update_position(socket.assigns.position, position_params) do
+      {:ok, position} ->
+        notify_parent({:saved, position})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Updated \"#{position.name}\"")
+         |> push_patch(to: ~p"/positions/#{position}")}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
   defp assign_form(socket, changeset) do
     assign(socket, :form, to_form(changeset))
   end

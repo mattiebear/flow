@@ -21,6 +21,9 @@
       <div :if={@position}>
         <h2 class="text-lg"><%= @position.name %></h2>
         <p class="text-md"><%= @position.description %></p>
+        <.link patch={~p"/positions/#{@position}/edit"}>
+          Edit
+        </.link>
       </div>
     </div>
   </div>

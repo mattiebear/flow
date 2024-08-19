@@ -19,6 +19,10 @@ defmodule FlowWeb.Skills.PositionLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
+  def handle_info({FlowWeb.Skills.PositionLive.FormComponent, {:saved, position}}, socket) do
+    {:noreply, stream_insert(socket, :positions, position)}
+  end
+
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Known Positions")
@@ -47,5 +51,4 @@ defmodule FlowWeb.Skills.PositionLive.Index do
     |> assign(:page_title, "Edit Position")
     |> assign(:draft, position)
   end
-
 end

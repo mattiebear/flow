@@ -24,6 +24,13 @@ defmodule Flow.Skills do
     |> Repo.preload(steps: :details, situations: :position)
   end
 
+  def update_technique(%Technique{} = technique, attrs) do
+    # TODO: How will we authorize the technique?
+    technique
+    |> Technique.changeset(attrs)
+    |> Repo.update()
+  end
+
   def change_technique(%Technique{} = technique, attrs \\ %{}) do
     Technique.changeset(technique, attrs)
   end
@@ -34,7 +41,7 @@ defmodule Flow.Skills do
   end
 
   def get_user_position(%User{} = user, id) do
-    Repo.get_by(Position, [user_id: user.id, id: id])
+    Repo.get_by!(Position, [user_id: user.id, id: id])
   end
 
   def create_user_position(%User{} = user, attrs) do
@@ -42,6 +49,13 @@ defmodule Flow.Skills do
     |> Position.changeset(attrs)
     |> Changeset.put_assoc(:user, user)
     |> Repo.insert()
+  end
+
+  def update_position(%Position{} = position, attrs) do
+    # TODO: How will we authorize the position?
+    position
+    |> Position.changeset(attrs)
+    |> Repo.update()
   end
 
   def change_position(%Position{} = position, attrs \\ %{}) do
