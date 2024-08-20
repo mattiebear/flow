@@ -22,6 +22,11 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
         <.input field={@form[:date]} type="date" label="Date" phx-debounce />
         <.input field={@form[:reflection]} type="textarea" label="Reflection" phx-debounce />
 
+        <label>
+          <input type="checkbox" name="training_session[subjects_order][]" class="hidden" />
+          <.icon name="hero-plus-circle" /> Add technique
+        </label>
+
         <:actions>
           <.button type="submit">Save</.button>
         </:actions>

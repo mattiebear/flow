@@ -4,6 +4,7 @@ defmodule Flow.Training.Subject do
 
   schema "training_subjects" do
     field :performance, :integer
+    field :order, :integer
 
     belongs_to :technique, Flow.Skills.Technique
     belongs_to :training_session, Flow.Training.TrainingSession
@@ -15,9 +16,10 @@ defmodule Flow.Training.Subject do
   end
 
   @doc false
-  def changeset(subject, attrs) do
+  def changeset(subject, attrs, order) do
     subject
-    |> cast(attrs, [:performance])
+    |> cast(attrs, [:performance, :technique_id])
+    |> change(order: order)
     |> validate_required([:performance])
   end
 end

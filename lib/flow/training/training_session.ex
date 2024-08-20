@@ -8,7 +8,7 @@ defmodule Flow.Training.TrainingSession do
 
     belongs_to :user, Flow.Accounts.User
 
-    has_many :subjects, Flow.Training.Subject
+    has_many :subjects, Flow.Training.Subject, preload_order: [asc: :order], on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end
@@ -17,5 +17,10 @@ defmodule Flow.Training.TrainingSession do
   def changeset(training_session, attrs) do
     training_session
     |> cast(attrs, [:date, :reflection])
+    |> cast_assoc(:subjects,
+      with: &Flow.Training.Subject.changeset/3,
+      sort_param: :subjects_order,
+      drop_param: :subjects_delete
+    )
   end
 end

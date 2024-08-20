@@ -19,7 +19,7 @@ defmodule FlowWeb.Training.TrainingSessionLive.Index do
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "Log Training")
+    |> assign(:page_title, "Log Training Session")
     |> assign(:draft, %TrainingSession{})
   end
 end
