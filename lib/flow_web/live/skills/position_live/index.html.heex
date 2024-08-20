@@ -37,7 +37,7 @@
 >
   <.live_component
     module={FlowWeb.Skills.PositionLive.FormComponent}
-    id={if @position, do: @position.id, else: :new}
+    id={@draft.id || :new}
     position={@draft}
     action={@live_action}
     title={@page_title}

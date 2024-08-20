@@ -79,7 +79,9 @@ defmodule FlowWeb.Router do
       live "/techniques/:id", Skills.TechniqueLive.Index, :show
       live "/techniques/:id/edit", Skills.TechniqueLive.Index, :edit
 
-      live "/training", Training.SessionLive.Index, :index
+      live "/training", Training.TrainingSessionLive.Index, :index
+      live "/training/new", Training.TrainingSessionLive.Index, :new
+      live "/training/:id", Training.TrainingSessionLive.Index, :show
     end
   end
 

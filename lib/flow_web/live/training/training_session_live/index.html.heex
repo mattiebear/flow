@@ -1,0 +1,27 @@
+<h2 class="font-bold">My Training</h2>
+
+<div class="flex-1">
+  <div class="max-w-screen-md mx-auto">
+    <div class="flex justify-end">
+      <.link patch={~p"/training/new"}>
+        <.button>Add training session</.button>
+      </.link>
+    </div>
+  </div>
+</div>
+
+<.modal
+  :if={@live_action in [:new, :show]}
+  id="training-session-form-modal"
+  show
+  on_cancel={JS.patch(~p"/training")}
+>
+  <.live_component
+    module={FlowWeb.Training.TrainingSessionLive.FormComponent}
+    id={@draft.id || :new}
+    training_session={@draft}
+    action={@live_action}
+    title={@page_title}
+    current_user={@current_user}
+  />
+</.modal>
