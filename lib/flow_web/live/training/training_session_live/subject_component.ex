@@ -6,4 +6,11 @@ defmodule FlowWeb.Training.TrainingSessionLive.SubjectComponent do
       <div>Component for <%= @technique_id %></div>
     """
   end
+
+  def update(assigns, socket) do
+    socket = socket
+      |> assign(assigns)
+
+    {:ok, socket}
+  end
 end

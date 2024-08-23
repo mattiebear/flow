@@ -28,7 +28,7 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
           <.input field={subject[:technique_id]} type="select" options={@technique_options} />
 
           <.live_component
-            :if={subject[:technique_id].value}
+            :if={is_present(subject[:technique_id].value)}
             module={FlowWeb.Training.TrainingSessionLive.SubjectComponent}
             id={subject[:technique_id].value}
             subject={subject}
@@ -100,4 +100,12 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp is_present(value) when is_binary(value) do
+    value |> String.trim() |> String.length() > 0
+  end
+
+  defp is_present(value) do
+    !is_nil(value)
+  end
 end
