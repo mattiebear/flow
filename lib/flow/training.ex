@@ -1,6 +1,4 @@
 defmodule Flow.Training do
-  import Ecto.Query
-
   alias Ecto.Changeset
   alias Flow.Accounts.User
   alias Flow.Repo

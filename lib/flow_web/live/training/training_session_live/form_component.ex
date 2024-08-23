@@ -1,6 +1,7 @@
 defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
   use FlowWeb, :live_component
 
+  alias Flow.Skills
   alias Flow.Training
 
   def render(assigns) do
@@ -22,6 +23,19 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
         <.input field={@form[:date]} type="date" label="Date" phx-debounce />
         <.input field={@form[:reflection]} type="textarea" label="Reflection" phx-debounce />
 
+        <.inputs_for :let={subject} field={@form[:subjects]}>
+          <h3>Studied Technique</h3>
+          <.input field={subject[:technique_id]} type="select" options={@technique_options} />
+
+          <.live_component
+            :if={subject[:technique_id].value}
+            module={FlowWeb.Training.TrainingSessionLive.SubjectComponent}
+            id={subject[:technique_id].value}
+            subject={subject}
+            technique_id={subject[:technique_id].value}
+          />
+        </.inputs_for>
+
         <label>
           <input type="checkbox" name="training_session[subjects_order][]" class="hidden" />
           <.icon name="hero-plus-circle" /> Add technique
@@ -37,10 +51,14 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
 
   def update(%{training_session: training_session} = assigns, socket) do
     training_session_changeset = Training.change_training_session(training_session)
+    techniques = Skills.list_user_techniques(assigns.current_user)
+    technique_options = Enum.map(techniques, fn technique -> {technique.name, technique.id} end)
+    technique_options = [{"Select technique", nil} | technique_options]
 
     socket =
       socket
       |> assign(assigns)
+      |> assign(:technique_options, technique_options)
       |> assign_form(training_session_changeset)
 
     {:ok, socket}
@@ -60,7 +78,10 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
   end
 
   defp save_training_session(socket, :new, training_session_params) do
-    case Training.create_user_training_session(socket.assigns.current_user, training_session_params) do
+    case Training.create_user_training_session(
+           socket.assigns.current_user,
+           training_session_params
+         ) do
       {:ok, training_session} ->
         notify_parent({:saved, training_session})
 
