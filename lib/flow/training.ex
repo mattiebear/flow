@@ -2,6 +2,7 @@ defmodule Flow.Training do
   alias Ecto.Changeset
   alias Flow.Accounts.User
   alias Flow.Repo
+  alias Flow.Training.Subject
   alias Flow.Training.TrainingSession
 
   def create_user_training_session(%User{} = user, attrs) do
@@ -13,5 +14,9 @@ defmodule Flow.Training do
 
   def change_training_session(%TrainingSession{} = training_session, attrs \\ %{}) do
     TrainingSession.changeset(training_session, attrs)
+  end
+
+  def change_subject(%Subject{} = subject, attrs \\ %{}) do
+    Subject.changeset(subject, attrs)
   end
 end

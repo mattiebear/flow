@@ -31,7 +31,9 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
             :if={is_present(subject[:technique_id].value)}
             module={FlowWeb.Training.TrainingSessionLive.SubjectComponent}
             id={subject[:technique_id].value}
-            subject={subject}
+            current_user={@current_user}
+            index={subject.index}
+            field_name={subject.name}
             technique_id={subject[:technique_id].value}
           />
         </.inputs_for>
