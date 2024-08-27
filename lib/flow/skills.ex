@@ -1,10 +1,12 @@
 defmodule Flow.Skills do
   import Ecto.Query
 
-  alias Ecto.Changeset
   alias Flow.Accounts.User
+  alias Ecto.Changeset
   alias Flow.Repo
+  alias Flow.Skills.Detail
   alias Flow.Skills.Position
+  alias Flow.Skills.Step
   alias Flow.Skills.Technique
 
   def list_user_techniques(%User{} = user) do
@@ -33,6 +35,21 @@ defmodule Flow.Skills do
 
   def change_technique(%Technique{} = technique, attrs \\ %{}) do
     Technique.changeset(technique, attrs)
+  end
+
+  def get_technique_steps(technique_id) do
+    query = from s in Step, where: s.technique_id == ^technique_id
+    Repo.all(query)
+  end
+
+  def get_technique_details(technique_id) do
+    query =
+      from d in Detail,
+        join: s in Step,
+        on: d.step_id == s.id,
+        where: s.technique_id == ^technique_id
+
+    Repo.all(query)
   end
 
   def list_user_positions(%User{} = user) do

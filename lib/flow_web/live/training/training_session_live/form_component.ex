@@ -3,6 +3,10 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
 
   alias Flow.Skills
   alias Flow.Training
+  alias Flow.Training.DetailRating
+  alias Flow.Training.StepRating
+  alias Flow.Training.Subject
+  alias Flow.Trianing.TrainingSession
 
   def render(assigns) do
     ~H"""
@@ -24,24 +28,21 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
         <.input field={@form[:reflection]} type="textarea" label="Reflection" phx-debounce />
 
         <.inputs_for :let={subject} field={@form[:subjects]}>
-          <h3>Studied Technique</h3>
-          <.input field={subject[:technique_id]} type="select" options={@technique_options} />
-
-          <.live_component
-            :if={is_present(subject[:technique_id].value)}
-            module={FlowWeb.Training.TrainingSessionLive.SubjectComponent}
-            id={subject[:technique_id].value}
-            current_user={@current_user}
-            index={subject.index}
-            field_name={subject.name}
-            technique_id={subject[:technique_id].value}
-          />
+          <h3>Technique: <%= subject.data.technique.name %></h3>
         </.inputs_for>
 
-        <label>
-          <input type="checkbox" name="training_session[subjects_order][]" class="hidden" />
-          <.icon name="hero-plus-circle" /> Add technique
-        </label>
+        <select name="technique_id">
+          <option value="">Select technique</option>
+          <%= Phoenix.HTML.Form.options_for_select(@technique_options, @technique_id) %>
+        </select>
+
+        <.button
+          type="button"
+          phx-click={JS.push("add_subject", value: %{technique_id: @technique_id})}
+          phx-target={@myself}
+        >
+          Add technique
+        </.button>
 
         <:actions>
           <.button type="submit">Save</.button>
@@ -54,16 +55,25 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
   def update(%{training_session: training_session} = assigns, socket) do
     training_session_changeset = Training.change_training_session(training_session)
     techniques = Skills.list_user_techniques(assigns.current_user)
+    # TODO: These need to be filtered based on techniques already present in the training session
     technique_options = Enum.map(techniques, fn technique -> {technique.name, technique.id} end)
-    technique_options = [{"Select technique", nil} | technique_options]
 
     socket =
       socket
       |> assign(assigns)
       |> assign(:technique_options, technique_options)
+      |> assign(:technique_id, "")
       |> assign_form(training_session_changeset)
 
     {:ok, socket}
+  end
+
+  def handle_event(
+        "validate",
+        %{"_target" => ["technique_id"], "technique_id" => technique_id},
+        socket
+      ) do
+    {:noreply, assign(socket, :technique_id, technique_id)}
   end
 
   def handle_event("validate", %{"training_session" => training_session_params}, socket) do
@@ -73,6 +83,36 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
       |> Map.put(:action, :validate)
 
     {:noreply, assign_form(socket, changeset)}
+  end
+
+  def handle_event("add_subject", %{"technique_id" => technique_id}, socket) do
+    # TODO: We should differentiate between the technique getters since this one doesn't need the associations
+    technique = Skills.get_user_technique(socket.assigns.current_user, technique_id)
+    # TODO: Should we pass in user ID in some way?
+    steps = Skills.get_technique_steps(technique_id)
+    details = Skills.get_technique_details(technique_id)
+
+    step_ratings = Enum.map(steps, fn step -> %StepRating{step: step} end)
+    detail_ratings = Enum.map(details, fn detail -> %DetailRating{detail: detail} end)
+
+    subject = %Subject{
+      detail_ratings: detail_ratings,
+      step_ratings: step_ratings,
+      technique: technique
+    }
+
+    training_session =
+      socket.assigns.training_session
+      |> Map.update!(:subjects, &(&1 ++ [subject]))
+
+    training_session_changeset = Training.change_training_session(training_session)
+
+    socket =
+      socket
+      |> assign(:training_session, training_session)
+      |> assign_form(training_session_changeset)
+
+    {:noreply, socket}
   end
 
   def handle_event("save", %{"training_session" => training_session_params}, socket) do
@@ -102,12 +142,4 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
-
-  defp is_present(value) when is_binary(value) do
-    value |> String.trim() |> String.length() > 0
-  end
-
-  defp is_present(value) do
-    !is_nil(value)
-  end
 end
