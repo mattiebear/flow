@@ -29,6 +29,12 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
 
         <.inputs_for :let={subject} field={@form[:subjects]}>
           <h3>Technique: <%= subject.data.technique.name %></h3>
+
+          <h4>Steps</h4>
+          <.inputs_for :let={step_rating} field={subject[:step_ratings]}>
+            <p>Step <%= step_rating.index + 1 %></p>
+            <.input field={step_rating[:rating]} type="select" options={[-1, 0, 1]} />
+          </.inputs_for>
         </.inputs_for>
 
         <select name="technique_id">
