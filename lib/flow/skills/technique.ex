@@ -9,6 +9,7 @@ defmodule Flow.Skills.Technique do
 
     has_many :situations, Flow.Skills.Situation, preload_order: [asc: :order], on_replace: :delete
     has_many :steps, Flow.Skills.Step, preload_order: [asc: :order], on_replace: :delete
+    has_many :subjects, Flow.Training.Subject
     has_many :positions, through: [:situations, :position]
 
     timestamps(type: :utc_datetime)

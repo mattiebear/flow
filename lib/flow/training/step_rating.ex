@@ -14,7 +14,7 @@ defmodule Flow.Training.StepRating do
   @doc false
   def changeset(step_rating, attrs) do
     step_rating
-    |> cast(attrs, [:rating])
+    |> cast(attrs, [:rating, :step_id])
     |> validate_required([:rating])
   end
 end

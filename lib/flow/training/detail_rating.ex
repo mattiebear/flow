@@ -14,7 +14,7 @@ defmodule Flow.Training.DetailRating do
   @doc false
   def changeset(detail_rating, attrs) do
     detail_rating
-    |> cast(attrs, [:rating])
+    |> cast(attrs, [:detail_id, :rating])
     |> validate_required([:rating])
   end
 end

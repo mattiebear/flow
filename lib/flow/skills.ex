@@ -21,13 +21,16 @@ defmodule Flow.Skills do
     |> Repo.insert()
   end
 
-  def get_user_technique(%User{} = user, id) do
-    Repo.get_by!(Technique, user_id: user.id, id: id)
+  def get_technique(id) do
+    Repo.get(Technique, id)
+  end
+
+  def get_technique_detail(id) do
+    Repo.get(Technique, id)
     |> Repo.preload(steps: :details, situations: :position)
   end
 
   def update_technique(%Technique{} = technique, attrs) do
-    # TODO: How will we authorize the technique?
     technique
     |> Technique.changeset(attrs)
     |> Repo.update()

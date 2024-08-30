@@ -30,7 +30,7 @@ defmodule FlowWeb.Skills.TechniqueLive.Index do
   end
 
   defp apply_action(socket, :show, %{"id" => id}) do
-    technique = Skills.get_user_technique(socket.assigns.current_user, id)
+    technique = Skills.get_technique_detail(id)
 
     socket
     |> assign(:page_title, technique.name)
@@ -45,7 +45,7 @@ defmodule FlowWeb.Skills.TechniqueLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    technique = Skills.get_user_technique(socket.assigns.current_user, id)
+    technique = Skills.get_technique_detail(id)
 
     socket
     |> assign(:page_title, "Edit Technique")

@@ -10,7 +10,7 @@ defmodule Flow.Training do
     |> TrainingSession.changeset(attrs)
     |> Changeset.put_assoc(:user, user)
     |> Repo.insert()
-  end 
+  end
 
   def change_training_session(%TrainingSession{} = training_session, attrs \\ %{}) do
     TrainingSession.changeset(training_session, attrs)
