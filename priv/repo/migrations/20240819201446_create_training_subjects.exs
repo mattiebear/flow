@@ -4,6 +4,7 @@ defmodule Flow.Repo.Migrations.CreateTrainingSubjects do
   def change do
     create table(:training_subjects) do
       add :performance, :integer
+      add :order, :integer
       add :technique_id, references(:skills_techniques, on_delete: :delete_all)
       add :training_session_id, references(:training_training_sessions, on_delete: :delete_all)
 

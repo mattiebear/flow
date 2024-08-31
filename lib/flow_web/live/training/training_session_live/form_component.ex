@@ -28,20 +28,23 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
         <.input field={@form[:reflection]} type="textarea" label="Reflection" phx-debounce />
 
         <.inputs_for :let={subject} field={@form[:subjects]}>
-          <% # TODO: Display associated technique name %>
+          <input type="hidden" name="training_session[subjects_order][]" value={subject.index} />
+          <.input
+            field={subject[:technique_id]}
+            label="Technique"
+            options={@technique_options}
+            prompt="Select technique"
+            type="select"
+          />
         </.inputs_for>
+
+        <label>
+          <input type="checkbox" name="training_session[subjects_order][]" class="hidden" />
+          <.icon name="hero-plus-circle" /> Add subject
+        </label>
+
+        <.button type="submit">Save</.button>
       </.simple_form>
-
-      <form phx-submit="add_subject" phx-target={@myself}>
-        <select name="technique_id">
-          <option value="">Add technique</option>
-          <%= Phoenix.HTML.Form.options_for_select(@technique_options, nil) %>
-        </select>
-
-        <.button type="submit">Add</.button>
-      </form>
-
-      <.button phx-click={JS.dispatch("submit", to: "#training-session-form")}>Save</.button>
     </div>
     """
   end
@@ -60,20 +63,6 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
       |> assign_form(training_session_changeset)
 
     {:ok, socket}
-  end
-
-  def handle_event("add_subject", %{"technique_id" => technique_id}, socket) do
-    technique = Skills.get_technique(technique_id)
-    subject = Ecto.build_assoc(technique, :subjects)
-
-    socket =
-      update(socket, :form, fn %{source: changeset} ->
-        existing = Changeset.get_assoc(changeset, :subjects)
-        changeset = Changeset.put_assoc(changeset, :subjects, existing ++ [subject])
-        to_form(changeset)
-      end)
-
-    {:noreply, socket}
   end
 
   def handle_event("validate", %{"training_session" => training_session_params}, socket) do
