@@ -21,7 +21,7 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
         id="training-session-form"
         autocomplete="off"
         phx-target={@myself}
-        phx-change="validate"
+        phx-change="change"
         phx-submit="save"
       >
         <.input field={@form[:date]} type="date" label="Date" phx-debounce />
@@ -60,16 +60,41 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
       socket
       |> assign(assigns)
       |> assign(:technique_options, technique_options)
+      |> assign(:all_techniques, MapSet.new())
       |> assign_form(training_session_changeset)
 
     {:ok, socket}
   end
 
-  def handle_event("validate", %{"training_session" => training_session_params}, socket) do
+  # Whenever the user changes a technique for a subject
+  def handle_event(
+        "change",
+        %{"_target" => ["training_session", "subjects", index, "technique_id"]} = params,
+        socket
+      ) do
+    technique_id = get_in(params, params["_target"])
+    technique = Skills.get_technique(technique_id)
+    steps = Skills.get_technique_steps(technique_id)
+    details = Skills.get_technique_details(technique_id)
+
+    step_details = Enum.map(steps, fn step -> %{"step_id" => step.id} end)
+
+    # Generate the necessary data for step and steps and details. Then add to the params map
+    # Apply all of the params to the changeset per normal
+    socket =
+      socket
+      |> update(:all_techniques, fn all_techniques -> MapSet.put(all_techniques, technique) end)
+
+    {:noreply, socket}
+  end
+
+  # This is the generic change event that updates the entire form
+  def handle_event("change", %{"training_session" => training_session_params}, socket) do
     changeset =
       socket.assigns.training_session
       |> Training.change_training_session(training_session_params)
-      |> Map.put(:action, :validate)
+
+    # |> Map.put(:action, :validate)
 
     {:noreply, assign_form(socket, changeset)}
   end
