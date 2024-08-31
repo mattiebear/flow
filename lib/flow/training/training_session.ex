@@ -16,7 +16,7 @@ defmodule Flow.Training.TrainingSession do
   @doc false
   def changeset(training_session, attrs) do
     training_session
-    |> cast(attrs, [:date, :reflection])
+    |> cast(attrs, [:date])
     |> cast_assoc(:subjects,
       with: &Flow.Training.Subject.changeset/3,
       sort_param: :subjects_order,

@@ -69,21 +69,42 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
   # Whenever the user changes a technique for a subject
   def handle_event(
         "change",
-        %{"_target" => ["training_session", "subjects", index, "technique_id"]} = params,
+        %{
+          "_target" => ["training_session", "subjects", index, "technique_id"],
+          "training_session" => training_session_params
+        } = params,
         socket
       ) do
+    {index, _} = Integer.parse(index)
     technique_id = get_in(params, params["_target"])
-    technique = Skills.get_technique(technique_id)
-    steps = Skills.get_technique_steps(technique_id)
-    details = Skills.get_technique_details(technique_id)
+    technique = Skills.get_technique_detail(technique_id)
 
-    step_details = Enum.map(steps, fn step -> %{"step_id" => step.id} end)
+    detail_ratings =
+      technique.steps
+      |> Enum.reduce([], fn step, acc -> acc ++ step.details end)
+      |> Enum.map(fn step -> Ecto.build_assoc(step, :detail_ratings) end)
 
-    # Generate the necessary data for step and steps and details. Then add to the params map
-    # Apply all of the params to the changeset per normal
+    step_ratings = Enum.map(technique.steps, fn step -> Ecto.build_assoc(step, :step_ratings) end)
+
+    changeset =
+      socket.assigns.training_session
+      |> Training.change_training_session(training_session_params)
+
+    subjects =
+      changeset
+      |> Changeset.get_assoc(:subjects)
+      |> List.update_at(index, fn subject ->
+        subject
+        |> Changeset.put_assoc(:detail_ratings, detail_ratings)
+        |> Changeset.put_assoc(:step_ratings, step_ratings)
+      end)
+
+    changeset = Changeset.put_assoc(changeset, :subjects, subjects)
+
     socket =
       socket
       |> update(:all_techniques, fn all_techniques -> MapSet.put(all_techniques, technique) end)
+      |> assign_form(changeset)
 
     {:noreply, socket}
   end

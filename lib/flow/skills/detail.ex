@@ -8,6 +8,8 @@ defmodule Flow.Skills.Detail do
 
     belongs_to :step, Flow.Skills.Step
 
+    has_many :detail_ratings, Flow.Training.DetailRating
+
     timestamps(type: :utc_datetime)
   end
 

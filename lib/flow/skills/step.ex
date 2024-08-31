@@ -9,6 +9,7 @@ defmodule Flow.Skills.Step do
     belongs_to :technique, Flow.Skills.Technique
 
     has_many :details, Flow.Skills.Detail, preload_order: [asc: :order], on_replace: :delete
+    has_many :step_ratings, Flow.Training.StepRating
 
     timestamps(type: :utc_datetime)
   end
