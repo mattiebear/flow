@@ -28,7 +28,9 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
         <.input field={@form[:reflection]} type="textarea" label="Reflection" phx-debounce />
 
         <.inputs_for :let={subject} field={@form[:subjects]}>
+          <% technique = pluck_technique(@all_techniques, subject[:technique_id].value) %>
           <input type="hidden" name="training_session[subjects_order][]" value={subject.index} />
+
           <.input
             field={subject[:technique_id]}
             label="Technique"
@@ -36,6 +38,51 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
             prompt="Select technique"
             type="select"
           />
+
+          <.inputs_for :let={step_rating} field={subject[:step_ratings]}>
+            <input
+              type="hidden"
+              name={step_rating[:step_id].name}
+              value={step_rating[:step_id].value}
+            />
+            <input type="hidden" name={step_rating[:rating].name} value={step_rating[:rating].value} />
+          </.inputs_for>
+
+          <%= if technique do %>
+            <div class="pl-2">
+              <div :for={step <- technique.steps} class="flex flex-row gap-x-2">
+                <% step_ratings = Changeset.get_assoc(subject.source, :step_ratings) %>
+
+                <div class="grow">
+                  <h3>Step <%= step.order + 1 %></h3>
+                  <p><%= step.description %></p>
+                </div>
+
+                <div class="flex gap-x-2">
+                  <button
+                    type="button"
+                    phx-target={@myself}
+                    phx-click="toggle_step_rating"
+                    phx-value-subject_index={subject.index}
+                    phx-value-step_id={step.id}
+                    phx-value-rating={-1}
+                  >
+                    <.icon name="hero-hand-thumb-down" class="h-6 w-6" />
+                  </button>
+                  <button
+                    type="button"
+                    phx-target={@myself}
+                    phx-click="toggle_step_rating"
+                    phx-value-subject_index={subject.index}
+                    phx-value-step_id={step.id}
+                    phx-value-rating={1}
+                  >
+                    <.icon name="hero-hand-thumb-up" class="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </.inputs_for>
 
         <label>
@@ -79,32 +126,65 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
     technique_id = get_in(params, params["_target"])
     technique = Skills.get_technique_detail(technique_id)
 
-    detail_ratings =
-      technique.steps
-      |> Enum.reduce([], fn step, acc -> acc ++ step.details end)
-      |> Enum.map(fn step -> Ecto.build_assoc(step, :detail_ratings) end)
-
-    step_ratings = Enum.map(technique.steps, fn step -> Ecto.build_assoc(step, :step_ratings) end)
-
     changeset =
       socket.assigns.training_session
       |> Training.change_training_session(training_session_params)
-
-    subjects =
-      changeset
-      |> Changeset.get_assoc(:subjects)
-      |> List.update_at(index, fn subject ->
-        subject
-        |> Changeset.put_assoc(:detail_ratings, detail_ratings)
-        |> Changeset.put_assoc(:step_ratings, step_ratings)
-      end)
-
-    changeset = Changeset.put_assoc(changeset, :subjects, subjects)
 
     socket =
       socket
       |> update(:all_techniques, fn all_techniques -> MapSet.put(all_techniques, technique) end)
       |> assign_form(changeset)
+
+    {:noreply, socket}
+  end
+
+  def handle_event(
+        "toggle_step_rating",
+        %{"subject_index" => subject_index, "step_id" => step_id, "rating" => rating},
+        socket
+      ) do
+    {step_id, _} = Integer.parse(step_id)
+    {rating, _} = Integer.parse(rating)
+    {index, _} = Integer.parse(subject_index)
+
+    socket =
+      update(socket, :form, fn %{source: changeset} ->
+        existing = Changeset.get_assoc(changeset, :subjects)
+
+        subjects =
+          List.update_at(existing, index, fn subject ->
+            step_ratings = Changeset.get_assoc(subject, :step_ratings)
+            selected = Enum.find(step_ratings, &(Changeset.fetch_field!(&1, :step_id) == step_id))
+
+            step_ratings =
+              case selected do
+                nil ->
+                  change = Changeset.change(%StepRating{}, step_id: step_id, rating: rating)
+                  [change | step_ratings]
+
+                step_rating ->
+                  if Changeset.fetch_field!(step_rating, :rating) == rating do
+                    Enum.reject(step_ratings, fn step_rating ->
+                      Changeset.fetch_field!(step_rating, :step_id) == step_id
+                    end)
+                  else
+                    Enum.map(step_ratings, fn step_rating ->
+                      if Changeset.fetch_field!(step_rating, :step_id) != step_id do
+                        step_rating
+                      else
+                        Changeset.change(step_rating, rating: rating)
+                      end
+                    end)
+                  end
+              end
+
+            Changeset.put_assoc(subject, :step_ratings, step_ratings)
+          end)
+
+        changeset
+        |> Changeset.put_assoc(:subjects, subjects)
+        |> to_form()
+      end)
 
     {:noreply, socket}
   end
@@ -151,5 +231,9 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
 
   defp rating_options do
     [{"Well", 1}, {"Not practiced", 0}, {"Needs work", -1}]
+  end
+
+  defp pluck_technique(techniques, id) do
+    Enum.find(techniques, fn technique -> technique.id == id end)
   end
 end

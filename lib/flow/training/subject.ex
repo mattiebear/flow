@@ -16,6 +16,15 @@ defmodule Flow.Training.Subject do
   end
 
   @doc false
+  def changeset(subject, attrs) do
+    subject
+    |> cast(attrs, [:performance, :technique_id])
+    |> validate_required([:performance])
+    |> cast_assoc(:detail_ratings, with: &Flow.Training.DetailRating.changeset/2)
+    |> cast_assoc(:step_ratings, with: &Flow.Training.StepRating.changeset/2)
+  end
+
+  @doc false
   def changeset(subject, attrs, order) do
     subject
     |> cast(attrs, [:performance, :technique_id])
