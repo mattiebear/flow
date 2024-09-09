@@ -49,6 +49,14 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
           </.inputs_for>
 
           <%= if technique do %>
+            <.input
+              field={subject[:performance]}
+              label="Technique performance"
+              options={performance_options()}
+              prompt="Rate your performance"
+              type="select"
+            />
+
             <div class="pl-2">
               <div :for={step <- technique.steps} class="flex flex-row gap-x-2">
                 <% step_ratings = Changeset.get_assoc(subject.source, :step_ratings) %>
@@ -240,6 +248,10 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
 
   defp rating_options do
     [{"Well", 1}, {"Not practiced", 0}, {"Needs work", -1}]
+  end
+
+  defp performance_options do
+    [{"Well", 1}, {"Okay", 0}, {"Needs work", -1}]
   end
 
   defp pluck_technique(techniques, id) do
