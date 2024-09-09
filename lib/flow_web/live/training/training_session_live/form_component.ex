@@ -52,6 +52,9 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
             <div class="pl-2">
               <div :for={step <- technique.steps} class="flex flex-row gap-x-2">
                 <% step_ratings = Changeset.get_assoc(subject.source, :step_ratings) %>
+                <% selected =
+                  Enum.find(step_ratings, &(Changeset.fetch_field!(&1, :step_id) == step.id)) %>
+                <% rating = if selected, do: Changeset.fetch_field!(selected, :rating), else: nil %>
 
                 <div class="grow">
                   <h3>Step <%= step.order + 1 %></h3>
@@ -67,7 +70,10 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
                     phx-value-step_id={step.id}
                     phx-value-rating={-1}
                   >
-                    <.icon name="hero-hand-thumb-down" class="h-6 w-6" />
+                    <.icon
+                      name="hero-hand-thumb-down"
+                      class={"h-6 w-6 #{if rating == -1, do: "text-blue-500", else: ""}"}
+                    />
                   </button>
                   <button
                     type="button"
@@ -77,7 +83,10 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
                     phx-value-step_id={step.id}
                     phx-value-rating={1}
                   >
-                    <.icon name="hero-hand-thumb-up" class="h-6 w-6" />
+                    <.icon
+                      name="hero-hand-thumb-up"
+                      class={"h-6 w-6 #{if rating == 1, do: "text-blue-500", else: ""}"}
+                    />
                   </button>
                 </div>
               </div>
