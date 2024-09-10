@@ -11,6 +11,14 @@ defmodule FlowWeb.Training.TrainingSessionLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
+  def handle_info(
+        {FlowWeb.Training.TrainingSessionLive.FormComponent, {:saved, _training_session}},
+        socket
+      ) do
+    # TODO: Manage front end training session views
+    {:noreply, socket}
+  end
+
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "My Training")

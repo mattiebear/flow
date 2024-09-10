@@ -6,7 +6,6 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
   alias Flow.Training
   alias Flow.Training.DetailRating
   alias Flow.Training.StepRating
-  alias Flow.Training.Subject
 
   def render(assigns) do
     ~H"""
@@ -66,7 +65,7 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
               field={subject[:performance]}
               label="Technique performance"
               options={performance_options()}
-              prompt="Rate your performance"
+              prompt="Rate your overall performance"
               type="select"
             />
 
@@ -189,16 +188,14 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
     {:ok, socket}
   end
 
-  # Whenever the user changes a technique for a subject
   def handle_event(
         "change",
         %{
-          "_target" => ["training_session", "subjects", index, "technique_id"],
+          "_target" => ["training_session", "subjects", _index, "technique_id"],
           "training_session" => training_session_params
         } = params,
         socket
       ) do
-    {index, _} = Integer.parse(index)
     technique_id = get_in(params, params["_target"])
 
     changeset =
@@ -223,6 +220,7 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
     end
   end
 
+  # TODO: Can this and the detail rating be combined?
   def handle_event(
         "toggle_step_rating",
         %{"subject_index" => subject_index, "step_id" => step_id, "rating" => rating},
@@ -327,20 +325,16 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
     {:noreply, socket}
   end
 
-  # This is the generic change event that updates the entire form
   def handle_event("change", %{"training_session" => training_session_params}, socket) do
     changeset =
       socket.assigns.training_session
       |> Training.change_training_session(training_session_params)
 
-    # |> Map.put(:action, :validate)
-
     {:noreply, assign_form(socket, changeset)}
   end
 
   def handle_event("save", %{"training_session" => training_session_params}, socket) do
-    # save_training_session(socket, socket.assigns.action, training_session_params)
-    {:noreply, socket}
+    save_training_session(socket, socket.assigns.action, training_session_params)
   end
 
   defp save_training_session(socket, :new, training_session_params) do
@@ -366,10 +360,6 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
-
-  defp rating_options do
-    [{"Well", 1}, {"Not practiced", 0}, {"Needs work", -1}]
-  end
 
   defp performance_options do
     [{"Well", 1}, {"Okay", 0}, {"Needs work", -1}]
