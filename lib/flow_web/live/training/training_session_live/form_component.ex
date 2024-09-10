@@ -48,6 +48,19 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
             <input type="hidden" name={step_rating[:rating].name} value={step_rating[:rating].value} />
           </.inputs_for>
 
+          <.inputs_for :let={detail_rating} field={subject[:detail_ratings]}>
+            <input
+              type="hidden"
+              name={detail_rating[:detail_id].name}
+              value={detail_rating[:detail_id].value}
+            />
+            <input
+              type="hidden"
+              name={detail_rating[:rating].name}
+              value={detail_rating[:rating].value}
+            />
+          </.inputs_for>
+
           <%= if technique do %>
             <.input
               field={subject[:performance]}
@@ -58,44 +71,90 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
             />
 
             <div class="pl-2">
-              <div :for={step <- technique.steps} class="flex flex-row gap-x-2">
-                <% step_ratings = Changeset.get_assoc(subject.source, :step_ratings) %>
+              <% step_ratings = Changeset.get_assoc(subject.source, :step_ratings) %>
+              <% detail_ratings = Changeset.get_assoc(subject.source, :detail_ratings) %>
+
+              <div :for={step <- technique.steps}>
                 <% selected =
                   Enum.find(step_ratings, &(Changeset.fetch_field!(&1, :step_id) == step.id)) %>
                 <% rating = if selected, do: Changeset.fetch_field!(selected, :rating), else: nil %>
 
-                <div class="grow">
-                  <h3>Step <%= step.order + 1 %></h3>
-                  <p><%= step.description %></p>
+                <div class="flex flex-row gap-x-2">
+                  <div class="grow">
+                    <h3>Step <%= step.order + 1 %></h3>
+                    <p><%= step.description %></p>
+                  </div>
+
+                  <div class="flex gap-x-2">
+                    <button
+                      type="button"
+                      phx-target={@myself}
+                      phx-click="toggle_step_rating"
+                      phx-value-subject_index={subject.index}
+                      phx-value-step_id={step.id}
+                      phx-value-rating={-1}
+                    >
+                      <.icon
+                        name="hero-hand-thumb-down"
+                        class={"h-6 w-6 #{if rating == -1, do: "text-blue-500", else: ""}"}
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      phx-target={@myself}
+                      phx-click="toggle_step_rating"
+                      phx-value-subject_index={subject.index}
+                      phx-value-step_id={step.id}
+                      phx-value-rating={1}
+                    >
+                      <.icon
+                        name="hero-hand-thumb-up"
+                        class={"h-6 w-6 #{if rating == 1, do: "text-blue-500", else: ""}"}
+                      />
+                    </button>
+                  </div>
                 </div>
 
-                <div class="flex gap-x-2">
-                  <button
-                    type="button"
-                    phx-target={@myself}
-                    phx-click="toggle_step_rating"
-                    phx-value-subject_index={subject.index}
-                    phx-value-step_id={step.id}
-                    phx-value-rating={-1}
-                  >
-                    <.icon
-                      name="hero-hand-thumb-down"
-                      class={"h-6 w-6 #{if rating == -1, do: "text-blue-500", else: ""}"}
-                    />
-                  </button>
-                  <button
-                    type="button"
-                    phx-target={@myself}
-                    phx-click="toggle_step_rating"
-                    phx-value-subject_index={subject.index}
-                    phx-value-step_id={step.id}
-                    phx-value-rating={1}
-                  >
-                    <.icon
-                      name="hero-hand-thumb-up"
-                      class={"h-6 w-6 #{if rating == 1, do: "text-blue-500", else: ""}"}
-                    />
-                  </button>
+                <div :for={detail <- step.details} class="pl-4">
+                  <% selected =
+                    Enum.find(detail_ratings, &(Changeset.fetch_field!(&1, :detail_id) == detail.id)) %>
+                  <% rating = if selected, do: Changeset.fetch_field!(selected, :rating), else: nil %>
+
+                  <div class="flex flex-row gap-x-2">
+                    <div class="grow">
+                      <h3>Detail <%= detail.order + 1 %></h3>
+                      <p><%= detail.description %></p>
+                    </div>
+
+                    <div class="flex gap-x-2">
+                      <button
+                        type="button"
+                        phx-target={@myself}
+                        phx-click="toggle_detail_rating"
+                        phx-value-subject_index={subject.index}
+                        phx-value-detail_id={detail.id}
+                        phx-value-rating={-1}
+                      >
+                        <.icon
+                          name="hero-hand-thumb-down"
+                          class={"h-6 w-6 #{if rating == -1, do: "text-blue-500", else: ""}"}
+                        />
+                      </button>
+                      <button
+                        type="button"
+                        phx-target={@myself}
+                        phx-click="toggle_detail_rating"
+                        phx-value-subject_index={subject.index}
+                        phx-value-detail_id={detail.id}
+                        phx-value-rating={1}
+                      >
+                        <.icon
+                          name="hero-hand-thumb-up"
+                          class={"h-6 w-6 #{if rating == 1, do: "text-blue-500", else: ""}"}
+                        />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -141,18 +200,27 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
       ) do
     {index, _} = Integer.parse(index)
     technique_id = get_in(params, params["_target"])
-    technique = Skills.get_technique_detail(technique_id)
 
     changeset =
       socket.assigns.training_session
       |> Training.change_training_session(training_session_params)
 
-    socket =
-      socket
-      |> update(:all_techniques, fn all_techniques -> MapSet.put(all_techniques, technique) end)
-      |> assign_form(changeset)
+    case technique_id do
+      "" ->
+        {:noreply, assign_form(socket, changeset)}
 
-    {:noreply, socket}
+      technique_id ->
+        technique = Skills.get_technique_detail(technique_id)
+
+        socket =
+          socket
+          |> update(:all_techniques, fn all_techniques ->
+            MapSet.put(all_techniques, technique)
+          end)
+          |> assign_form(changeset)
+
+        {:noreply, socket}
+    end
   end
 
   def handle_event(
@@ -196,6 +264,59 @@ defmodule FlowWeb.Training.TrainingSessionLive.FormComponent do
               end
 
             Changeset.put_assoc(subject, :step_ratings, step_ratings)
+          end)
+
+        changeset
+        |> Changeset.put_assoc(:subjects, subjects)
+        |> to_form()
+      end)
+
+    {:noreply, socket}
+  end
+
+  def handle_event(
+        "toggle_detail_rating",
+        %{"subject_index" => subject_index, "detail_id" => detail_id, "rating" => rating},
+        socket
+      ) do
+    {detail_id, _} = Integer.parse(detail_id)
+    {rating, _} = Integer.parse(rating)
+    {index, _} = Integer.parse(subject_index)
+
+    socket =
+      update(socket, :form, fn %{source: changeset} ->
+        existing = Changeset.get_assoc(changeset, :subjects)
+
+        subjects =
+          List.update_at(existing, index, fn subject ->
+            detail_ratings = Changeset.get_assoc(subject, :detail_ratings)
+
+            selected =
+              Enum.find(detail_ratings, &(Changeset.fetch_field!(&1, :detail_id) == detail_id))
+
+            detail_ratings =
+              case selected do
+                nil ->
+                  change = Changeset.change(%DetailRating{}, detail_id: detail_id, rating: rating)
+                  [change | detail_ratings]
+
+                detail_rating ->
+                  if Changeset.fetch_field!(detail_rating, :rating) == rating do
+                    Enum.reject(detail_ratings, fn detail_rating ->
+                      Changeset.fetch_field!(detail_rating, :detail_id) == detail_id
+                    end)
+                  else
+                    Enum.map(detail_ratings, fn detail_rating ->
+                      if Changeset.fetch_field!(detail_rating, :detail_id) != detail_id do
+                        detail_rating
+                      else
+                        Changeset.change(detail_rating, rating: rating)
+                      end
+                    end)
+                  end
+              end
+
+            Changeset.put_assoc(subject, :detail_ratings, detail_ratings)
           end)
 
         changeset
