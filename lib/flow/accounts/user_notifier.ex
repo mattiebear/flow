@@ -8,7 +8,8 @@ defmodule Flow.Accounts.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"Flow", "contact@example.com"})
+      # TODO: Source domain from ENV
+      |> from({"Flow", "contact@demomailtrap.com"})
       |> subject(subject)
       |> text_body(body)
 
