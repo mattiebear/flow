@@ -30,5 +30,6 @@ defmodule Flow.Skills.Technique do
       drop_param: :steps_delete
     )
     |> validate_required([:name])
+    |> validate_length(:name, max: 255)
   end
 end

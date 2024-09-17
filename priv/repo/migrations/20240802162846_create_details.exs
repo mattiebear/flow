@@ -3,7 +3,7 @@ defmodule Flow.Repo.Migrations.CreateDetails do
 
   def change do
     create table(:skills_details) do
-      add :description, :string, null: false
+      add :description, :text, null: false
       add :order, :integer, null: false
       add :step_id, references(:skills_steps, on_delete: :delete_all)
 

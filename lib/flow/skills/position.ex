@@ -19,6 +19,7 @@ defmodule Flow.Skills.Position do
     position
     |> cast(attrs, [:description, :name])
     |> validate_required([:name])
+    |> validate_length(:name, max: 255)
     |> unsafe_validate_unique([:name, :email], Flow.Repo)
     |> unique_constraint([:name, :user_id])
   end

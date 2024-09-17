@@ -4,7 +4,7 @@ defmodule Flow.Repo.Migrations.CreateTrainingTrainingSessions do
   def change do
     create table(:training_training_sessions) do
       add :date, :date
-      add :reflection, :string
+      add :reflection, :text
       add :user_id, references(:accounts_users, on_delete: :delete_all)
 
       timestamps(type: :utc_datetime)
