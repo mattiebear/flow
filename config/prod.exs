@@ -18,3 +18,5 @@ config :logger, level: :info
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
+# TODO: Enable SSL
+# config :flow, FlowWeb.Endpoint, force_ssl: [hsts: true]
