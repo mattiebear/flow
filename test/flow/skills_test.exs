@@ -26,22 +26,20 @@ defmodule Flow.SkillsTest do
 
     test "get_technique/1 finds the requested technique" do
       technique = technique_fixture()
-      record = Skills.get_technique(technique.id)
 
-      assert technique == record
+      assert Skills.get_technique(technique.id) == technique
     end
 
     test "get_technique_detail/1 finds the requested technique" do
       technique = technique_fixture()
-      record = Skills.get_technique_detail(technique.id)
 
-      assert technique.id == record.id
+      assert Skills.get_technique_detail(technique.id).id == technique.id
     end
 
     test "update_technique/2 updates the specified technique" do
       technique = technique_fixture(%{name: "Half Guard"})
       {:ok, record} = Skills.update_technique(technique, %{name: "Full Guard"})
-      
+
       assert record.name == "Full Guard"
     end
 
@@ -56,9 +54,7 @@ defmodule Flow.SkillsTest do
       step_1 = step_fixture(%{technique: technique})
       step_2 = step_fixture(%{technique: technique})
 
-      steps = Skills.get_technique_steps(technique.id)
-
-      assert steps == [step_1, step_2]
+      assert Skills.get_technique_steps(technique.id) == [step_1, step_2]
     end
 
     test "get_technique_details/1 fetches the technique details" do
@@ -69,9 +65,7 @@ defmodule Flow.SkillsTest do
       detail_2 = detail_fixture(%{step: step_1})
       detail_3 = detail_fixture(%{step: step_2})
 
-      details = Skills.get_technique_details(technique.id)
-
-      assert details == [detail_1, detail_2, detail_3]
+      assert Skills.get_technique_details(technique.id) == [detail_1, detail_2, detail_3]
     end
   end
 
@@ -82,6 +76,36 @@ defmodule Flow.SkillsTest do
       position_fixture()
 
       assert Skills.list_user_positions(user) == [position]
+    end
+
+    test "get_position/1 fetches the specified position" do
+      position = position_fixture()
+
+      assert Skills.get_position(position.id) == position
+    end
+
+    test "create_user_position/2 creates a position for the user" do
+      user = user_fixture()
+      {:ok, position} = Skills.create_user_position(user, %{name: "Open Guard"})
+
+      user_id = user.id
+
+      assert %{name: "Open Guard", user_id: ^user_id} = position
+    end
+
+    test "update_position/2 updates the position" do
+      position = position_fixture()
+
+      {:ok, record} = Skills.update_position(position, %{name: "Full Guard"})
+
+      assert record.name == "Full Guard"
+    end
+
+    test "change_position/2 creates a changeset" do
+      position = position_fixture()
+      changeset = Skills.change_position(position, %{name: "New Position"})
+
+      assert %Ecto.Changeset{} = changeset
     end
   end
 end

@@ -60,8 +60,8 @@ defmodule Flow.Skills do
     Repo.all(query)
   end
 
-  def get_user_position(%User{} = user, id) do
-    Repo.get_by!(Position, user_id: user.id, id: id)
+  def get_position(id) do
+    Repo.get(Position, id)
   end
 
   def create_user_position(%User{} = user, attrs) do

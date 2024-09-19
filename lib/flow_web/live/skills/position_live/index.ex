@@ -30,7 +30,7 @@ defmodule FlowWeb.Skills.PositionLive.Index do
   end
 
   defp apply_action(socket, :show, %{"id" => id}) do
-    position = Skills.get_user_position(socket.assigns.current_user, id)
+    position = Skills.get_position(id)
 
     socket
     |> assign(:page_title, position.name)
@@ -45,7 +45,7 @@ defmodule FlowWeb.Skills.PositionLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    position = Skills.get_user_position(socket.assigns.current_user, id)
+    position = Skills.get_position(id)
 
     socket
     |> assign(:page_title, "Edit Position")
