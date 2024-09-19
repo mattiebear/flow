@@ -2,7 +2,6 @@ defmodule Flow.TrainingTest do
   use Flow.DataCase
 
   import Flow.AccountsFixtures
-  import Flow.TrainingFixtures
 
   alias Flow.Training
   alias Flow.Training.Subject
