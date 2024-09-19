@@ -48,7 +48,7 @@ defmodule Flow.SkillsFixtures do
 
     step
   end
-  
+
   @detail_attrs %{order: 1, description: "Do it well"}
 
   def detail_fixture(attrs \\ %{}) do
@@ -82,5 +82,4 @@ defmodule Flow.SkillsFixtures do
 
     position
   end
-
 end
