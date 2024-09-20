@@ -9,7 +9,7 @@ defmodule FlowWeb.Skills.PositionLiveTest do
   @valid_attrs %{name: "Half Guard", description: "Be in half guard"}
   @invalid_attrs %{name: ""}
 
-  describe "Positions index" do
+  describe "Index" do
     test "lists all positions", %{conn: conn, user: user} do
       position = position_fixture(%{user: user, name: "Spider Guard"})
 

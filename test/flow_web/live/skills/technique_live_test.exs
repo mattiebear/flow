@@ -9,7 +9,7 @@ defmodule FlowWeb.Skills.TechniqueLiveTest do
   @valid_attrs %{name: "Butterfly Sweep"}
   @invalid_attrs %{name: ""}
 
-  describe "Techniques index" do
+  describe "Index" do
     test "lists all techniques", %{conn: conn, user: user} do
       technique = technique_fixture(%{user: user, name: "Omaplata"})
 
