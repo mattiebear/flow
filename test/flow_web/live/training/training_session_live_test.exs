@@ -22,8 +22,8 @@ defmodule FlowWeb.Skills.TrainingSessionLiveTest do
       assert_patch(view, ~p"/training/new")
 
       assert view
-        |> form("#training-session-form", %{training_session: @valid_attrs})
-        |> render_submit()
+             |> form("#training-session-form", %{training_session: @valid_attrs})
+             |> render_submit()
 
       html = render(view)
 
