@@ -20,6 +20,14 @@ defmodule FlowWeb.Skills.TrainingSessionLiveTest do
              |> render_click() =~ "Log a training session"
 
       assert_patch(view, ~p"/training/new")
+
+      assert view
+        |> form("#training-session-form", %{training_session: @valid_attrs})
+        |> render_submit()
+
+      html = render(view)
+
+      assert html =~ "Logged training session"
     end
   end
 end
