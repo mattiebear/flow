@@ -22,12 +22,42 @@
           <img src="/images/logo.png" alt="Flow BBJ logo" class="h-full w-auto" />
         </a>
       </div>
+
       <div class="flex flex-row items-center gap-x-4">
         <%= if @current_user do %>
-          <span><%= @current_user.email %></span>
+          <div class="relative">
+            <div
+              class="rounded-full overflow-hidden cursor-pointer h-[64px]"
+              phx-click={JS.toggle(to: "#profile-menu")}
+            >
+              <img
+                src={FlowWeb.Util.Avatar.url(@current_user.email)}
+                class="object-contain h-full"
+              />
+            </div>
 
-          <div class="rounded-full overflow-hidden">
-            <img src={FlowWeb.Util.Avatar.url(@current_user.email)} class="object-contain" />
+            <div
+              id="profile-menu"
+              class="hidden absolute top-[calc(100% + 16px)] right-0 bg-neutral-300 dark:bg-neutral-900 w-[200px] p-3 rounded-lg"
+              phx-click-away={JS.hide()}
+            >
+              <span><%= @current_user.email %></span>
+              <hr class="my-2" />
+
+              <ul class="flex flex-col gap-y-2">
+                <li>
+                  <.link href={~p"/users/settings"}>
+                    Settings
+                  </.link>
+                </li>
+
+                <li>
+                  <.link href={~p"/users/log_out"} method="delete">
+                    Log out
+                  </.link>
+                </li>
+              </ul>
+            </div>
           </div>
         <% else %>
           <.link href={~p"/users/log_in"}>
@@ -40,30 +70,7 @@
         <% end %>
       </div>
     </header>
-    <%!-- <ul class=> --%>
-    <%!--   <%= if @current_user do %> --%>
-    <%!--     <li class=> --%>
-    <%!--       <%= @current_user.email %> --%>
-    <%!--     </li> --%>
-    <%!--     <li> --%>
-    <%!--       <.link --%>
-    <%!--         href={~p"/users/settings"} --%>
-    <%!--         class= --%>
-    <%!--       > --%>
-    <%!--         Settings --%>
-    <%!--       </.link> --%>
-    <%!--     </li> --%>
-    <%!--     <li> --%>
-    <%!--       <.link --%>
-    <%!--         href={~p"/users/log_out"} --%>
-    <%!--         method="delete" --%>
-    <%!--         class= --%>
-    <%!--       > --%>
-    <%!--         Log out --%>
-    <%!--       </.link> --%>
-    <%!--     </li> --%>
-    <%!--   <% end %> --%>
-    <%!-- </ul> --%>
+
     <%= @inner_content %>
   </body>
 </html>
