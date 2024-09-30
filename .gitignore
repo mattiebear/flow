@@ -35,3 +35,6 @@ flow-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Local config
+.DS_Store
+

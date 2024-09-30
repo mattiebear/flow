@@ -220,19 +220,33 @@ defmodule FlowWeb.CoreComponents do
       <.button>Send!</.button>
       <.button phx-click="go" class="ml-2">Send!</.button>
   """
+
+  @button_style_matrix %{
+    "primary" => %{
+      "solid" => "bg-indigo-700 text-neutral-200 hover:bg-indigo-800",
+      "outline" =>
+        "border border-solid border-indigo-700 text-neutral-900 dark:text-neutral-200 hover:text-neutral-300 dark:hover:text-neutral-800"
+    }
+  }
+
   attr :type, :string, default: nil
   attr :class, :string, default: nil
   attr :rest, :global, include: ~w(disabled form name value)
+  attr :size, :string, default: "md"
+  attr :color, :string, default: "primary"
+  attr :variant, :string, default: "solid"
 
   slot :inner_block, required: true
 
   def button(assigns) do
+    assigns = assign(assigns, :styles, button_styles(assigns))
+
     ~H"""
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
+        "phx-submit-loading:opacity-75 whitespace-nowrap",
+        @styles,
         @class
       ]}
       {@rest}
@@ -240,6 +254,14 @@ defmodule FlowWeb.CoreComponents do
       <%= render_slot(@inner_block) %>
     </button>
     """
+  end
+
+  defp button_styles(assigns) do
+    base = @button_style_matrix[assigns.color][assigns.variant]
+
+    case assigns.size do
+      "md" -> base <> " px-3 py-2 rounded-md"
+    end
   end
 
   @doc """
