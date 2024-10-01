@@ -3,7 +3,6 @@ defmodule FlowWeb.Skills.TrainingSessionLiveTest do
 
   import Phoenix.LiveViewTest
   import Flow.SkillsFixtures
-  import Flow.TrainingFixtures
 
   setup :register_and_log_in_user
 
@@ -11,7 +10,7 @@ defmodule FlowWeb.Skills.TrainingSessionLiveTest do
 
   describe "Index" do
     test "creates a new position", %{conn: conn, user: user} do
-      position = position_fixture(%{user: user})
+      position_fixture(%{user: user})
 
       {:ok, view, _html} = live(conn, ~p"/training")
 

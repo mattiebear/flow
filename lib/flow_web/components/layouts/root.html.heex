@@ -7,55 +7,70 @@
     <.live_title suffix=" · Flow BJJ">
       <%= assigns[:page_title] || "Flow" %>
     </.live_title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cabin&display=swap" rel="stylesheet" />
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
-  <body class="bg-white">
-    <!-- Top navigation bar -->
-    <!-- TODO: Move to component -->
-    <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-      <%= if @current_user do %>
-        <li class="text-[0.8125rem] leading-6 text-zinc-900">
-          <%= @current_user.email %>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/settings"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Settings
+
+  <body class="bg-neutral-200 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-200 font-body tracking-wide">
+    <header class="py-2 px-4 flex flex-row justify-between h-[80px] border-b border-b-neutral-800 border-b-solid">
+      <div>
+        <a href="/">
+          <img src="/images/logo.png" alt="Flow BBJ logo" class="h-full w-auto" />
+        </a>
+      </div>
+
+      <div class="flex flex-row items-center gap-x-4">
+        <%= if @current_user do %>
+          <div class="relative">
+            <div
+              class="rounded-full overflow-hidden cursor-pointer h-[64px]"
+              phx-click={JS.toggle(to: "#profile-menu")}
+            >
+              <img
+                src={FlowWeb.Util.Avatar.url(@current_user.email)}
+                class="object-contain h-full"
+              />
+            </div>
+
+            <div
+              id="profile-menu"
+              class="hidden absolute top-[calc(100% + 16px)] right-0 bg-neutral-300 dark:bg-neutral-900 w-[200px] p-3 rounded-lg"
+              phx-click-away={JS.hide()}
+            >
+              <span><%= @current_user.email %></span>
+              <hr class="my-2" />
+
+              <ul class="flex flex-col gap-y-2">
+                <li>
+                  <.link href={~p"/users/settings"}>
+                    Settings
+                  </.link>
+                </li>
+
+                <li>
+                  <.link href={~p"/users/log_out"} method="delete">
+                    Log out
+                  </.link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        <% else %>
+          <.link href={~p"/users/log_in"}>
+            <.button size="md" color="primary" variant="outline">Log in</.button>
           </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_out"}
-            method="delete"
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Log out
+
+          <.link href={~p"/users/register"}>
+            <.button size="md" color="primary" variant="solid">Sign up</.button>
           </.link>
-        </li>
-      <% else %>
-        <li>
-          <.link
-            href={~p"/users/register"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Register
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_in"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Log in
-          </.link>
-        </li>
-      <% end %>
-    </ul>
-    <!-- Main content -->
+        <% end %>
+      </div>
+    </header>
+
     <%= @inner_content %>
   </body>
 </html>
