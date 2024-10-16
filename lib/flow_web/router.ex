@@ -64,24 +64,12 @@ defmodule FlowWeb.Router do
   scope "/", FlowWeb do
     pipe_through [:browser, :require_authenticated_user]
 
+    get "/training", PageController, :home
+
     live_session :require_authenticated_user,
       on_mount: [{FlowWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", Auth.UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", Auth.UserSettingsLive, :confirm_email
-
-      live "/positions", Skills.PositionLive.Index, :index
-      live "/positions/new", Skills.PositionLive.Index, :new
-      live "/positions/:id", Skills.PositionLive.Index, :show
-      live "/positions/:id/edit", Skills.PositionLive.Index, :edit
-
-      live "/techniques", Skills.TechniqueLive.Index, :index
-      live "/techniques/new", Skills.TechniqueLive.Index, :new
-      live "/techniques/:id", Skills.TechniqueLive.Index, :show
-      live "/techniques/:id/edit", Skills.TechniqueLive.Index, :edit
-
-      live "/training", Training.TrainingSessionLive.Index, :index
-      live "/training/new", Training.TrainingSessionLive.Index, :new
-      live "/training/:id", Training.TrainingSessionLive.Index, :show
     end
   end
 
