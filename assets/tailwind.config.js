@@ -9,7 +9,8 @@ module.exports = {
 	content: [
 		"./js/**/*.js",
 		"../lib/flow_web.ex",
-		"../lib/flow_web/**/*.*ex"
+		"../lib/flow_web/**/*.*ex",
+		"./svelte/**/*.svelte"
 	],
 	theme: {
 		fontFamily: {

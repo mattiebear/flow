@@ -25,7 +25,7 @@ config :flow, FlowWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "oU9oECwq7ZwgEIBEWe0VPxhfOfa1IoXsMCBlEUizog2KniiE/uncyQBX5LOPphK4",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:flow, ~w(--sourcemap=inline --watch)]},
+    node: ["build.js", "--watch", cd: Path.expand("../assets", __DIR__)],
     tailwind: {Tailwind, :install_and_run, [:flow, ~w(--watch)]}
   ]
 

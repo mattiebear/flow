@@ -5,7 +5,7 @@ defmodule Flow.Skills.Step do
   schema "skills_steps" do
     field :description, :string
 
-    belongs_to :step, Flow.Skills.Step
+    belongs_to :technique, Flow.Skills.Technique
 
     many_to_many :details, Flow.Skills.Detail, join_through: Flow.Skills.StepDetail
 
