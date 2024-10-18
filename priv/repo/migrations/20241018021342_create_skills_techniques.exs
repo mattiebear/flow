@@ -11,6 +11,7 @@ defmodule Flow.Repo.Migrations.CreateSkillsTechniques do
       timestamps(type: :utc_datetime)
     end
 
+    create index(:skills_techniques, [:name])
     create index(:skills_techniques, [:user_id])
   end
 end

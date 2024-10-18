@@ -16,6 +16,7 @@ defmodule Flow.Skills.Step do
   def changeset(step, attrs) do
     step
     |> cast(attrs, [:description])
+    |> cast_assoc(:details)
     |> validate_required([:description])
   end
 end

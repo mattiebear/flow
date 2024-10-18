@@ -17,7 +17,7 @@ defmodule Flow.Skills.Technique do
   def changeset(technique, attrs) do
     technique
     |> cast(attrs, [:name])
-    |> cast_assoc(:steps, with: &Flow.Skills.Step.changeset)
+    |> cast_assoc(:steps)
     |> validate_required([:name])
   end
 end

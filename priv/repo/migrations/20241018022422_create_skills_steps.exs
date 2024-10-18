@@ -9,6 +9,6 @@ defmodule Flow.Repo.Migrations.CreateSkillsSteps do
       timestamps(type: :utc_datetime)
     end
 
-    create index(:skills_steps, [:segment_id])
+    create index(:skills_steps, [:technique_id])
   end
 end

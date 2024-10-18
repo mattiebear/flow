@@ -9,7 +9,7 @@ defmodule Flow.Repo.Migrations.CreateSkillsStepDetails do
       timestamps(type: :utc_datetime)
     end
 
-    create unique_index(:skills_step_details, [:detail_id])
+    create index(:skills_step_details, [:detail_id])
     create index(:skills_step_details, [:step_id])
   end
 end

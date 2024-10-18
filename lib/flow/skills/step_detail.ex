@@ -13,7 +13,6 @@ defmodule Flow.Skills.StepDetail do
   def changeset(step_detail, attrs) do
     step_detail
     |> cast(attrs, [])
-    |> validate_required([])
     |> unique_constraint(:detail_id)
   end
 end
