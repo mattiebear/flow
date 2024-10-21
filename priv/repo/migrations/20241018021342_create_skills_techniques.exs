@@ -3,7 +3,7 @@ defmodule Flow.Repo.Migrations.CreateSkillsTechniques do
 
   def change do
     create table(:skills_techniques) do
-      add :layout, :map, null: false, default: %{}
+      add :layout, {:array, :map}, null: false, default: []
       add :name, :string, null: false
 
       add :user_id, references(:accounts_users, on_delete: :delete_all)

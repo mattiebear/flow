@@ -2,8 +2,10 @@ defmodule Flow.Skills.Technique do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, except: [:__meta__, :user]}
+
   schema "skills_techniques" do
-    field :layout, :map
+    field :layout, {:array, :map}
     field :name, :string
 
     belongs_to :user, Flow.Accounts.User
