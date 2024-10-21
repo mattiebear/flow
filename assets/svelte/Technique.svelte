@@ -8,8 +8,7 @@
 <form autocomplete="off">
 	<div class="flex flex-col">
 		<input
-			aria-label="Technique name
-			id="name"
+			aria-label="Technique name"
 			bind:value={name}
 			placeholder="Butterfly Sweep"
 			class={[
