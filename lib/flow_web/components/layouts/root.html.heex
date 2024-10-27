@@ -30,10 +30,14 @@
               class="rounded-full overflow-hidden cursor-pointer h-[64px]"
               phx-click={JS.toggle(to: "#profile-menu")}
             >
-              <img
-                src={FlowWeb.Util.Avatar.url(@current_user.email)}
-                class="object-contain h-full"
-              />
+              <div class="bg-indigo-900 h-full p-1.5 relative">
+                <div class="absolute right-2 h-full w-1.5 bg-gradient-to-b from-zinc-300 to-zinc-500 to-transparent z-0" />
+
+                <img
+                  src={FlowWeb.Util.Avatar.url(@current_user.email)}
+                  class="object-contain h-full rounded-full relative"
+                />
+              </div>
             </div>
 
             <div
