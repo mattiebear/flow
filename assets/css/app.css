@@ -4,7 +4,20 @@
 
 /* This file is for your main application CSS */
 @layer components {
-	.btn {
-				
+	.switch {
+		@apply relative h-6 w-12 rounded-full bg-red-500 cursor-pointer;
+	}
+
+	.switch input {
+		display: none;
+	}
+
+	.switch::after {
+		@apply block h-8 w-8 absolute bg-black -left-1 -top-1 rounded-full;
+		content: "";
+	}
+
+	.switch input:checked + * {
+		@apply right-1;
 	}
 }
