@@ -4,20 +4,20 @@
 
 /* This file is for your main application CSS */
 @layer components {
-	.switch {
-		@apply relative h-6 w-12 rounded-full bg-red-500 cursor-pointer;
+	.switch .slider {
+		@apply block relative h-6 w-12 rounded-full cursor-pointer bg-zinc-200 drop-shadow-sm;
+	}
+
+	.switch .slider::before {
+		@apply block h-8 w-8 absolute bg-amber-500 -left-1 -top-1 rounded-full transition-all duration-200;
+		content: "";
 	}
 
 	.switch input {
 		display: none;
 	}
 
-	.switch::after {
-		@apply block h-8 w-8 absolute bg-black -left-1 -top-1 rounded-full;
-		content: "";
-	}
-
-	.switch input:checked + * {
-		@apply right-1;
+	.switch input:checked + .slider::before {
+		@apply translate-x-6 bg-zinc-900;
 	}
 }
