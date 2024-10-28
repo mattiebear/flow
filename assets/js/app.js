@@ -24,8 +24,38 @@ import topbar from "../vendor/topbar"
 import { getHooks } from "live_svelte"
 import * as Components from "../svelte/**/*.svelte"
 
+const Hooks = {
+	ModeToggle: {
+		mounted() {
+
+			const STORAGE_KEY = 'mode-toggle';
+			const mode = localStorage.getItem(STORAGE_KEY) === 'dark' ? 'dark' : 'light';
+			const input = this.el.querySelector('input');
+			const root = document.querySelector('html');
+
+			const setMode = (mode) => {
+				localStorage.setItem(STORAGE_KEY, mode);
+				root.className = mode;
+			}
+
+			setMode(mode)
+
+			if (!input) {
+				return;
+			}
+
+			input.checked = (mode === 'dark');
+
+			input.addEventListener('change', (e) => {
+				const mode = e.target.checked ? 'dark' : 'light';
+				setMode(mode);
+			});
+		}
+	}
+}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, { hooks: getHooks(Components), longPollFallbackMs: 500, params: { _csrf_token: csrfToken } })
+let liveSocket = new LiveSocket("/live", Socket, { hooks: { ...Hooks, ...getHooks(Components) }, longPollFallbackMs: 500, params: { _csrf_token: csrfToken } })
 
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
