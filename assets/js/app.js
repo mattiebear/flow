@@ -36,6 +36,7 @@ const Hooks = {
 			const setMode = (mode) => {
 				localStorage.setItem(STORAGE_KEY, mode);
 				root.className = mode;
+				this.el.dataset.mode = mode;
 			}
 
 			setMode(mode)

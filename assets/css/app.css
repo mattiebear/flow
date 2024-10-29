@@ -4,6 +4,7 @@
 
 /* This file is for your main application CSS */
 @layer components {
+	/* Switch */
 	.switch .slider {
 		@apply block relative h-6 w-12 rounded-full cursor-pointer bg-zinc-200 drop-shadow-sm;
 	}
@@ -19,5 +20,14 @@
 
 	.switch input:checked + .slider::before {
 		@apply translate-x-6 bg-zinc-900;
+	}
+
+	/* Menu */
+	.menu {
+		@apply drop-shadow bg-zinc-100 dark:bg-zinc-800 w-[200px] p-3 rounded-xl;
+	}
+
+	.menu .option {
+		@apply px-2 py-1.5 rounded-lg hover:bg-indigo-500 hover:text-zinc-300 block w-full;
 	}
 }
