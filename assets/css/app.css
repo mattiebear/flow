@@ -28,6 +28,6 @@
 	}
 
 	.menu .option {
-		@apply px-2 py-1.5 rounded-lg hover:bg-indigo-500 hover:text-zinc-300 block w-full;
+		@apply px-2 py-1.5 rounded-lg hover:bg-indigo-500 hover:text-zinc-100 block w-full;
 	}
 }

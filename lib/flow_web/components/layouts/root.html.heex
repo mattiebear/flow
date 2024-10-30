@@ -15,86 +15,90 @@
     </script>
   </head>
 
-  <body class="bg-neutral-200 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-200 font-body tracking-wide">
-    <header class="py-2 px-4 flex flex-row justify-between h-[80px] border-b border-b-neutral-800 border-b-solid">
-      <div>
-        <a href="/">
-          <img src="/images/logo.png" alt="Flow BBJ logo" class="h-full w-auto" />
-        </a>
-      </div>
+  <body class="bg-stone-300 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 font-body tracking-wide">
+    <header class="border-b border-b-zinc-800 border-b-solid">
+      <div class="container m-auto py-2 px-4 flex flex-row justify-between h-[80px]">
+        <div class="w-[64px]">
+          <a href="/">
+            <img src="/images/logo.png" alt="Flow BBJ logo" class="h-full w-auto" />
+          </a>
+        </div>
 
-      <div class="flex flex-row items-center gap-x-4">
-        <%= if @current_user do %>
-          <div class="relative">
-            <div
-              class="rounded-full overflow-hidden cursor-pointer h-[64px]"
-              phx-click={
-                JS.toggle(
-                  to: "#profile-menu",
-                  in: {"ease-out duration-100", "opacity-0 scale-90", "opacity-100 scale-100"},
-                  out: {"ease-out duration-100", "opacity-100 scale-100", "opacity-0 scale-90"}
-                )
-              }
-            >
-              <div class="bg-indigo-900 h-full p-1.5 relative">
-                <div class="absolute right-2 h-full w-1.5 bg-gradient-to-b from-zinc-200 to-zinc-300 to-transparent z-0" />
+        <div class="flex flex-row items-center gap-x-4">
+          <%= if @current_user do %>
+            <div class="relative">
+              <div
+                class="rounded-full overflow-hidden cursor-pointer h-[64px]"
+                phx-click={
+                  JS.toggle(
+                    to: "#profile-menu",
+                    in: {"ease-out duration-100", "opacity-0 scale-90", "opacity-100 scale-100"},
+                    out: {"ease-out duration-100", "opacity-100 scale-100", "opacity-0 scale-90"}
+                  )
+                }
+              >
+                <div class="bg-indigo-900 h-full p-1.5 relative">
+                  <div class="absolute right-2 h-full w-1.5 bg-gradient-to-b from-zinc-200 to-zinc-300 to-transparent z-0" />
 
-                <img
-                  src={FlowWeb.Util.Avatar.url(@current_user.email)}
-                  class="object-contain h-full rounded-full relative"
-                />
+                  <img
+                    src={FlowWeb.Util.Avatar.url(@current_user.email)}
+                    class="object-contain h-full rounded-full relative"
+                  />
+                </div>
+              </div>
+
+              <div
+                id="profile-menu"
+                class="menu hidden absolute top-[calc(100%_+_4px)] right-0"
+                phx-click-away={
+                  JS.hide(
+                    transition:
+                      {"ease-out duration-100", "opacity-100 scale-100", "opacity-0 scale-90"}
+                  )
+                }
+              >
+                <span><%= @current_user.email %></span>
+                <hr class="my-2" />
+
+                <ul class="flex flex-col gap-y-2">
+                  <li>
+                    <div class="flex row justify-between px-2 py-1.5">
+                      Dark mode
+                      <label class="switch" id="mode-toggle" phx-hook="ModeToggle">
+                        <input type="checkbox" />
+                        <span class="slider" />
+                      </label>
+                    </div>
+                  </li>
+                  <li>
+                    <.link href={~p"/users/settings"} class="option">
+                      Settings
+                    </.link>
+                  </li>
+
+                  <li>
+                    <.link href={~p"/users/log_out"} method="delete" class="option">
+                      Log out
+                    </.link>
+                  </li>
+                </ul>
               </div>
             </div>
+          <% else %>
+            <.link href={~p"/users/log_in"}>
+              <.button size="md" color="primary" variant="outline">Log in</.button>
+            </.link>
 
-            <div
-              id="profile-menu"
-              class="menu hidden absolute top-[calc(100%_+_4px)] right-0"
-              phx-click-away={
-                JS.hide(
-                  transition:
-                    {"ease-out duration-100", "opacity-100 scale-100", "opacity-0 scale-90"}
-                )
-              }
-            >
-              <span><%= @current_user.email %></span>
-              <hr class="my-2" />
-
-              <ul class="flex flex-col gap-y-2">
-                <li>
-                  <div class="flex row justify-between px-2 py-1.5">
-                    Dark mode
-                    <label class="switch" id="mode-toggle" phx-hook="ModeToggle">
-                      <input type="checkbox" />
-                      <span class="slider" />
-                    </label>
-                  </div>
-                </li>
-                <li>
-                  <.link href={~p"/users/settings"} class="option">
-                    Settings
-                  </.link>
-                </li>
-
-                <li>
-                  <.link href={~p"/users/log_out"} method="delete" class="option">
-                    Log out
-                  </.link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        <% else %>
-          <.link href={~p"/users/log_in"}>
-            <.button size="md" color="primary" variant="outline">Log in</.button>
-          </.link>
-
-          <.link href={~p"/users/register"}>
-            <.button size="md" color="primary" variant="solid">Sign up</.button>
-          </.link>
-        <% end %>
+            <.link href={~p"/users/register"}>
+              <.button size="md" color="primary" variant="solid">Sign up</.button>
+            </.link>
+          <% end %>
+        </div>
       </div>
     </header>
 
-    <%= @inner_content %>
+    <div class="container m-auto">
+      <%= @inner_content %>
+    </div>
   </body>
 </html>
