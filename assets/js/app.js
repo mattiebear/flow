@@ -27,8 +27,8 @@ import * as Components from "../svelte/**/*.svelte"
 const Hooks = {
 	ModeToggle: {
 		mounted() {
-
 			const STORAGE_KEY = 'mode-toggle';
+
 			const mode = localStorage.getItem(STORAGE_KEY) === 'dark' ? 'dark' : 'light';
 			const input = this.el.querySelector('input');
 			const root = document.querySelector('html');

@@ -1,6 +1,6 @@
 <script>
-	export let live;
-	export let technique = {};
+	// export let live;
+	// export let technique = {};
 
 	let name = '';
 </script>

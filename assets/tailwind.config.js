@@ -9,9 +9,9 @@ module.exports = {
 	darkMode: 'selector',
 	content: [
 		"./js/**/*.js",
+		"./svelte/**/*.svelte",
 		"../lib/flow_web.ex",
-		"../lib/flow_web/**/*.*ex",
-		"./svelte/**/*.svelte"
+		"../lib/flow_web/**/*.*ex"
 	],
 	theme: {
 		fontFamily: {
@@ -46,6 +46,8 @@ module.exports = {
 						values[name] = { name, fullPath: path.join(iconsDir, dir, file) }
 					})
 				})
+				// TODO: Remove this
+				console.log({ values })
 				matchComponents({
 					"hero": ({ name, fullPath }) => {
 						let content = fs.readFileSync(fullPath).toString().replace(/\r?\n|\r/g, "")

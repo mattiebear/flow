@@ -75,11 +75,11 @@ defmodule Flow.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.setup": ["tailwind.install --if-missing", "npm install --prefix assets"],
-      "assets.build": ["tailwind flow", "esbuild flow"],
+      "assets.setup": ["tailwind.install --if-missing", "cmd --cd assets npm install"],
+      "assets.build": ["tailwind flow", "cmd --cd assets node build.js"],
       "assets.deploy": [
         "tailwind flow --minify",
-        "node build.js --deploy --prefix assets",
+        "cmd --cd assets node build.js --deploy",
         "phx.digest"
       ]
     ]
