@@ -619,6 +619,34 @@ defmodule FlowWeb.CoreComponents do
     """
   end
 
+  @doc """
+  Renders a navigation link that responds to the active path to apply an active class
+  """
+  attr :href, :string, required: true
+  attr :icon, :string, required: true
+  attr :path, :string, required: true
+
+  def nav_link(assigns) do
+    active = String.contains?(assigns.path, assigns.href)
+    assigns = assign(assigns, :active, active)
+
+    ~H"""
+    <.link href={@href} class="block">
+      <button class={[
+        "p-[1px] rounded-xl",
+        @active && "dark:text-zinc-300 bg-gradient-to-b from-zinc-600 to-transparent to-80%"
+      ]}>
+        <div class={[
+          "h-full rounded-[calc(0.75rem_-_1px)] p-2.5",
+          @active && "bg-gradient-to-b from-zinc-800 to-zinc-900"
+        ]}>
+          <.icon name={@icon} />
+        </div>
+      </button>
+    </.link>
+    """
+  end
+
   ## JS Commands
 
   def show(js \\ %JS{}, selector) do

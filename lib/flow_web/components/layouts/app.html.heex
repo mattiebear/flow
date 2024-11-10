@@ -3,21 +3,11 @@
     <nav class="m-auto flex justify-center">
       <ul class="flex flex-col gap-y-4">
         <li>
-          <.link href={~p"/training"} class="block">
-            <button class="p-3 rounded-xl dark:text-zinc-300">
-              <.icon name="hero-squares-2x2" />
-            </button>
-          </.link>
+          <.nav_link href={~p"/training"} icon="hero-squares-2x2" path={@current_path} />
         </li>
 
         <li>
-          <.link href={~p"/training"} class="block">
-            <button class="p-[1px] rounded-xl dark:text-zinc-300 bg-gradient-to-b from-zinc-600 to-transparent to-80%">
-              <div class="h-full rounded-[calc(0.75rem_-_1px)] p-2.5 bg-gradient-to-b from-zinc-800 to-zinc-900">
-                <.icon name="hero-pencil" />
-              </div>
-            </button>
-          </.link>
+          <.nav_link href={~p"/techniques"} icon="hero-pencil" path={@current_path} />
         </li>
       </ul>
     </nav>

@@ -1,6 +1,7 @@
 defmodule FlowWeb.Router do
   use FlowWeb, :router
 
+  import FlowWeb.Navigation
   import FlowWeb.UserAuth
 
   pipeline :browser do
@@ -11,6 +12,7 @@ defmodule FlowWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    plug :fetch_current_path
   end
 
   pipeline :api do
@@ -52,7 +54,10 @@ defmodule FlowWeb.Router do
     post "/users/log_in", UserSessionController, :create
 
     live_session :redirect_if_user_is_authenticated,
-      on_mount: [{FlowWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+      on_mount: [
+        {FlowWeb.UserAuth, :redirect_if_user_is_authenticated},
+        {FlowWeb.Navigation, :mount_current_path}
+      ] do
       live "/users/register", Auth.UserRegistrationLive, :new
       live "/users/log_in", Auth.UserLoginLive, :new
       live "/users/reset_password", Auth.UserForgotPasswordLive, :new
@@ -65,7 +70,10 @@ defmodule FlowWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: [{FlowWeb.UserAuth, :ensure_authenticated}] do
+      on_mount: [
+        {FlowWeb.UserAuth, :ensure_authenticated},
+        {FlowWeb.Navigation, :mount_current_path}
+      ] do
       live "/users/settings", Auth.UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", Auth.UserSettingsLive, :confirm_email
 
@@ -84,7 +92,10 @@ defmodule FlowWeb.Router do
     delete "/users/log_out", UserSessionController, :delete
 
     live_session :current_user,
-      on_mount: [{FlowWeb.UserAuth, :mount_current_user}] do
+      on_mount: [
+        {FlowWeb.UserAuth, :mount_current_user},
+        {FlowWeb.Navigation, :mount_current_path}
+      ] do
       live "/users/confirm/:token", Auth.UserConfirmationLive, :edit
       live "/users/confirm", Auth.UserConfirmationInstructionsLive, :new
     end
