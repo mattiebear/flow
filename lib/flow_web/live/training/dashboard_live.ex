@@ -3,7 +3,7 @@ defmodule FlowWeb.Training.DashboardLive do
 
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="col-start-3 col-span-6">
       <div :if={@technique_count == 0}>
         <h2>No techniques created</h2>
         <p>Add a new technique to your library to start training</p>
