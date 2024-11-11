@@ -8,6 +8,8 @@
   function handleSubmit() {
     console.log(technique, this);
   }
+
+  function handleAddStep() {}
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={handleSubmit}>
@@ -28,8 +30,8 @@
     />
   </div>
 
-  <div class="flex flex-row w-full items-center">
-    <div class="w-[8rem]">
+  <div class="w-full grid grid-cols-technique gap-4">
+    <div class="flex justify-end items-center">
       <span
         class={className(
           'inline-block px-6 py-1 rounded-full',
@@ -47,9 +49,24 @@
     >
       <AutoResizeTextarea
         id="description"
-        class="bg-none bg-transparent outline-none border-none p-1 w-full resize-none min-h-[6rem]"
+        class={className(
+          'bg-none bg-transparent outline-none border-none p-1',
+          'w-full resize-none min-h-[6rem]'
+        )}
         placeholder="Describe the starting position for this technique"
       />
+    </div>
+
+    <div class="col-start-2 flex flex-row justify-center">
+      <button
+        class={className(
+          'p-1 rounded-full border border-solid border-zinc-500 transition-colors',
+          'hover:bg-zinc-300 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-200'
+        )}
+        type="button"
+      >
+        <span class="hero-plus" />
+      </button>
     </div>
   </div>
 
