@@ -1,5 +1,8 @@
 <script>
+  import { produce } from 'immer';
+
   import { className } from '../js/style';
+  import { randomId } from '../js/utils';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
 
   export let live;
@@ -8,12 +11,30 @@
   let form = {
     name: '',
     description: '',
+    layout: [],
     steps: [],
   };
 
+  $: steps = (() => {
+    return form.layout.map((child) => {
+      return form.steps.find(
+        (step) => step.id === child.id || step.tempId === child.id
+      );
+    });
+  })();
+
   function updateForm(key, value) {
-    console.log('update', key, value);
     form = { ...form, [key]: value };
+  }
+
+  function updateStep(id, key, value) {
+    form = produce(form, (draft) => {
+      const step = draft.steps.find(
+        (step) => step.id === id || step.tempId === id
+      );
+
+      step[key] = value;
+    });
   }
 
   function handleSubmit() {
@@ -21,7 +42,18 @@
   }
 
   function handleAddStep() {
-    console.log('add step', form);
+    form = produce(form, (draft) => {
+      const id = randomId();
+
+      draft.steps.push({
+        tempId: id,
+        description: '',
+      });
+
+      draft.layout.push({ id });
+    });
+
+    console.log(form);
   }
 </script>
 
@@ -70,6 +102,35 @@
         value={form.description}
       />
     </div>
+
+    {#each steps as step, index}
+      <div class="flex justify-end items-center">
+        <span
+          class={className(
+            'inline-block px-6 py-1 rounded-full',
+            'border border-solid border-zinc-300'
+          )}>Step {index + 1}</span
+        >
+      </div>
+
+      <div
+        class={className(
+          'rounded-xl w-full py-2 px-3',
+          'border border-solid border-zinc-500'
+        )}
+      >
+        <AutoResizeTextarea
+          class={className(
+            'bg-none bg-transparent outline-none border-none p-1',
+            'w-full resize-none min-h-[6rem]'
+          )}
+          onChange={(e) =>
+            updateStep(step.id || step.tempId, 'description', e.target.value)}
+          placeholder="Describe the this step"
+          value={step.description}
+        />
+      </div>
+    {/each}
 
     <div class="col-start-2 flex flex-row justify-center">
       <button
