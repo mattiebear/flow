@@ -2,21 +2,33 @@
   import { className } from '../js/style';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
 
-  // export let live;
-  export let technique = {};
+  export let live;
+  export let technique;
 
-  function handleSubmit() {
-    console.log(technique, this);
+  let form = {
+    name: '',
+    description: '',
+    steps: [],
+  };
+
+  function updateForm(key, value) {
+    console.log('update', key, value);
+    form = { ...form, [key]: value };
   }
 
-  function handleAddStep() {}
+  function handleSubmit() {
+    console.log('submit', form);
+  }
+
+  function handleAddStep() {
+    console.log('add step', form);
+  }
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={handleSubmit}>
   <div class="mb-8">
     <label for="name" class="text-sm text-zinc-500 mb-1"> Name </label>
     <input
-      aria-label="Technique name"
       class={className(
         'text-6xl px-3 py-4 placeholder:text-neutral-500 w-full outline-none',
         'text-neutral-900 dark:text-neutral-300 bg-transparent',
@@ -24,9 +36,9 @@
         'transition-colors'
       )}
       id="name"
-      on:change={(e) => (technique.name = e.target.value)}
+      on:change={(e) => updateForm('name', e.target.value)}
       placeholder="Butterfly Sweep"
-      value={technique.name}
+      value={form.name}
     />
   </div>
 
@@ -53,7 +65,9 @@
           'bg-none bg-transparent outline-none border-none p-1',
           'w-full resize-none min-h-[6rem]'
         )}
+        onChange={(e) => updateForm('description', e.target.value)}
         placeholder="Describe the starting position for this technique"
+        value={form.description}
       />
     </div>
 
@@ -63,6 +77,7 @@
           'p-1 rounded-full border border-solid border-zinc-500 transition-colors',
           'hover:bg-zinc-300 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-200'
         )}
+        on:click={handleAddStep}
         type="button"
       >
         <span class="hero-plus" />

@@ -1,6 +1,8 @@
 <script>
   import { onMount } from 'svelte';
 
+  export let onChange;
+
   let el;
 
   onMount(() => {
@@ -14,4 +16,4 @@
   });
 </script>
 
-<textarea bind:this={el} {...$$restProps} />
+<textarea bind:this={el} on:change={onChange} {...$$restProps} />
