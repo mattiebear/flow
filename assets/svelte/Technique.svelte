@@ -52,8 +52,6 @@
 
       draft.layout.push({ id });
     });
-
-    console.log(form);
   }
 </script>
 
