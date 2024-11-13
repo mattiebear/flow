@@ -8,6 +8,7 @@ defmodule Flow.Skills.Technique do
   schema "skills_techniques" do
     field :layout, {:array, :map}
     field :name, :string
+    # TODO: Add starting position description
 
     belongs_to :user, Flow.Accounts.User
 

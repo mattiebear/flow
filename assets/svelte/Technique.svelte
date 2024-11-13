@@ -8,67 +8,54 @@
   export let live;
   export let technique;
 
-  let form = {
-    name: '',
-    description: '',
-    layout: [],
-    steps: [],
-  };
+  // TODO: Should this be in an object? Maybe wait for Svelte version 5.
+  let name = '';
+  let description = '';
+  let steps = [];
+  let layout = [];
 
-  $: steps = (() => {
-    return form.layout.map((child) => {
-      return form.steps.find(
+  $: orderedSteps = (() => {
+    return layout.map((child) => {
+      return steps.find(
+        // TODO: Come up with a better way to store tempId. Maybe create an entity for this.
         (step) => step.id === child.id || step.tempId === child.id
       );
     });
   })();
 
-  function updateForm(key, value) {
-    form = { ...form, [key]: value };
-  }
+  function addStep() {
+    const id = randomId();
 
-  function updateStep(id, key, value) {
-    form = produce(form, (draft) => {
-      const step = draft.steps.find(
-        (step) => step.id === id || step.tempId === id
-      );
-
-      step[key] = value;
-    });
-  }
-
-  function handleSubmit() {
-    console.log('submit', form);
-  }
-
-  function handleAddStep() {
-    form = produce(form, (draft) => {
-      const id = randomId();
-
-      draft.steps.push({
+    steps = produce(steps, (draft) => {
+      draft.push({
         tempId: id,
         description: '',
       });
-
-      draft.layout.push({ id });
     });
+
+    layout = produce(layout, (draft) => {
+      draft.push({ id });
+    });
+  }
+
+  function submit() {
+    console.log('submit', { name, description, steps, layout });
   }
 </script>
 
-<form autocomplete="off" on:submit|preventDefault={handleSubmit}>
+<form autocomplete="off" on:submit|preventDefault={submit}>
   <div class="mb-8">
     <label for="name" class="text-sm text-zinc-500 mb-1"> Name </label>
     <input
+      id="name"
+      bind:value={name}
       class={className(
         'text-6xl px-3 py-4 placeholder:text-neutral-500 w-full outline-none',
         'text-neutral-900 dark:text-neutral-300 bg-transparent',
         'border-b border-zinc-300 dark:border-zinc-500 focus:border-zinc-100',
         'transition-colors'
       )}
-      id="name"
-      on:change={(e) => updateForm('name', e.target.value)}
       placeholder="Butterfly Sweep"
-      value={form.name}
     />
   </div>
 
@@ -91,17 +78,17 @@
     >
       <AutoResizeTextarea
         id="description"
+        bind:value={description}
+        aria-label="Description of starting position"
         class={className(
           'bg-none bg-transparent outline-none border-none p-1',
           'w-full resize-none min-h-[6rem]'
         )}
-        onChange={(e) => updateForm('description', e.target.value)}
         placeholder="Describe the starting position for this technique"
-        value={form.description}
       />
     </div>
 
-    {#each steps as step, index}
+    {#each orderedSteps as step, index}
       <div class="flex justify-end items-center">
         <span
           class={className(
@@ -118,14 +105,12 @@
         )}
       >
         <AutoResizeTextarea
+          bind:value={steps[index]['description']}
           class={className(
             'bg-none bg-transparent outline-none border-none p-1',
             'w-full resize-none min-h-[6rem]'
           )}
-          onChange={(e) =>
-            updateStep(step.id || step.tempId, 'description', e.target.value)}
           placeholder="Describe the this step"
-          value={step.description}
         />
       </div>
     {/each}
@@ -136,7 +121,7 @@
           'p-1 rounded-full border border-solid border-zinc-500 transition-colors',
           'hover:bg-zinc-300 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-200'
         )}
-        on:click={handleAddStep}
+        on:click={addStep}
         type="button"
       >
         <span class="hero-plus" />
