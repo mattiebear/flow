@@ -1,8 +1,8 @@
 <script>
   import { produce } from 'immer';
 
-  import { className } from '../js/style';
-  import { randomId } from '../js/utils';
+  import { Step } from '../js/entities/Step';
+  import { className } from '../js/utils/style';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
 
   export let live;
@@ -14,27 +14,29 @@
   let steps = [];
   let layout = [];
 
+  // TODO: Handle missing layout and steps
   $: orderedSteps = (() => {
     return layout.map((child) => {
-      return steps.find(
-        // TODO: Come up with a better way to store tempId. Maybe create an entity for this.
-        (step) => step.id === child.id || step.tempId === child.id
-      );
+      return steps.find((step) => step.idx === child.id);
     });
   })();
 
   function addStep() {
-    const id = randomId();
+    const step = new Step();
 
     steps = produce(steps, (draft) => {
-      draft.push({
-        tempId: id,
-        description: '',
-      });
+      draft.push(step);
     });
 
     layout = produce(layout, (draft) => {
-      draft.push({ id });
+      draft.push({ id: step.idx });
+    });
+  }
+
+  function updateStep(id, key, value) {
+    steps = produce(steps, (draft) => {
+      const step = draft.find((step) => step.idx === id);
+      step[key] = value;
     });
   }
 
@@ -105,12 +107,13 @@
         )}
       >
         <AutoResizeTextarea
-          bind:value={steps[index]['description']}
           class={className(
             'bg-none bg-transparent outline-none border-none p-1',
             'w-full resize-none min-h-[6rem]'
           )}
+          on:change={(e) => updateStep(step.idx, 'description', e.target.value)}
           placeholder="Describe the this step"
+          value={step.description}
         />
       </div>
     {/each}

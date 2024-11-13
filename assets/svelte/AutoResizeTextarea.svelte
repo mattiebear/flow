@@ -16,4 +16,4 @@
   });
 </script>
 
-<textarea bind:this={el} bind:value {...$$restProps} />
+<textarea bind:this={el} on:change {...$$restProps} />
