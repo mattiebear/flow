@@ -34,6 +34,11 @@
     });
   }
 
+  function deleteStep(id) {
+    steps = steps.filter((step) => step.idx !== id);
+    layout = layout.filter((child) => child.id !== id);
+  }
+
   function updateStep(id, key, value) {
     steps = produce(steps, (draft) => {
       const step = draft.find((step) => step.idx === id);
@@ -92,7 +97,12 @@
     </div>
 
     {#each orderedSteps as step, index}
-      <StepCard number={index + 1} {step} onUpdate={updateStep} />
+      <StepCard
+        {step}
+        number={index + 1}
+        onDelete={deleteStep}
+        onUpdate={updateStep}
+      />
     {/each}
 
     <div class="col-start-2 flex flex-row justify-center">

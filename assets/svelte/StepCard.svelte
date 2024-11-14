@@ -6,6 +6,7 @@
 
   export let number;
   export let step;
+  export let onDelete;
   export let onUpdate;
 
   let isOpen = false;
@@ -76,7 +77,11 @@
       >
         <ul class="flex flex-col gap-y-2">
           <li>
-            <button class="option flex justify-between">
+            <button
+              class="option flex justify-between"
+              on:click={() => onDelete(step.idx)}
+              type="button"
+            >
               Remove
               <span class="hero-trash" />
             </button>
