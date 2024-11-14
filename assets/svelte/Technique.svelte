@@ -16,11 +16,9 @@
   let layout = [];
 
   // TODO: Handle missing layout and steps
-  $: orderedSteps = (() => {
-    return layout.map((child) => {
-      return steps.find((step) => step.idx === child.id);
-    });
-  })();
+  $: orderedSteps = layout.map((child) => {
+    return steps.find((step) => step.idx === child.id);
+  });
 
   function addStep() {
     const step = new Step();
