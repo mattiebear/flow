@@ -53,14 +53,16 @@
 
 <form autocomplete="off" on:submit|preventDefault={submit}>
   <div class="mb-8">
-    <label for="name" class="text-sm text-zinc-500 mb-1"> Name </label>
+    <label for="name" class="text-sm text-zinc-700 dark:text-zinc-500 mb-1">
+      Name
+    </label>
     <input
       id="name"
       bind:value={name}
       class={className(
         'text-6xl px-3 py-4 placeholder:text-neutral-500 w-full outline-none',
         'text-neutral-900 dark:text-neutral-300 bg-transparent',
-        'border-b border-zinc-300 dark:border-zinc-500 focus:border-zinc-100',
+        'border-b border-zinc-400 dark:border-zinc-500 focus:border-zinc-500 dark:focus:border-zinc-100',
         'transition-colors'
       )}
       placeholder="Butterfly Sweep"
@@ -72,7 +74,7 @@
       <span
         class={className(
           'inline-block px-6 py-1 rounded-full',
-          'border border-solid border-zinc-300'
+          'border border-solid border-zinc-500 dark:border-zinc-300'
         )}>Start</span
       >
     </div>

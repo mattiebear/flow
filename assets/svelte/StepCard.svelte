@@ -34,7 +34,7 @@
   <span
     class={className(
       'inline-block px-6 py-1 rounded-full',
-      'border border-solid border-zinc-300'
+      'border border-solid border-zinc-500 dark:border-zinc-300'
     )}>Step {number}</span
   >
 </div>
