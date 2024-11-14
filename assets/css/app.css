@@ -1,33 +1,33 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 /* This file is for your main application CSS */
 @layer components {
-	/* Switch */
-	.switch .slider {
-		@apply block relative h-6 w-12 rounded-full cursor-pointer bg-zinc-200 drop-shadow-sm;
-	}
+  /* Switch */
+  .switch .slider {
+    @apply block relative h-6 w-12 rounded-full cursor-pointer bg-zinc-200 drop-shadow-sm;
+  }
 
-	.switch .slider::before {
-		@apply block h-8 w-8 absolute bg-amber-500 -left-1 -top-1 rounded-full transition-all duration-200;
-		content: "";
-	}
+  .switch .slider::before {
+    @apply block h-8 w-8 absolute bg-amber-500 -left-1 -top-1 rounded-full transition-all duration-200;
+    content: '';
+  }
 
-	.switch input {
-		display: none;
-	}
+  .switch input {
+    display: none;
+  }
 
-	.switch input:checked + .slider::before {
-		@apply translate-x-6 bg-zinc-900;
-	}
+  .switch input:checked + .slider::before {
+    @apply translate-x-6 bg-zinc-900;
+  }
 
-	/* Menu */
-	.menu {
-		@apply drop-shadow bg-zinc-100 dark:bg-zinc-800 w-[200px] p-3 rounded-xl;
-	}
+  /* Menu */
+  .menu {
+    @apply drop-shadow bg-zinc-100 dark:bg-zinc-800 w-[200px] p-3 rounded-xl;
+  }
 
-	.menu .option {
-		@apply px-2 py-1.5 rounded-lg hover:bg-indigo-500 hover:text-zinc-100 block w-full;
-	}
+  .menu .option {
+    @apply px-2 py-1.5 rounded-lg hover:bg-indigo-500 hover:text-zinc-100 w-full;
+  }
 }

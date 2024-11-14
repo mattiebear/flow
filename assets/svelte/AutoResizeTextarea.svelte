@@ -1,8 +1,6 @@
 <script>
   import { onMount } from 'svelte';
 
-  export let value = '';
-
   let el;
 
   onMount(() => {

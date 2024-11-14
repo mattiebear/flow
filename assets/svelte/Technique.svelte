@@ -4,6 +4,7 @@
   import { Step } from '../js/entities/Step';
   import { className } from '../js/utils/style';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
+  import StepCard from './StepCard.svelte';
 
   export let live;
   export let technique;
@@ -91,35 +92,12 @@
     </div>
 
     {#each orderedSteps as step, index}
-      <div class="flex justify-end items-center">
-        <span
-          class={className(
-            'inline-block px-6 py-1 rounded-full',
-            'border border-solid border-zinc-300'
-          )}>Step {index + 1}</span
-        >
-      </div>
-
-      <div
-        class={className(
-          'rounded-xl w-full py-2 px-3',
-          'border border-solid border-zinc-500'
-        )}
-      >
-        <AutoResizeTextarea
-          class={className(
-            'bg-none bg-transparent outline-none border-none p-1',
-            'w-full resize-none min-h-[6rem]'
-          )}
-          on:change={(e) => updateStep(step.idx, 'description', e.target.value)}
-          placeholder="Describe the this step"
-          value={step.description}
-        />
-      </div>
+      <StepCard number={index + 1} {step} onUpdate={updateStep} />
     {/each}
 
     <div class="col-start-2 flex flex-row justify-center">
       <button
+        aria-label="Add step"
         class={className(
           'p-1 rounded-full border border-solid border-zinc-500 transition-colors',
           'hover:bg-zinc-300 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-200'
