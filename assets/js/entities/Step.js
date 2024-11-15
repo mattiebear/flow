@@ -2,7 +2,7 @@ import { randomId } from '../utils/id';
 
 export class Step {
   id = undefined;
-  name = '';
+  description = '';
   tempId = null;
 
   constructor(data = {}) {
@@ -15,5 +15,12 @@ export class Step {
 
   get idx() {
     return this.id || this.tempId;
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      description: this.description,
+    };
   }
 }

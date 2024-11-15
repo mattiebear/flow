@@ -44,6 +44,11 @@ defmodule FlowWeb.Skills.TechniqueLive do
     {:noreply, socket}
   end
 
+  def handle_event("save", %{"technique" => technique_params}, socket) do
+    IO.inspect(technique_params)
+    {:noreply, socket}
+  end
+
   defp assign_action(:index, socket) do
     assign(socket, :technique, nil)
   end

@@ -58,7 +58,14 @@
   }
 
   function submit() {
-    console.log('submit', { name, description, steps, layout });
+    const technique = {
+      name,
+      description,
+      steps: steps.map((step) => step.toJSON()),
+      layout,
+    };
+
+    live.pushEvent('save', { technique });
   }
 </script>
 
