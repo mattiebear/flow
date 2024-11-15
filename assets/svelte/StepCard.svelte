@@ -8,6 +8,9 @@
   export let step;
   export let onDelete;
   export let onUpdate;
+  export let onMove;
+  export let canMoveUp;
+  export let canMoveDown;
 
   let isOpen = false;
   let menu;
@@ -28,6 +31,11 @@
       document.removeEventListener('click', listener);
     }
   });
+
+  function moveStep(direction) {
+    isOpen = false;
+    onMove(step.idx, direction);
+  }
 </script>
 
 <div class="flex justify-end items-center">
@@ -76,6 +84,32 @@
         }}
       >
         <ul class="flex flex-col gap-y-2">
+          {#if canMoveUp}
+            <li>
+              <button
+                class="option flex justify-between"
+                on:click={() => moveStep(-1)}
+                type="button"
+              >
+                Move Up
+                <span class="hero-arrow-up" />
+              </button>
+            </li>
+          {/if}
+
+          {#if canMoveDown}
+            <li>
+              <button
+                class="option flex justify-between"
+                on:click={() => moveStep(1)}
+                type="button"
+              >
+                Move Down
+                <span class="hero-arrow-down" />
+              </button>
+            </li>
+          {/if}
+
           <li>
             <button
               class="option flex justify-between"

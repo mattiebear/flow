@@ -44,6 +44,19 @@
     });
   }
 
+  function moveStep(id, direction) {
+    const index = layout.findIndex((child) => child.id === id);
+    const newIndex = index + direction;
+
+    if (newIndex < 0 || newIndex >= layout.length) {
+      return;
+    }
+
+    layout = produce(layout, (draft) => {
+      draft.splice(newIndex, 0, draft.splice(index, 1)[0]);
+    });
+  }
+
   function submit() {
     console.log('submit', { name, description, steps, layout });
   }
@@ -98,10 +111,13 @@
 
     {#each orderedSteps as step, index}
       <StepCard
-        {step}
+        canMoveDown={index < orderedSteps.length - 1}
+        canMoveUp={index > 0}
         number={index + 1}
         onDelete={deleteStep}
+        onMove={moveStep}
         onUpdate={updateStep}
+        {step}
       />
     {/each}
 
