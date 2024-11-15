@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
-  import { scale } from 'svelte/transition';
+  import { fade, scale } from 'svelte/transition';
   import { className } from '../js/utils/style';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
 
@@ -38,7 +38,7 @@
   }
 </script>
 
-<div class="flex justify-end items-center">
+<div class="flex justify-end items-center" transition:fade={{ duration: 100 }}>
   <span
     class={className(
       'inline-block px-6 py-1 rounded-full',
@@ -52,6 +52,7 @@
     'rounded-xl w-full py-2 px-3',
     'border border-solid border-zinc-500'
   )}
+  transition:fade={{ duration: 100 }}
 >
   <AutoResizeTextarea
     class={className(

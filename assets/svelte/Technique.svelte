@@ -109,7 +109,7 @@
       />
     </div>
 
-    {#each orderedSteps as step, index}
+    {#each orderedSteps as step, index (step.idx)}
       <StepCard
         canMoveDown={index < orderedSteps.length - 1}
         canMoveUp={index > 0}
@@ -136,7 +136,7 @@
     </div>
   </div>
 
-  <div class="flex justify-end">
-    <button class="mt-6" type="submit">Submit</button>
+  <div class="flex justify-end mt-6">
+    <button class="button" type="submit">Submit</button>
   </div>
 </form>

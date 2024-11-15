@@ -4,6 +4,11 @@
 
 /* This file is for your main application CSS */
 @layer components {
+  /* Button */
+  .button {
+    @apply px-4 py-2 rounded-lg bg-indigo-500 text-zinc-100;
+  }
+
   /* Switch */
   .switch .slider {
     @apply block relative h-6 w-12 rounded-full cursor-pointer bg-zinc-200 drop-shadow-sm;
