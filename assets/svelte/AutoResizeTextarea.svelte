@@ -3,8 +3,6 @@
 
   let el;
 
-  export let value = '';
-
   onMount(() => {
     el.style.height = el.scrollHeight + 'px';
     el.style.overflowY = 'hidden';
@@ -16,4 +14,4 @@
   });
 </script>
 
-<textarea bind:this={el} bind:value {...$$restProps} />
+<textarea bind:this={el} on:change {...$$restProps} />

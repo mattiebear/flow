@@ -7,7 +7,7 @@ defmodule Flow.Skills.Technique do
 
   schema "skills_techniques" do
     field :description, :string
-    field :layout, {:array, :map}
+    field :layout, {:array, :map}, default: []
     field :name, :string
 
     belongs_to :user, Flow.Accounts.User

@@ -4,10 +4,13 @@
   import { className } from '../js/utils/style';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
 
+  export let canMoveDown;
+  export let canMoveUp;
+  export let onChange;
+  export let onDelete;
+  export let onMove;
   export let number;
   export let step;
-  export let canMoveUp;
-  export let canMoveDown;
 
   let isOpen = false;
   let menu;
@@ -31,7 +34,7 @@
 
   function moveStep(direction) {
     isOpen = false;
-    onMove(step.idx, direction);
+    onMove(step.layout_id, direction);
   }
 </script>
 
@@ -52,13 +55,12 @@
   transition:fade={{ duration: 100 }}
 >
   <AutoResizeTextarea
+    on:change={(e) => onChange(step.layout_id, 'description', e.target.value)}
     class={className(
       'bg-none bg-transparent outline-none border-none p-1',
       'w-full resize-none min-h-[6rem]'
     )}
-    on:change={(e) => onUpdate(step.idx, 'description', e.target.value)}
     placeholder="Describe the this step"
-    value={step.description}
   />
 
   <div class="flex justify-end relative">
@@ -111,7 +113,7 @@
           <li>
             <button
               class="option flex justify-between"
-              on:click={() => onDelete(step.idx)}
+              on:click={() => onDelete(step.layout_id)}
               type="button"
             >
               Remove

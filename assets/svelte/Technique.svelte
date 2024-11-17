@@ -15,8 +15,9 @@
     return form.steps.find((step) => step.layout_id === node.layout_id);
   });
 
+  // TODO: Remove this
   $: {
-    console.log({ orderedSteps });
+    console.log({ form });
   }
 
   function addStep() {
@@ -24,7 +25,6 @@
       const id = randomId();
 
       draft.steps.push({
-        title: '',
         description: '',
         layout_id: id,
       });
@@ -35,34 +35,35 @@
     });
   }
 
-  // function deleteStep(id) {
-  //   steps = steps.filter((step) => step.idx !== id);
-  //   layout = layout.filter((child) => child.id !== id);
-  // }
+  function deleteStep(id) {
+    form = produce(form, (draft) => {
+      draft.steps = draft.steps.filter((step) => step.layout_id !== id);
+      draft.layout = draft.layout.filter((child) => child.layout_id !== id);
+    });
+  }
 
-  // function updateStep(id, key, value) {
-  //   steps = produce(steps, (draft) => {
-  //     const step = draft.find((step) => step.idx === id);
-  //     step[key] = value;
-  //   });
-  // }
+  function updateStep(id, key, value) {
+    form = produce(form, (draft) => {
+      const step = draft.steps.find((step) => step.layout_id === id);
+      step[key] = value;
+    });
+  }
 
-  // function moveStep(id, direction) {
-  //   const index = layout.findIndex((child) => child.id === id);
-  //   const newIndex = index + direction;
+  function moveStep(id, direction) {
+    const index = form.layout.findIndex((node) => node.layout_id === id);
+    const newIndex = index + direction;
 
-  //   if (newIndex < 0 || newIndex >= layout.length) {
-  //     return;
-  //   }
+    if (newIndex < 0 || newIndex >= form.layout.length) {
+      return;
+    }
 
-  //   layout = produce(layout, (draft) => {
-  //     draft.splice(newIndex, 0, draft.splice(index, 1)[0]);
-  //   });
-  // }
+    form = produce(form, (draft) => {
+      draft.layout.splice(newIndex, 0, draft.layout.splice(index, 1)[0]);
+    });
+  }
 
   function submit() {
-    console.log({ form });
-    // live.pushEvent('save', { technique: form });
+    live.pushEvent('save', { technique: form });
   }
 </script>
 
@@ -73,7 +74,8 @@
     </label>
     <input
       id="name"
-      bind:value={form.name}
+      on:change={(e) => (form.name = e.target.value)}
+      value={form.name}
       class={className(
         'text-6xl px-3 py-4 placeholder:text-neutral-500 w-full outline-none',
         'text-neutral-900 dark:text-neutral-300 bg-transparent',
@@ -103,7 +105,8 @@
     >
       <AutoResizeTextarea
         id="description"
-        bind:value={form.description}
+        on:change={(e) => (form.description = e.target.value)}
+        value={form.description}
         aria-label="Description of starting position"
         class={className(
           'bg-none bg-transparent outline-none border-none p-1',
@@ -113,14 +116,17 @@
       />
     </div>
 
-    <!-- {#each orderedSteps as step, index (step.idx)}
+    {#each orderedSteps as step, index (step.layout_id)}
       <StepCard
         canMoveDown={index < orderedSteps.length - 1}
         canMoveUp={index > 0}
+        onChange={updateStep}
+        onDelete={deleteStep}
+        onMove={moveStep}
         number={index + 1}
         {step}
       />
-    {/each} -->
+    {/each}
 
     <div class="col-start-2 flex flex-row justify-center">
       <button
