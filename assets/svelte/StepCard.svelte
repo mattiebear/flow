@@ -16,6 +16,10 @@
   let menu;
   let listener;
 
+  $: {
+    console.log({ step });
+  }
+
   onMount(() => {
     listener = (e) => {
       if (menu && !menu.contains(e.target)) {
@@ -49,8 +53,8 @@
 
 <div
   class={className(
-    'rounded-xl w-full py-2 px-3',
-    'border border-solid border-zinc-500'
+    'rounded-xl w-full py-2 px-3 border border-solid',
+    step.errors.description ? 'border-red-900' : 'border-zinc-500'
   )}
   transition:fade={{ duration: 100 }}
 >
@@ -62,6 +66,12 @@
     )}
     placeholder="Describe the this step"
   />
+
+  {#if step.errors.description}
+    <p class="text-red-700 dark:text-red-300 text-sm mt-1">
+      {step.errors.description}
+    </p>
+  {/if}
 
   <div class="flex justify-end relative">
     <button

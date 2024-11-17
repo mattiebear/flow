@@ -4,6 +4,7 @@ defmodule Flow.Skills.Step do
 
   schema "skills_steps" do
     field :description, :string
+    field :layout_id, :string
 
     belongs_to :technique, Flow.Skills.Technique
 
@@ -15,8 +16,8 @@ defmodule Flow.Skills.Step do
   @doc false
   def changeset(step, attrs) do
     step
-    |> cast(attrs, [:description])
+    |> cast(attrs, [:description, :layout_id])
     |> cast_assoc(:details)
-    |> validate_required([:description])
+    |> validate_required([:description, :layout_id])
   end
 end

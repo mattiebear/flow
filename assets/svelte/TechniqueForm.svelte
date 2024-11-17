@@ -5,14 +5,23 @@
   import { className } from '../js/utils/style';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
   import StepCard from './StepCard.svelte';
+  import { get } from 'svelte/store';
 
+  export let errors = {};
   export let live;
   export let technique;
 
   let form = { ...technique };
 
   $: orderedSteps = form.layout.map((node) => {
-    return form.steps.find((step) => step.layout_id === node.layout_id);
+    const index = form.steps.findIndex(
+      (step) => step.layout_id === node.layout_id
+    );
+
+    return {
+      ...form.steps[index],
+      errors: errors.steps ? errors.steps[index] : {},
+    };
   });
 
   function addStep() {
@@ -73,13 +82,20 @@
       on:change={(e) => (form.name = e.target.value)}
       value={form.name}
       class={className(
-        'text-6xl px-3 py-4 placeholder:text-neutral-500 w-full outline-none',
-        'text-neutral-900 dark:text-neutral-300 bg-transparent',
-        'border-b border-zinc-400 dark:border-zinc-500 focus:border-zinc-500 dark:focus:border-zinc-100',
-        'transition-colors'
+        'text-6xl px-3 py-4 placeholder:text-neutral-500 w-full outline-none border-b',
+        'text-neutral-900 dark:text-neutral-300 bg-transparent transition-colors',
+        {
+          'border-red-900 placeholder:text-red-300': errors.name,
+          'border-zinc-400 dark:border-zinc-500 focus:border-zinc-500 dark:focus:border-zinc-100':
+            !errors.name,
+        }
       )}
-      placeholder="Butterfly Sweep"
+      placeholder="Technique name"
     />
+
+    {#if errors.name}
+      <p class="text-red-700 dark:text-red-300 text-sm mt-1">{errors.name}</p>
+    {/if}
   </div>
 
   <div class="w-full grid grid-cols-technique gap-4">

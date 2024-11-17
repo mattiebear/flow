@@ -1,6 +1,8 @@
 defmodule FlowWeb.Skills.TechniqueLive do
   use FlowWeb, :live_view
 
+  alias Flow.Schema.Error
+  alias Flow.Skills
   alias Flow.Skills.Technique
 
   def render(assigns) do
@@ -9,7 +11,19 @@ defmodule FlowWeb.Skills.TechniqueLive do
       Breadcrumbs <br />
 
       <div :if={@live_action != :new}>
-        Seach <br /> Technique list
+        <p>
+          Search
+        </p>
+        <p>
+          <.link patch={~p"/techniques/new"}>
+            <.button>
+              Add Technique
+            </.button>
+          </.link>
+        </p>
+        <p>
+          Technique list
+        </p>
       </div>
     </div>
 
@@ -18,11 +32,10 @@ defmodule FlowWeb.Skills.TechniqueLive do
         Active filters
       </span>
 
-      <br />
       <.svelte
-        :if={@live_action != :index}
-        name="Technique"
-        props={%{technique: @technique}}
+        :if={@live_action == :new}
+        name="TechniqueForm"
+        props={%{errors: @errors, technique: @technique}}
         socket={@socket}
       />
     </div>
@@ -45,8 +58,19 @@ defmodule FlowWeb.Skills.TechniqueLive do
   end
 
   def handle_event("save", %{"technique" => technique_params}, socket) do
-    IO.inspect(technique_params)
-    {:noreply, socket}
+    # TODO: Will need to handle saving an existing technique
+    case Skills.create_technique(socket.assigns.current_user, technique_params) do
+      {:ok, technique} ->
+        socket =
+          socket
+          |> put_flash(:info, "Technique added to library!")
+          |> push_patch(to: ~p"/techniques/#{technique}")
+
+        {:noreply, socket}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, :errors, Error.serialize_errors(changeset))}
+    end
   end
 
   defp assign_action(:index, socket) do
@@ -56,7 +80,9 @@ defmodule FlowWeb.Skills.TechniqueLive do
   defp assign_action(:new, socket) do
     technique = %Technique{layout: [], steps: []}
 
-    assign(socket, :technique, technique)
+    socket
+    |> assign(:technique, technique)
+    |> assign(:errors, %{})
   end
 
   defp assign_action(:show, socket) do

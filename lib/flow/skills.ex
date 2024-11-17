@@ -7,6 +7,12 @@ defmodule Flow.Skills do
 
   @doc """
   Returns the count of techniques for a given user.
+
+  ## Examples
+
+      iex> get_technique_count(%User{})
+      10
+
   """
   def get_technique_count(%User{} = user) do
     Repo.one(from p in Technique, where: p.user_id == ^user.id, select: count(p.id))
