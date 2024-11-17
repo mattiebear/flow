@@ -85,7 +85,8 @@
         'text-6xl px-3 py-4 placeholder:text-neutral-500 w-full outline-none border-b',
         'text-neutral-900 dark:text-neutral-300 bg-transparent transition-colors',
         {
-          'border-red-900 placeholder:text-red-300': errors.name,
+          'border-red-900 placeholder:text-red-400 dark:placeholder:text-red-300':
+            errors.name,
           'border-zinc-400 dark:border-zinc-500 focus:border-zinc-500 dark:focus:border-zinc-100':
             !errors.name,
         }
