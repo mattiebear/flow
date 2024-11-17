@@ -14,7 +14,7 @@ defmodule FlowWeb.Training.DashboardLive do
   end
 
   def mount(_params, _session, socket) do
-    technique_count = Flow.Skills.technique_count(socket.assigns.current_user)
+    technique_count = Flow.Skills.get_technique_count(socket.assigns.current_user)
     {:ok, assign(socket, technique_count: technique_count)}
   end
 end
