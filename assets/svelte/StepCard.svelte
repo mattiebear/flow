@@ -6,9 +6,6 @@
 
   export let number;
   export let step;
-  export let onDelete;
-  export let onUpdate;
-  export let onMove;
   export let canMoveUp;
   export let canMoveDown;
 

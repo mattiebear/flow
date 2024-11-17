@@ -6,9 +6,9 @@ defmodule Flow.Skills.Technique do
   @derive {Jason.Encoder, except: [:__meta__, :user]}
 
   schema "skills_techniques" do
+    field :description, :string
     field :layout, {:array, :map}
     field :name, :string
-    # TODO: Add starting position description
 
     belongs_to :user, Flow.Accounts.User
 
@@ -20,7 +20,7 @@ defmodule Flow.Skills.Technique do
   @doc false
   def changeset(technique, attrs) do
     technique
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:description, :name])
     |> cast_assoc(:steps)
     |> validate_required([:name])
   end

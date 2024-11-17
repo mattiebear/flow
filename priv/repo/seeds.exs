@@ -6,7 +6,7 @@
 alias Flow.Accounts.User
 alias Flow.Repo
 
-{:ok, user} =
+{:ok, _user} =
   %User{}
   |> User.registration_changeset(%{
     email: "user@example.com",

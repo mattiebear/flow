@@ -1,7 +1,7 @@
 export function className(...classes) {
   return classes
     .map((c) => {
-      if (typeof c === "string") {
+      if (typeof c === 'string') {
         return c;
       }
 
@@ -9,14 +9,14 @@ export function className(...classes) {
         return className(...c);
       }
 
-      if (typeof c === "object") {
+      if (typeof c === 'object') {
         return Object.entries(c)
           .filter(([, value]) => value)
           .map(([key]) => key)
-          .join(" ");
+          .join(' ');
       }
 
-      return "";
+      return '';
     })
-    .join(" ");
+    .join(' ');
 }

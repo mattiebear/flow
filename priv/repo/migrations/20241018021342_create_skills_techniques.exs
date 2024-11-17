@@ -3,6 +3,7 @@ defmodule Flow.Repo.Migrations.CreateSkillsTechniques do
 
   def change do
     create table(:skills_techniques) do
+      add :description, :text
       add :layout, {:array, :map}, null: false, default: []
       add :name, :string, null: false
 

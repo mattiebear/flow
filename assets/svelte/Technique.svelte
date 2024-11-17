@@ -1,7 +1,7 @@
 <script>
   import { produce } from 'immer';
 
-  import { Step } from '../js/entities/Step';
+  import { randomId } from '../js/utils/id';
   import { className } from '../js/utils/style';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
   import StepCard from './StepCard.svelte';
@@ -9,63 +9,60 @@
   export let live;
   export let technique;
 
-  // TODO: Should this be in an object? Maybe wait for Svelte version 5.
-  let name = '';
-  let description = '';
-  let steps = [];
-  let layout = [];
+  let form = { ...technique };
 
-  // TODO: Handle missing layout and steps
-  $: orderedSteps = layout.map((child) => {
-    return steps.find((step) => step.idx === child.id);
+  $: orderedSteps = form.layout.map((node) => {
+    return form.steps.find((step) => step.layout_id === node.layout_id);
   });
 
+  $: {
+    console.log({ orderedSteps });
+  }
+
   function addStep() {
-    const step = new Step();
+    form = produce(form, (draft) => {
+      const id = randomId();
 
-    steps = produce(steps, (draft) => {
-      draft.push(step);
-    });
+      draft.steps.push({
+        title: '',
+        description: '',
+        layout_id: id,
+      });
 
-    layout = produce(layout, (draft) => {
-      draft.push({ id: step.idx });
-    });
-  }
-
-  function deleteStep(id) {
-    steps = steps.filter((step) => step.idx !== id);
-    layout = layout.filter((child) => child.id !== id);
-  }
-
-  function updateStep(id, key, value) {
-    steps = produce(steps, (draft) => {
-      const step = draft.find((step) => step.idx === id);
-      step[key] = value;
+      draft.layout.push({
+        layout_id: id,
+      });
     });
   }
 
-  function moveStep(id, direction) {
-    const index = layout.findIndex((child) => child.id === id);
-    const newIndex = index + direction;
+  // function deleteStep(id) {
+  //   steps = steps.filter((step) => step.idx !== id);
+  //   layout = layout.filter((child) => child.id !== id);
+  // }
 
-    if (newIndex < 0 || newIndex >= layout.length) {
-      return;
-    }
+  // function updateStep(id, key, value) {
+  //   steps = produce(steps, (draft) => {
+  //     const step = draft.find((step) => step.idx === id);
+  //     step[key] = value;
+  //   });
+  // }
 
-    layout = produce(layout, (draft) => {
-      draft.splice(newIndex, 0, draft.splice(index, 1)[0]);
-    });
-  }
+  // function moveStep(id, direction) {
+  //   const index = layout.findIndex((child) => child.id === id);
+  //   const newIndex = index + direction;
+
+  //   if (newIndex < 0 || newIndex >= layout.length) {
+  //     return;
+  //   }
+
+  //   layout = produce(layout, (draft) => {
+  //     draft.splice(newIndex, 0, draft.splice(index, 1)[0]);
+  //   });
+  // }
 
   function submit() {
-    const technique = {
-      name,
-      description,
-      steps: steps.map((step) => step.toJSON()),
-      layout,
-    };
-
-    live.pushEvent('save', { technique });
+    console.log({ form });
+    // live.pushEvent('save', { technique: form });
   }
 </script>
 
@@ -76,7 +73,7 @@
     </label>
     <input
       id="name"
-      bind:value={name}
+      bind:value={form.name}
       class={className(
         'text-6xl px-3 py-4 placeholder:text-neutral-500 w-full outline-none',
         'text-neutral-900 dark:text-neutral-300 bg-transparent',
@@ -106,7 +103,7 @@
     >
       <AutoResizeTextarea
         id="description"
-        bind:value={description}
+        bind:value={form.description}
         aria-label="Description of starting position"
         class={className(
           'bg-none bg-transparent outline-none border-none p-1',
@@ -116,17 +113,14 @@
       />
     </div>
 
-    {#each orderedSteps as step, index (step.idx)}
+    <!-- {#each orderedSteps as step, index (step.idx)}
       <StepCard
         canMoveDown={index < orderedSteps.length - 1}
         canMoveUp={index > 0}
         number={index + 1}
-        onDelete={deleteStep}
-        onMove={moveStep}
-        onUpdate={updateStep}
         {step}
       />
-    {/each}
+    {/each} -->
 
     <div class="col-start-2 flex flex-row justify-center">
       <button
