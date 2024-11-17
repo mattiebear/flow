@@ -15,11 +15,6 @@
     return form.steps.find((step) => step.layout_id === node.layout_id);
   });
 
-  // TODO: Remove this
-  $: {
-    console.log({ form });
-  }
-
   function addStep() {
     form = produce(form, (draft) => {
       const id = randomId();
