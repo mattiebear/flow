@@ -7,31 +7,39 @@ defmodule FlowWeb.Skills.TechniqueLive do
 
   def render(assigns) do
     ~H"""
-    <div class="col-span-2">
-      Breadcrumbs <br />
-
-      <div :if={@live_action != :new}>
-        <p>
-          Search
-        </p>
-        <p>
-          <.link patch={~p"/techniques/new"}>
-            <.button>
-              Add Technique
-            </.button>
-          </.link>
-        </p>
-        <p>
-          Technique list
-        </p>
+    <div class="col-span-11">
+      <div class="flex flex-row gap-x-1">
+        <span>Techniques</span>
+        <span>/</span>
+        <span>Add a technique</span>
       </div>
     </div>
 
-    <div class="col-span-6">
-      <span :if={@live_action != :new}>
-        Active filters
-      </span>
+    <div class="col-span-2">
+      <p>
+        Search
+      </p>
+    </div>
 
+    <div class="col-span-9">
+      <p>
+        Filters
+      </p>
+    </div>
+
+    <div class="col-span-2">
+      <.link patch={~p"/techniques/new"}>
+        <.button>
+          Add Technique
+        </.button>
+      </.link>
+
+      <p>
+        Technique list
+      </p>
+    </div>
+
+    <div class="col-span-6">
       <.svelte
         :if={@live_action == :new}
         name="TechniqueForm"
@@ -40,10 +48,10 @@ defmodule FlowWeb.Skills.TechniqueLive do
       />
     </div>
 
-    <div class="col-span-2">
-      <div :if={Enum.member?(~w(edit show), @live_action)}>
+    <div class="col-span-3">
+      <p>
         Drawer
-      </div>
+      </p>
     </div>
     """
   end
