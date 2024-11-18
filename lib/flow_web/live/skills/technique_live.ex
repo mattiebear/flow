@@ -8,11 +8,7 @@ defmodule FlowWeb.Skills.TechniqueLive do
   def render(assigns) do
     ~H"""
     <div class="col-span-11">
-      <div class="flex flex-row gap-x-1">
-        <span>Techniques</span>
-        <span>/</span>
-        <span>Add a technique</span>
-      </div>
+      <.breadcrumbs items={@breadcrumbs} />
     </div>
 
     <div class="col-span-2">
@@ -82,15 +78,21 @@ defmodule FlowWeb.Skills.TechniqueLive do
   end
 
   defp assign_action(:index, socket) do
-    assign(socket, :technique, nil)
+    socket
+    |> assign(:breadcrumbs, [{"Techniques", ~p"/techniques"}])
+    |> assign(:technique, nil)
   end
 
   defp assign_action(:new, socket) do
     technique = %Technique{layout: [], steps: []}
 
     socket
-    |> assign(:technique, technique)
+    |> assign(:breadcrumbs, [
+      {"Techniques", ~p"/techniques"},
+      {"Add a technique", ~p"/techniques/new"}
+    ])
     |> assign(:errors, %{})
+    |> assign(:technique, technique)
   end
 
   defp assign_action(:show, socket) do

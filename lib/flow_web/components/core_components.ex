@@ -647,6 +647,37 @@ defmodule FlowWeb.CoreComponents do
     """
   end
 
+  @doc """
+  Renders breadcrumbs for navigation.
+  """
+  attr :items, :list, required: true
+
+  def breadcrumbs(assigns) do
+    items = Enum.with_index(assigns.items)
+    assigns = assign(assigns, :items, items)
+
+    ~H"""
+    <nav class="flex flex-row items-center">
+      <%= for {{label, path}, index} <- @items do %>
+        <% bold = index == length(@items) - 1 && index != 0 %>
+        <.link :if={path != nil} patch={path} class="hover:underline">
+          <span class={bold && "font-semibold"}>
+            <%= label %>
+          </span>
+        </.link>
+
+        <span :if={path == nil} class={bold && "font-semibold"}>
+          <%= label %>
+        </span>
+
+        <span :if={index < length(@items) - 1} class="mx-1">
+          <.icon name="hero-chevron-right-mini" />
+        </span>
+      <% end %>
+    </nav>
+    """
+  end
+
   ## JS Commands
 
   def show(js \\ %JS{}, selector) do
