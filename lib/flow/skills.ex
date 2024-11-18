@@ -33,4 +33,22 @@ defmodule Flow.Skills do
     |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
+
+  @doc """
+  Lists all techniques for a given user.
+
+  ## Examples
+
+      iex> list_techniques(%User{})
+      [%Technique{}, %Technique{}]
+
+  """
+  def list_techniques(%User{} = user) do
+    Repo.all(
+      from t in Technique,
+        select: %{id: t.id, name: t.name},
+        where: t.user_id == ^user.id,
+        order_by: [asc: t.name]
+    )
+  end
 end

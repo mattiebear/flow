@@ -12,27 +12,48 @@ defmodule FlowWeb.Skills.TechniqueLive do
     </div>
 
     <div class="col-span-2">
-      <p>
+      <%!-- <p>
         Search
-      </p>
+      </p> --%>
     </div>
 
     <div class="col-span-9">
-      <p>
+      <%!-- <p>
         Filters
-      </p>
+      </p> --%>
     </div>
 
     <div class="col-span-2">
-      <.link patch={~p"/techniques/new"}>
+      <%!-- <.link patch={~p"/techniques/new"}>
         <.button>
           Add Technique
         </.button>
-      </.link>
+      </.link> --%>
 
-      <p>
-        Technique list
+      <p class="mb-4">
+        <%= ngettext("1 technique", "%{count} techniques", length(@techniques)) %>
       </p>
+
+      <nav>
+        <ul class="flex flex-col gap-y-2">
+          <li :for={technique <- @techniques}>
+            <% active = String.contains?(@url, ~p"/techniques/#{technique.id}") %>
+            <.link patch={~p"/techniques/#{technique.id}"} class="block">
+              <button class={[
+                "p-[1px] rounded-xl w-full",
+                active && "dark:text-zinc-300 bg-gradient-to-b from-zinc-600 to-transparent to-80%"
+              ]}>
+                <div class={[
+                  "h-full rounded-[calc(0.75rem_-_1px)] py-1 px-2.5 text-left",
+                  active && "bg-gradient-to-b from-zinc-800 to-zinc-900 text-indigo-400"
+                ]}>
+                  <%= technique.name %>
+                </div>
+              </button>
+            </.link>
+          </li>
+        </ul>
+      </nav>
     </div>
 
     <div class="col-span-6">
@@ -53,11 +74,17 @@ defmodule FlowWeb.Skills.TechniqueLive do
   end
 
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    techniques = Skills.list_techniques(socket.assigns.current_user)
+    {:ok, assign(socket, :techniques, techniques)}
   end
 
-  def handle_params(_params, _url, socket) do
-    socket = assign_action(socket.assigns.live_action, socket)
+  def handle_params(params, url, socket) do
+    socket =
+      socket
+      |> assign(:params, params)
+      |> assign(:url, url)
+      |> assign_action(socket.assigns.live_action)
+
     {:noreply, socket}
   end
 
@@ -77,13 +104,13 @@ defmodule FlowWeb.Skills.TechniqueLive do
     end
   end
 
-  defp assign_action(:index, socket) do
+  defp assign_action(socket, :index) do
     socket
     |> assign(:breadcrumbs, [{"Techniques", ~p"/techniques"}])
     |> assign(:technique, nil)
   end
 
-  defp assign_action(:new, socket) do
+  defp assign_action(socket, :new) do
     technique = %Technique{layout: [], steps: []}
 
     socket
@@ -95,13 +122,15 @@ defmodule FlowWeb.Skills.TechniqueLive do
     |> assign(:technique, technique)
   end
 
-  defp assign_action(:show, socket) do
-    # TODO: Load technique
+  defp assign_action(socket, :show) do
     socket
+    |> assign(:breadcrumbs, [
+      {"Techniques", ~p"/techniques"},
+      {"TODO: Technique name", ~p"/techniques/#{socket.assigns.params["id"]}"}
+    ])
   end
 
-  defp assign_action(:edit, socket) do
-    # TODO: Load technique
+  defp assign_action(socket, :edit) do
     socket
   end
 end
