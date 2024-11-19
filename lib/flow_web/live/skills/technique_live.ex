@@ -61,6 +61,19 @@ defmodule FlowWeb.Skills.TechniqueLive do
     {:noreply, socket}
   end
 
+  def handle_event("remove_filter", %{"filter" => filter}, socket) do
+    filters = socket.assigns.filters |> List.delete(filter)
+
+    socket =
+      socket
+      |> push_patch(
+        to: "#{socket.assigns.current_path}?#{Plug.Conn.Query.encode(%{filters: filters})}"
+      )
+      |> assign(:filters, filters)
+
+    {:noreply, socket}
+  end
+
   defp assign_action(socket, :index) do
     socket
     |> assign(:breadcrumbs, [{"Techniques", ~p"/techniques"}])
