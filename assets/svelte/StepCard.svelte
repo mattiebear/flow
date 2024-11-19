@@ -62,7 +62,7 @@
     on:change={(e) => onChange(step.layout_id, 'description', e.target.value)}
     class={className(
       'bg-none bg-transparent outline-none border-none p-1',
-      'w-full resize-none min-h-[6rem]'
+      'w-full resize-none min-h-[6rem] focus:ring-0'
     )}
     placeholder="Describe the this step"
   />

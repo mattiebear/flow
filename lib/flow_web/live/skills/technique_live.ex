@@ -11,8 +11,22 @@ defmodule FlowWeb.Skills.TechniqueLive do
   end
 
   def handle_params(params, url, socket) do
+    filters = Map.get(params, "filters", [])
+
+    filtered_techniques =
+      case filters do
+        [] ->
+          socket.assigns.techniques
+
+        _ ->
+          Enum.reduce(filters, socket.assigns.techniques, fn filter, techniques ->
+            Enum.filter(techniques, &String.match?(&1.name, ~r/#{filter}/i))
+          end)
+      end
+
     socket =
       socket
+      |> assign(:filtered_techniques, filtered_techniques)
       |> assign(:params, params)
       |> assign(:url, url)
       |> assign_action(socket.assigns.live_action)
@@ -34,6 +48,16 @@ defmodule FlowWeb.Skills.TechniqueLive do
       {:error, changeset} ->
         {:noreply, assign(socket, :errors, Error.serialize_errors(changeset))}
     end
+  end
+
+  def handle_event("add_filter", %{"filter" => filter}, socket) do
+    filters = %{filters: [filter]}
+
+    socket =
+      socket
+      |> push_patch(to: "#{socket.assigns.current_path}?#{Plug.Conn.Query.encode(filters)}")
+
+    {:noreply, socket}
   end
 
   defp assign_action(socket, :index) do

@@ -123,7 +123,7 @@
         aria-label="Description of starting position"
         class={className(
           'bg-none bg-transparent outline-none border-none p-1',
-          'w-full resize-none min-h-[6rem]'
+          'w-full resize-none min-h-[6rem] focus:ring-0'
         )}
         placeholder="Describe the starting position for this technique"
       />

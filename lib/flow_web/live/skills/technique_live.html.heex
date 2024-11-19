@@ -3,15 +3,24 @@
 </div>
 
 <div class="col-span-2">
-  <%!-- <p>
-        Search
-      </p> --%>
+  <div>
+    <form
+      class="flex flex-row rounded-full border border-solid border-zinc-300 items-center px-1 gap-x-2"
+      phx-submit="add_filter"
+    >
+      <.icon name="hero-magnifying-glass" />
+      <input
+        type="text"
+        placeholder="Add filters"
+        class="bg-inherit border-none w-full basis-0 grow p-1 focus:ring-0"
+        name="filter"
+      />
+    </form>
+  </div>
 </div>
 
 <div class="col-span-9">
-  <%!-- <p>
-        Filters
-      </p> --%>
+  <%!-- Filters --%>
 </div>
 
 <div class="col-span-2">
@@ -27,7 +36,7 @@
 
   <nav>
     <ul class="flex flex-col gap-y-2">
-      <li :for={technique <- @techniques}>
+      <li :for={technique <- @filtered_techniques}>
         <% active = String.contains?(@url, ~p"/techniques/#{technique.id}") %>
         <.link patch={~p"/techniques/#{technique.id}"} class="block">
           <button class={[
@@ -57,7 +66,5 @@
 </div>
 
 <div class="col-span-3">
-  <p>
-    Drawer
-  </p>
+  <%!-- Drawer --%>
 </div>
