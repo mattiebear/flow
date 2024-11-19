@@ -26,6 +26,7 @@ defmodule FlowWeb.Skills.TechniqueLive do
 
     socket =
       socket
+      |> assign(:filters, filters)
       |> assign(:filtered_techniques, filtered_techniques)
       |> assign(:params, params)
       |> assign(:url, url)
