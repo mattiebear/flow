@@ -99,7 +99,7 @@
     {/if}
   </div>
 
-  <div class="w-full grid grid-cols-technique gap-4">
+  <div class="w-full grid grid-cols-[8rem_1fr] gap-4">
     <div class="flex justify-end items-center">
       <span
         class={className(

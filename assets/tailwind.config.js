@@ -14,16 +14,21 @@ module.exports = {
     '../lib/flow_web/**/*.*ex',
   ],
   theme: {
-    extend: {
-      gridTemplateColumns: {
-        technique: '8rem 1fr',
-      },
-    },
     fontFamily: {
       body: ['Cabin', 'sans-serif'],
     },
+    extend: {
+      gridTemplateAreas: {
+        techniques: [
+          'breadcrumbs breadcrumbs breadcrumbs breadcrumbs breadcrumbs breadcrumbs breadcrumbs breadcrumbs breadcrumbs breadcrumbs breadcrumbs',
+          'search search filters filters filters filters filters filters filters filters filters',
+          'techniques techniques technique technique technique technique technique technique details details details',
+        ],
+      },
+    },
   },
   plugins: [
+    require('@savvywombat/tailwindcss-grid-areas'),
     require('@tailwindcss/forms'),
     plugin(({ addVariant }) =>
       addVariant('phx-click-loading', [

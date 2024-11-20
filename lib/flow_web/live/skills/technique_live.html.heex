@@ -1,104 +1,106 @@
-<div class="col-span-11">
-  <.breadcrumbs items={@breadcrumbs} />
-</div>
-
-<div class="col-span-2">
-  <div class="h-full flex items-center">
-    <form
-      class="flex flex-row rounded-full border border-solid border-zinc-300 items-center px-1 gap-x-2"
-      phx-submit="add_filter"
-    >
-      <.icon name="hero-magnifying-glass" />
-      <input
-        type="text"
-        placeholder="Add filters"
-        class="bg-inherit border-none w-full basis-0 grow p-1 focus:ring-0"
-        name="filter"
-      />
-    </form>
+<main class="grid col-span-11 grid-cols-subgrid grid-rows-[48px_48px_auto] grid-areas-techniques py-7">
+  <div class="grid-in-breadcrumbs">
+    <.breadcrumbs items={@breadcrumbs} />
   </div>
-</div>
 
-<div class="col-span-9">
-  <div class="h-full flex flex-row gap-y-2 items-center">
-    <div
-      :for={filter <- @filters}
-      class={[
-        "rounded-full border border-solid border-zinc-300",
-        "px-2 py-0.5 flex flex-row items-center gap-x-2"
-      ]}
-    >
-      <span class="text-sm text-zinc-400 block">
-        "<%= filter %>"
-      </span>
-      <button
-        phx-click="remove_filter"
-        phx-value-filter={filter}
-        class="text-zinc-500 flex items-center"
+  <div class="grid-in-search">
+    <div class="h-full flex items-center">
+      <form
+        class="flex flex-row rounded-full border border-solid border-zinc-300 items-center px-1 gap-x-2"
+        phx-submit="add_filter"
       >
-        <.icon name="hero-x-mark-micro" />
-      </button>
+        <.icon name="hero-magnifying-glass" />
+        <input
+          type="text"
+          placeholder="Add filters"
+          class="bg-inherit border-none w-full basis-0 grow p-1 focus:ring-0"
+          name="filter"
+        />
+      </form>
     </div>
   </div>
-</div>
 
-<div class="col-span-2 py-6">
-  <div class="mb-6">
-    <.link patch={~p"/techniques/new"}>
-      <.button class="w-full" size="sm">
-        Add Technique
-      </.button>
-    </.link>
+  <div class="grid-in-filters">
+    <div class="h-full flex flex-row gap-y-2 items-center">
+      <div
+        :for={filter <- @filters}
+        class={[
+          "rounded-full border border-solid border-zinc-300",
+          "px-2 py-0.5 flex flex-row items-center gap-x-2"
+        ]}
+      >
+        <span class="text-sm text-zinc-400 block">
+          "<%= filter %>"
+        </span>
+        <button
+          phx-click="remove_filter"
+          phx-value-filter={filter}
+          class="text-zinc-500 flex items-center"
+        >
+          <.icon name="hero-x-mark-micro" />
+        </button>
+      </div>
+    </div>
   </div>
 
-  <p class="mb-1 text-sm">
-    <%= ngettext("1 technique", "%{count} techniques", length(@techniques)) %>
-  </p>
+  <div class="grid-in-techniques py-6">
+    <div class="mb-6">
+      <.link patch={~p"/techniques/new"}>
+        <.button class="w-full" size="sm">
+          Add Technique
+        </.button>
+      </.link>
+    </div>
 
-  <nav>
-    <ul class="flex flex-col gap-y-2">
-      <li :for={technique <- @techniques}>
-        <% active = String.contains?(@url, ~p"/techniques/#{technique.id}") %>
-        <.link patch={~p"/techniques/#{technique.id}"} class="block">
-          <button class={[
-            "p-[1px] rounded-xl w-full",
-            active && "dark:text-zinc-300 bg-gradient-to-b from-zinc-600 to-transparent to-80%"
-          ]}>
-            <div class={[
-              "h-full rounded-[calc(0.75rem_-_1px)] py-1 px-2.5 text-left",
-              active && "bg-gradient-to-b from-zinc-800 to-zinc-900 text-indigo-400"
+    <p class="mb-1 text-sm">
+      <%= ngettext("1 technique", "%{count} techniques", length(@techniques)) %>
+    </p>
+
+    <nav>
+      <ul class="flex flex-col gap-y-2">
+        <li :for={technique <- @techniques}>
+          <% active = String.contains?(@url, ~p"/techniques/#{technique.id}") %>
+          <.link patch={~p"/techniques/#{technique.id}"} class="block">
+            <button class={[
+              "p-[1px] rounded-xl w-full",
+              active && "dark:text-zinc-300 bg-gradient-to-b from-zinc-600 to-transparent to-80%"
             ]}>
-              <%= technique.name %>
-            </div>
-          </button>
-        </.link>
-      </li>
-    </ul>
-  </nav>
-</div>
-
-<div class="col-span-6 py-4">
-  <.live_component
-    :if={@live_action == :new}
-    module={FlowWeb.Skills.TechniqueFormComponent}
-    id={:new}
-    current_user={@current_user}
-    technique={@technique}
-  />
-
-  <div :if={@live_action == :index} class="text-center">
-    <h2 class="text-3xl mb-4">
-      Select or create a technique to get started
-    </h2>
-
-    <.link patch={~p"/techniques/new"}>
-      <.button>
-        Add Technique
-      </.button>
-    </.link>
+              <div class={[
+                "h-full rounded-[calc(0.75rem_-_1px)] py-1 px-2.5 text-left",
+                active && "bg-gradient-to-b from-zinc-800 to-zinc-900 text-indigo-400"
+              ]}>
+                <%= technique.name %>
+              </div>
+            </button>
+          </.link>
+        </li>
+      </ul>
+    </nav>
   </div>
-</div>
 
-<div class="col-span-3">
-  <%!-- Drawer --%>
-</div>
+  <div class="grid-in-technique py-4">
+    <.live_component
+      :if={@live_action == :new}
+      module={FlowWeb.Skills.TechniqueFormComponent}
+      id={:new}
+      current_user={@current_user}
+      technique={@technique}
+    />
+
+    <div :if={@live_action == :index} class="text-center">
+      <h2 class="text-3xl mb-4">
+        Select or create a technique to get started
+      </h2>
+
+      <.link patch={~p"/techniques/new"}>
+        <.button>
+          Add Technique
+        </.button>
+      </.link>
+    </div>
+  </div>
+
+  <div class="grid-in-details">
+    <%!-- Drawer --%>
+  </div>
+</main>
