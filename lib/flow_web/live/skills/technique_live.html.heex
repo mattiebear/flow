@@ -43,20 +43,20 @@
 </div>
 
 <div class="col-span-2 py-6">
-  <p class="mb-4 text-sm">
+  <div class="mb-6">
+    <.link patch={~p"/techniques/new"}>
+      <.button class="w-full" size="sm">
+        Add Technique
+      </.button>
+    </.link>
+  </div>
+
+  <p class="mb-1 text-sm">
     <%= ngettext("1 technique", "%{count} techniques", length(@techniques)) %>
   </p>
 
   <nav>
     <ul class="flex flex-col gap-y-2">
-      <li>
-        <.link patch={~p"/techniques/new"}>
-          <.button class="w-full" size="sm">
-            Add Technique
-          </.button>
-        </.link>
-      </li>
-
       <li :for={technique <- @techniques}>
         <% active = String.contains?(@url, ~p"/techniques/#{technique.id}") %>
         <.link patch={~p"/techniques/#{technique.id}"} class="block">
