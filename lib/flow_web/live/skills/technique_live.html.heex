@@ -55,6 +55,14 @@
 
   <nav>
     <ul class="flex flex-col gap-y-2">
+      <li>
+        <.link patch={~p"/techniques/new"}>
+          <.button class="w-full" size="sm">
+            Add Technique
+          </.button>
+        </.link>
+      </li>
+
       <li :for={technique <- @techniques}>
         <% active = String.contains?(@url, ~p"/techniques/#{technique.id}") %>
         <.link patch={~p"/techniques/#{technique.id}"} class="block">
@@ -83,9 +91,17 @@
     socket={@socket}
   />
 
-  <h2 :if={@live_action == :index} class="text-center text-3xl">
-    Select or create a technique to get started
-  </h2>
+  <div :if={@live_action == :index} class="text-center">
+    <h2 class="text-3xl mb-4">
+      Select or create a technique to get started
+    </h2>
+
+    <.link patch={~p"/techniques/new"}>
+      <.button>
+        Add Technique
+      </.button>
+    </.link>
+  </div>
 </div>
 
 <div class="col-span-3">

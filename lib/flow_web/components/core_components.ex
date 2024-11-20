@@ -260,6 +260,7 @@ defmodule FlowWeb.CoreComponents do
     base = @button_style_matrix[assigns.color][assigns.variant]
 
     case assigns.size do
+      "sm" -> base <> " px-2 py-1 rounded-md"
       "md" -> base <> " px-3 py-2 rounded-md"
     end
   end
