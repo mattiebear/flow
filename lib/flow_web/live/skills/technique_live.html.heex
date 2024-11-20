@@ -84,11 +84,12 @@
 </div>
 
 <div class="col-span-6 py-4">
-  <.svelte
+  <.live_component
     :if={@live_action == :new}
-    name="TechniqueForm"
-    props={%{errors: @errors, technique: @technique}}
-    socket={@socket}
+    module={FlowWeb.Skills.TechniqueFormComponent}
+    id={:new}
+    current_user={@current_user}
+    technique={@technique}
   />
 
   <div :if={@live_action == :index} class="text-center">

@@ -68,7 +68,7 @@
   }
 
   function submit() {
-    live.pushEvent('save', { technique: form });
+    live.pushEventTo('#technique-form', 'save', { technique: form });
   }
 </script>
 

@@ -1,7 +1,6 @@
 defmodule FlowWeb.Skills.TechniqueLive do
   use FlowWeb, :live_view
 
-  alias Flow.Schema.Error
   alias Flow.Skills
   alias Flow.Skills.Technique
 
@@ -22,24 +21,6 @@ defmodule FlowWeb.Skills.TechniqueLive do
       |> assign_action(socket.assigns.live_action)
 
     {:noreply, socket}
-  end
-
-  def handle_event("save", %{"technique" => technique_params}, socket) do
-    # TODO: Will need to handle saving an existing technique
-    case Skills.create_technique(socket.assigns.current_user, technique_params) do
-      {:ok, technique} ->
-        send(self(), {:technique_added, technique})
-
-        socket =
-          socket
-          |> put_flash(:info, "Technique added to library!")
-          |> push_patch(to: ~p"/techniques/#{technique}")
-
-        {:noreply, socket}
-
-      {:error, changeset} ->
-        {:noreply, assign(socket, :errors, Error.serialize_errors(changeset))}
-    end
   end
 
   def handle_event("add_filter", %{"filter" => filter}, socket) do
