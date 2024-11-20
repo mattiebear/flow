@@ -51,4 +51,13 @@ defmodule Flow.Skills do
         order_by: [asc: t.name]
     )
   end
+
+  def search_techniques(%User{} = user, query) do
+    Repo.all(
+      from t in Technique,
+        select: %{id: t.id, name: t.name},
+        where: t.user_id == ^user.id and fragment("? ILIKE ?", t.name, ^"%#{query}%"),
+        order_by: [asc: t.name]
+    )
+  end
 end

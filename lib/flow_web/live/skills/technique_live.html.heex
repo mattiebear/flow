@@ -49,13 +49,13 @@
         </.button>
       </.link> --%>
 
-  <p class="mb-4">
+  <p class="mb-4 text-sm">
     <%= ngettext("1 technique", "%{count} techniques", length(@techniques)) %>
   </p>
 
   <nav>
     <ul class="flex flex-col gap-y-2">
-      <li :for={technique <- @filtered_techniques}>
+      <li :for={technique <- @techniques}>
         <% active = String.contains?(@url, ~p"/techniques/#{technique.id}") %>
         <.link patch={~p"/techniques/#{technique.id}"} class="block">
           <button class={[
