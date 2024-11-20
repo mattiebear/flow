@@ -6,14 +6,12 @@ defmodule FlowWeb.Skills.TechniqueLive do
   alias Flow.Skills.Technique
 
   def mount(_params, _session, socket) do
-    techniques = Skills.list_techniques(socket.assigns.current_user)
-
     socket =
       socket
       |> assign(:filters, [])
-      |> assign(:techniques, techniques)
+      |> assign_techniques()
 
-    {:ok, assign(socket, :techniques, techniques)}
+    {:ok, socket}
   end
 
   def handle_params(params, url, socket) do
@@ -30,6 +28,8 @@ defmodule FlowWeb.Skills.TechniqueLive do
     # TODO: Will need to handle saving an existing technique
     case Skills.create_technique(socket.assigns.current_user, technique_params) do
       {:ok, technique} ->
+        send(self(), {:technique_added, technique})
+
         socket =
           socket
           |> put_flash(:info, "Technique added to library!")
@@ -43,27 +43,25 @@ defmodule FlowWeb.Skills.TechniqueLive do
   end
 
   def handle_event("add_filter", %{"filter" => filter}, socket) do
-    filters = [filter]
-    techniques = Skills.search_techniques(socket.assigns.current_user, filter)
-
     socket =
       socket
-      |> assign(:filters, filters)
-      |> assign(:techniques, techniques)
+      |> assign(:filters, [filter])
+      |> assign_techniques()
 
     {:noreply, socket}
   end
 
   def handle_event("remove_filter", %{"filter" => _filter}, socket) do
-    filters = []
-    techniques = Skills.list_techniques(socket.assigns.current_user)
-
     socket =
       socket
-      |> assign(:filters, filters)
-      |> assign(:techniques, techniques)
+      |> assign(:filters, [])
+      |> assign_techniques()
 
     {:noreply, socket}
+  end
+
+  def handle_info({:technique_added, _technique}, socket) do
+    {:noreply, assign_techniques(socket)}
   end
 
   defp assign_action(socket, :index) do
@@ -94,5 +92,15 @@ defmodule FlowWeb.Skills.TechniqueLive do
 
   defp assign_action(socket, :edit) do
     socket
+  end
+
+  defp assign_techniques(socket) do
+    techniques =
+      case socket.assigns.filters do
+        [filter] -> Skills.search_techniques(socket.assigns.current_user, filter)
+        _ -> Skills.list_techniques(socket.assigns.current_user)
+      end
+
+    assign(socket, :techniques, techniques)
   end
 end
