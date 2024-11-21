@@ -16,9 +16,8 @@ defmodule FlowWeb.Skills.TechniqueLive do
   def handle_params(params, url, socket) do
     socket =
       socket
-      |> assign(:params, params)
       |> assign(:url, url)
-      |> assign_action(socket.assigns.live_action)
+      |> apply_action(socket.assigns.live_action, params)
 
     {:noreply, socket}
   end
@@ -45,13 +44,13 @@ defmodule FlowWeb.Skills.TechniqueLive do
     {:noreply, assign_techniques(socket)}
   end
 
-  defp assign_action(socket, :index) do
+  defp apply_action(socket, :index, _params) do
     socket
     |> assign(:breadcrumbs, [{"Techniques", ~p"/techniques"}])
     |> assign(:technique, nil)
   end
 
-  defp assign_action(socket, :new) do
+  defp apply_action(socket, :new, _params) do
     technique = %Technique{layout: [], steps: []}
 
     socket
@@ -63,15 +62,18 @@ defmodule FlowWeb.Skills.TechniqueLive do
     |> assign(:technique, technique)
   end
 
-  defp assign_action(socket, :show) do
+  defp apply_action(socket, :show, %{"id" => id}) do
+    technique = Skills.get_technique(socket.assigns.current_user, id)
+
     socket
     |> assign(:breadcrumbs, [
       {"Techniques", ~p"/techniques"},
-      {"TODO: Technique name", ~p"/techniques/#{socket.assigns.params["id"]}"}
+      {technique.name, ~p"/techniques/#{technique}"}
     ])
+    |> assign(:technique, technique)
   end
 
-  defp assign_action(socket, :edit) do
+  defp apply_action(socket, :edit, _params) do
     socket
   end
 

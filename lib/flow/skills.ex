@@ -60,4 +60,9 @@ defmodule Flow.Skills do
         order_by: [asc: t.name]
     )
   end
+
+  def get_technique(%User{} = user, id) do
+    Repo.get_by!(Technique, id: id, user_id: user.id)
+    |> Repo.preload(:steps)
+  end
 end

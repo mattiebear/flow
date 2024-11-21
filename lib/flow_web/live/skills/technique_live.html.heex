@@ -87,6 +87,14 @@
       technique={@technique}
     />
 
+    <.live_component
+      :if={@live_action == :show}
+      module={FlowWeb.Skills.TechniqueDetail}
+      id={@technique.id}
+      current_user={@current_user}
+      technique={@technique}
+    />
+
     <div :if={@live_action == :index} class="text-center">
       <h2 class="text-3xl mb-4">
         Select or create a technique to get started
