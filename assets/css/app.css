@@ -24,7 +24,7 @@
   }
 
   .switch input:checked + .slider::before {
-    @apply translate-x-6 bg-zinc-900;
+    @apply translate-x-6 bg-zinc-900 p-1.5;
     content: url('/icons/moon.svg');
   }
 
