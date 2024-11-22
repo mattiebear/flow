@@ -5,9 +5,6 @@ defmodule FlowWeb.Skills.TechniqueDetail do
     ~H"""
     <div>
       <div class="mb-8 w-full">
-        <p class="text-sm text-zinc-700 dark:text-zinc-500 mb-1">
-          Name
-        </p>
         <h1 class="px-3 py-4 text-6xl text-neutral-900 dark:text-neutral-300">
           <%= @technique.name %>
         </h1>

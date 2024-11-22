@@ -74,14 +74,7 @@
 
 <form autocomplete="off" on:submit|preventDefault={submit}>
   <div class="mb-8">
-    <label
-      for="name"
-      class="block text-sm text-zinc-700 dark:text-zinc-500 mb-1"
-    >
-      Name
-    </label>
     <input
-      id="name"
       on:change={(e) => (form.name = e.target.value)}
       value={form.name}
       class={className(
