@@ -15,8 +15,8 @@
   }
 
   .switch .slider::before {
-    @apply block h-8 w-8 absolute bg-amber-500 -left-1 -top-1 rounded-full transition-all duration-200;
-    content: '';
+    @apply block h-8 w-8 p-1 absolute bg-amber-500 -left-1 -top-1 rounded-full transition-all duration-200;
+    content: url('/icons/sun.svg');
   }
 
   .switch input {
@@ -25,6 +25,7 @@
 
   .switch input:checked + .slider::before {
     @apply translate-x-6 bg-zinc-900;
+    content: url('/icons/moon.svg');
   }
 
   /* Menu */
