@@ -5,7 +5,6 @@
   import { className } from '../js/utils/style';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
   import StepCard from './StepCard.svelte';
-  import { get } from 'svelte/store';
 
   export let errors = {};
   export let live;
