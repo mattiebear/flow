@@ -77,8 +77,17 @@ defmodule FlowWeb.Skills.TechniqueLive do
     |> assign(:technique, technique)
   end
 
-  defp apply_action(socket, :edit, _params) do
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    technique = Skills.get_technique(socket.assigns.current_user, id)
+
     socket
+    |> assign(:breadcrumbs, [
+      {"Techniques", ~p"/techniques"},
+      {technique.name, ~p"/techniques/#{technique}"},
+      {"Edit", ~p"/techniques/#{technique}/edit"}
+    ])
+    |> assign(:errors, %{})
+    |> assign(:technique, technique)
   end
 
   defp assign_techniques(socket) do

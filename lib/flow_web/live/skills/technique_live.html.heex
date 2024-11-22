@@ -80,16 +80,16 @@
 
   <div class="grid-in-technique py-4">
     <.live_component
-      :if={@live_action == :new}
+      :if={@live_action == [:new, :edit]}
       module={FlowWeb.Skills.TechniqueFormComponent}
-      id={:new}
+      id={@technique.id || :new}
       current_user={@current_user}
       technique={@technique}
     />
 
     <.live_component
       :if={@live_action == :show}
-      module={FlowWeb.Skills.TechniqueDetail}
+      module={FlowWeb.Skills.TechniqueDetailComponent}
       id={@technique.id}
       current_user={@current_user}
       technique={@technique}

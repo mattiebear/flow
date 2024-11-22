@@ -39,9 +39,12 @@ defmodule FlowWeb.CoreComponents do
   attr :id, :string, required: true
   attr :show, :boolean, default: false
   attr :on_cancel, JS, default: %JS{}
+  attr :size, :string, default: "xl"
   slot :inner_block, required: true
 
   def modal(assigns) do
+    assigns = assign(assigns, :styles, modal_styles(assigns))
+
     ~H"""
     <div
       id={@id}
@@ -64,7 +67,7 @@ defmodule FlowWeb.CoreComponents do
         tabindex="0"
       >
         <div class="flex min-h-full items-center justify-center">
-          <div class="w-full max-w-3xl p-4 sm:p-6 lg:py-8">
+          <div class={["w-full p-4 sm:p-6 lg:py-8", @styles]}>
             <.focus_wrap
               id={"#{@id}-container"}
               phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
@@ -91,6 +94,15 @@ defmodule FlowWeb.CoreComponents do
       </div>
     </div>
     """
+  end
+
+  defp modal_styles(assigns) do
+    case assigns.size do
+      "sm" -> "max-w-lg"
+      "md" -> "max-w-xl"
+      "lg" -> "max-w-2xl"
+      "xl" -> "max-w-3xl"
+    end
   end
 
   @doc """

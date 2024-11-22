@@ -1,4 +1,4 @@
-defmodule FlowWeb.Skills.TechniqueDetail do
+defmodule FlowWeb.Skills.TechniqueDetailComponent do
   use FlowWeb, :live_component
 
   alias Flow.Skills
@@ -103,9 +103,9 @@ defmodule FlowWeb.Skills.TechniqueDetail do
         <% end %>
       </div>
 
-      <.modal id="confirm-delete">
+      <.modal id="confirm-delete" size="sm">
         <h2 class="text-3xl mb-6">Are you sure you want to delete this technique?</h2>
-        <p>This action cannot be undone.</p>
+        <p class="mb-6">This action cannot be undone.</p>
 
         <div class="flex justify-end gap-x-4">
           <.button color="primary" variant="outline">Never mind</.button>
