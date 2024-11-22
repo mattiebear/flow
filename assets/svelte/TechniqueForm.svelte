@@ -74,7 +74,10 @@
 
 <form autocomplete="off" on:submit|preventDefault={submit}>
   <div class="mb-8">
-    <label for="name" class="text-sm text-zinc-700 dark:text-zinc-500 mb-1">
+    <label
+      for="name"
+      class="block text-sm text-zinc-700 dark:text-zinc-500 mb-1"
+    >
       Name
     </label>
     <input
@@ -82,7 +85,7 @@
       on:change={(e) => (form.name = e.target.value)}
       value={form.name}
       class={className(
-        'text-6xl px-3 py-4 placeholder:text-neutral-500 w-full outline-none border-b',
+        'text-6xl px-3 py-4 h-[93px] placeholder:text-neutral-500 w-full outline-none border-b',
         'text-neutral-900 dark:text-neutral-300 bg-transparent transition-colors',
         {
           'border-red-900 placeholder:text-red-400 dark:placeholder:text-red-300':
@@ -100,7 +103,7 @@
   </div>
 
   <div class="w-full grid grid-cols-[8rem_1fr] gap-4">
-    <div class="flex justify-end items-center">
+    <div class="flex justify-end items-start mt-[calc(3rem_-_16px)]">
       <span
         class={className(
           'inline-block px-6 py-1 rounded-full',

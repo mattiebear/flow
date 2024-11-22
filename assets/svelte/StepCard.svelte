@@ -42,7 +42,10 @@
   }
 </script>
 
-<div class="flex justify-end items-center" transition:fade={{ duration: 100 }}>
+<div
+  class="flex justify-end items-start mt-[calc(3rem_-_16px)]"
+  transition:fade={{ duration: 100 }}
+>
   <span
     class={className(
       'inline-block px-6 py-1 rounded-full',

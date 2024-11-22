@@ -4,12 +4,17 @@ defmodule FlowWeb.Skills.TechniqueDetail do
   def render(assigns) do
     ~H"""
     <div>
-      <div class="px-3 py-4 mb-8 w-full border-b border-zinc-400 dark:border-zinc-500">
-        <h1 class="text-6xl text-neutral-900 dark:text-neutral-300"><%= @technique.name %></h1>
+      <div class="mb-8 w-full border-b border-zinc-400 dark:border-zinc-500">
+        <p class="text-sm text-zinc-700 dark:text-zinc-500 mb-1">
+          Name
+        </p>
+        <h1 class="px-3 py-4 text-6xl text-neutral-900 dark:text-neutral-300">
+          <%= @technique.name %>
+        </h1>
       </div>
 
       <div class="w-full grid grid-cols-[8rem_1fr] gap-4">
-        <div class="flex justify-end items-center">
+        <div class="flex justify-end items-start mt-[calc(3rem_-_16px)]">
           <span class={[
             "inline-block px-6 py-1 rounded-full",
             "border border-solid border-zinc-500 dark:border-zinc-300"
@@ -29,7 +34,7 @@ defmodule FlowWeb.Skills.TechniqueDetail do
         </div>
 
         <%= for {step, index} <- @ordered_steps do %>
-          <div class="flex justify-end items-center">
+          <div class="flex justify-end items-start mt-[calc(3rem_-_16px)]">
             <span class={[
               "inline-block px-6 py-1 rounded-full",
               "border border-solid border-zinc-500 dark:border-zinc-300"
