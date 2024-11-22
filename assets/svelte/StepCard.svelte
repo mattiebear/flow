@@ -16,10 +16,6 @@
   let menu;
   let listener;
 
-  $: {
-    console.log({ step });
-  }
-
   onMount(() => {
     listener = (e) => {
       if (menu && !menu.contains(e.target)) {
@@ -68,6 +64,7 @@
       'w-full resize-none min-h-[6rem] focus:ring-0'
     )}
     placeholder="Describe the this step"
+    value={step.description}
   />
 
   {#if step.errors.description}

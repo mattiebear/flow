@@ -1,6 +1,9 @@
 defmodule Flow.Skills.Step do
   use Ecto.Schema
+
   import Ecto.Changeset
+
+  @derive {Jason.Encoder, except: [:__meta__, :technique]}
 
   schema "skills_steps" do
     field :description, :string

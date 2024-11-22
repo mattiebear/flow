@@ -133,7 +133,7 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
   end
 
   def handle_event("delete_technique", _params, socket) do
-    Skills.delete_technique(socket.assigns.current_user, socket.assigns.technique.id)
+    Skills.delete_technique(socket.assigns.technique)
 
     send(self(), {:technique_deleted, socket.assigns.technique})
 

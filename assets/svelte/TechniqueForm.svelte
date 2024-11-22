@@ -24,6 +24,10 @@
     };
   });
 
+  $: {
+    console.log({ orderedSteps });
+  }
+
   function addStep() {
     form = produce(form, (draft) => {
       // TODO: Use a shorter ID strategy and loop to ensure uniqueness

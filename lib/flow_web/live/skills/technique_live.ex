@@ -44,6 +44,10 @@ defmodule FlowWeb.Skills.TechniqueLive do
     {:noreply, assign_techniques(socket)}
   end
 
+  def handle_info({:technique_updated, _technique}, socket) do
+    {:noreply, socket}
+  end
+
   def handle_info({:technique_deleted, _technique}, socket) do
     {:noreply, assign_techniques(socket)}
   end

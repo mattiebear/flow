@@ -80,9 +80,10 @@
 
   <div class="grid-in-technique py-4">
     <.live_component
-      :if={@live_action == [:new, :edit]}
+      :if={@live_action in [:new, :edit]}
       module={FlowWeb.Skills.TechniqueFormComponent}
       id={@technique.id || :new}
+      action={@live_action}
       current_user={@current_user}
       technique={@technique}
     />

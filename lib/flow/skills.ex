@@ -34,6 +34,12 @@ defmodule Flow.Skills do
     |> Repo.insert()
   end
 
+  def update_technique(%Technique{} = technique, attrs) do
+    technique
+    |> Technique.changeset(attrs)
+    |> Repo.update()
+  end
+
   @doc """
   Lists all techniques for a given user.
 
@@ -63,11 +69,10 @@ defmodule Flow.Skills do
 
   def get_technique(%User{} = user, id) do
     Repo.get_by!(Technique, id: id, user_id: user.id)
-    |> Repo.preload(:steps)
+    |> Repo.preload(steps: [:details])
   end
 
-  def delete_technique(%User{} = user, id) do
-    technique = Repo.get_by!(Technique, id: id, user_id: user.id)
+  def delete_technique(%Technique{} = technique) do
     Repo.delete(technique)
   end
 end
