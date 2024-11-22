@@ -4,7 +4,7 @@ defmodule FlowWeb.Skills.TechniqueDetail do
   def render(assigns) do
     ~H"""
     <div>
-      <div class="mb-8 w-full border-b border-zinc-400 dark:border-zinc-500">
+      <div class="mb-8 w-full">
         <p class="text-sm text-zinc-700 dark:text-zinc-500 mb-1">
           Name
         </p>

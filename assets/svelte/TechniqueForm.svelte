@@ -85,7 +85,7 @@
       on:change={(e) => (form.name = e.target.value)}
       value={form.name}
       class={className(
-        'text-6xl px-3 py-4 h-[93px] placeholder:text-neutral-500 w-full outline-none border-b',
+        'text-6xl px-3 py-4 h-[92px] placeholder:text-neutral-500 w-full outline-none border-b',
         'text-neutral-900 dark:text-neutral-300 bg-transparent transition-colors',
         {
           'border-red-900 placeholder:text-red-400 dark:placeholder:text-red-300':
