@@ -50,7 +50,11 @@ defmodule FlowWeb.CoreComponents do
       data-cancel={JS.exec(@on_cancel, "phx-remove")}
       class="relative z-50 hidden"
     >
-      <div id={"#{@id}-bg"} class="bg-zinc-50/90 fixed inset-0 transition-opacity" aria-hidden="true" />
+      <div
+        id={"#{@id}-bg"}
+        class="bg-zinc-50/90 dark:bg-zinc-800/90 fixed inset-0 transition-opacity"
+        aria-hidden="true"
+      />
       <div
         class="fixed inset-0 overflow-y-auto"
         aria-labelledby={"#{@id}-title"}
@@ -66,7 +70,7 @@ defmodule FlowWeb.CoreComponents do
               phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
               phx-key="escape"
               phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
-              class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-2xl bg-white p-14 shadow-lg ring-1 transition"
+              class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-2xl bg-stone-300 dark:bg-zinc-900 p-14 shadow-lg ring-1 transition"
             >
               <div class="absolute top-6 right-5">
                 <button
@@ -223,9 +227,14 @@ defmodule FlowWeb.CoreComponents do
 
   @button_style_matrix %{
     "primary" => %{
-      "solid" => "bg-indigo-700 text-neutral-200 hover:bg-indigo-800",
+      "solid" => "bg-indigo-700 text-zinc-200 hover:bg-indigo-800",
       "outline" =>
-        "border border-solid border-indigo-700 text-neutral-900 dark:text-neutral-200 hover:text-neutral-300 dark:hover:text-neutral-800"
+        "border border-solid border-indigo-700 hover:border-indigo-800 text-zinc-800 dark:text-zinc-300 hover:text-zinc-500 dark:hover:text-zinc-200"
+    },
+    "destructive" => %{
+      "solid" => "bg-red-600 text-zinc-200 hover:bg-red-800",
+      "outline" =>
+        "border border-solid border-red-600 text-zinc-900 dark:text-zinc-200 hover:text-zinc-300 dark:hover:text-zinc-800"
     }
   }
 
@@ -245,7 +254,7 @@ defmodule FlowWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 whitespace-nowrap",
+        "phx-submit-loading:opacity-75 whitespace-nowrap transition-colors",
         @styles,
         @class
       ]}

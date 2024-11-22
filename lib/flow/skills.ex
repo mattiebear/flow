@@ -65,4 +65,9 @@ defmodule Flow.Skills do
     Repo.get_by!(Technique, id: id, user_id: user.id)
     |> Repo.preload(:steps)
   end
+
+  def delete_technique(%User{} = user, id) do
+    technique = Repo.get_by!(Technique, id: id, user_id: user.id)
+    Repo.delete(technique)
+  end
 end
