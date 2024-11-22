@@ -2,7 +2,6 @@ defmodule FlowWeb.Skills.TechniqueLive do
   use FlowWeb, :live_view
 
   alias Flow.Skills
-  alias Flow.Skills.Technique
 
   def mount(_params, _session, socket) do
     socket =
@@ -59,15 +58,13 @@ defmodule FlowWeb.Skills.TechniqueLive do
   end
 
   defp apply_action(socket, :new, _params) do
-    technique = %Technique{layout: [], steps: []}
-
     socket
     |> assign(:breadcrumbs, [
       {"Techniques", ~p"/techniques"},
       {"Add a technique", ~p"/techniques/new"}
     ])
     |> assign(:errors, %{})
-    |> assign(:technique, technique)
+    |> assign(:technique, Skills.build_technique_draft())
   end
 
   defp apply_action(socket, :show, %{"id" => id}) do

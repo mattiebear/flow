@@ -3,6 +3,7 @@ defmodule Flow.Skills do
 
   alias Flow.Repo
   alias Flow.Accounts.User
+  alias Flow.Skills.Step
   alias Flow.Skills.Technique
 
   @doc """
@@ -74,5 +75,16 @@ defmodule Flow.Skills do
 
   def delete_technique(%Technique{} = technique) do
     Repo.delete(technique)
+  end
+
+  def build_technique_draft do
+    layout_id = Flow.Util.Crypto.random_id()
+
+    %Technique{
+      layout: [%{layout_id: layout_id}],
+      steps: [
+        %Step{layout_id: layout_id, details: []}
+      ]
+    }
   end
 end

@@ -9,6 +9,7 @@
   export let onChange;
   export let onDelete;
   export let onMove;
+  export let onNext;
   export let number;
   export let step;
 
@@ -58,7 +59,14 @@
   transition:fade={{ duration: 100 }}
 >
   <AutoResizeTextarea
+    id={`step-description-${number}`}
     on:change={(e) => onChange(step.layout_id, 'description', e.target.value)}
+    on:keypress={(e) => {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        onNext();
+      }
+    }}
     class={className(
       'bg-none bg-transparent outline-none border-none p-1',
       'w-full resize-none min-h-[6rem] focus:ring-0'

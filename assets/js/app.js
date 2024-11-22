@@ -16,25 +16,25 @@
 //
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
-import "phoenix_html";
+import 'phoenix_html';
 // Establish Phoenix Socket and LiveView configuration.
-import { Socket } from "phoenix";
-import { LiveSocket } from "phoenix_live_view";
-import topbar from "../vendor/topbar";
-import { getHooks } from "live_svelte";
-import * as Components from "../svelte/**/*.svelte";
+import { Socket } from 'phoenix';
+import { LiveSocket } from 'phoenix_live_view';
+import topbar from '../vendor/topbar';
+import { getHooks } from 'live_svelte';
+import * as Components from '../svelte/**/*.svelte';
 
-const Hooks = {
+let Hooks = {
   ModeToggle: {
     mounted() {
-      const STORAGE_KEY = "mode-toggle";
+      const STORAGE_KEY = 'mode-toggle';
 
-      const mode =
-        localStorage.getItem(STORAGE_KEY) === "dark" ? "dark" : "light";
-      const input = this.el.querySelector("input");
-      const root = document.querySelector("html");
+      let mode =
+        localStorage.getItem(STORAGE_KEY) === 'dark' ? 'dark' : 'light';
+      let input = this.el.querySelector('input');
+      let root = document.querySelector('html');
 
-      const setMode = (mode) => {
+      let setMode = (mode) => {
         localStorage.setItem(STORAGE_KEY, mode);
         root.className = mode;
         this.el.dataset.mode = mode;
@@ -46,10 +46,10 @@ const Hooks = {
         return;
       }
 
-      input.checked = mode === "dark";
+      input.checked = mode === 'dark';
 
-      input.addEventListener("change", (e) => {
-        const mode = e.target.checked ? "dark" : "light";
+      input.addEventListener('change', (e) => {
+        let mode = e.target.checked ? 'dark' : 'light';
         setMode(mode);
       });
     },
@@ -58,17 +58,17 @@ const Hooks = {
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
-  .getAttribute("content");
-let liveSocket = new LiveSocket("/live", Socket, {
+  .getAttribute('content');
+let liveSocket = new LiveSocket('/live', Socket, {
   hooks: { ...Hooks, ...getHooks(Components) },
   longPollFallbackMs: 500,
   params: { _csrf_token: csrfToken },
 });
 
 // Show progress bar on live navigation and form submits
-topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" });
-window.addEventListener("phx:page-loading-start", (_info) => topbar.show(300));
-window.addEventListener("phx:page-loading-stop", (_info) => topbar.hide());
+topbar.config({ barColors: { 0: '#29d' }, shadowColor: 'rgba(0, 0, 0, .3)' });
+window.addEventListener('phx:page-loading-start', (_info) => topbar.show(300));
+window.addEventListener('phx:page-loading-stop', (_info) => topbar.hide());
 
 // connect if there are any LiveViews on the page
 liveSocket.connect();

@@ -14,7 +14,7 @@
   let form = { ...technique };
 
   $: orderedSteps = form.layout.map((node) => {
-    const index = form.steps.findIndex(
+    let index = form.steps.findIndex(
       (step) => step.layout_id === node.layout_id
     );
 
@@ -31,7 +31,7 @@
   function addStep() {
     form = produce(form, (draft) => {
       // TODO: Use a shorter ID strategy and loop to ensure uniqueness
-      const id = randomId();
+      let id = randomId();
 
       draft.steps.push({
         description: '',
@@ -53,14 +53,14 @@
 
   function updateStep(id, key, value) {
     form = produce(form, (draft) => {
-      const step = draft.steps.find((step) => step.layout_id === id);
+      let step = draft.steps.find((step) => step.layout_id === id);
       step[key] = value;
     });
   }
 
   function moveStep(id, direction) {
-    const index = form.layout.findIndex((node) => node.layout_id === id);
-    const newIndex = index + direction;
+    let index = form.layout.findIndex((node) => node.layout_id === id);
+    let newIndex = index + direction;
 
     if (newIndex < 0 || newIndex >= form.layout.length) {
       return;
@@ -73,6 +73,19 @@
 
   function submit() {
     live.pushEventTo('#technique-form', 'save', { technique: form });
+  }
+
+  function navigateToStep(number) {
+    let el = document.getElementById(`step-description-${number}`);
+
+    if (el) {
+      return el.focus();
+    }
+
+    addStep();
+
+    // Wait for the next tick to ensure the new step is rendered
+    return Promise.resolve().then(() => navigateToStep(number));
   }
 </script>
 
@@ -117,8 +130,15 @@
       )}
     >
       <AutoResizeTextarea
+        autofocus
         id="description"
         on:change={(e) => (form.description = e.target.value)}
+        on:keypress={(e) => {
+          if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            navigateToStep(1);
+          }
+        }}
         value={form.description}
         aria-label="Description of starting position"
         class={className(
@@ -136,6 +156,7 @@
         onChange={updateStep}
         onDelete={deleteStep}
         onMove={moveStep}
+        onNext={() => navigateToStep(index + 2)}
         number={index + 1}
         {step}
       />
