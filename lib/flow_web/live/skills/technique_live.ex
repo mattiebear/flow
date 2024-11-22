@@ -44,6 +44,10 @@ defmodule FlowWeb.Skills.TechniqueLive do
     {:noreply, assign_techniques(socket)}
   end
 
+  def handle_info({:technique_deleted, _technique}, socket) do
+    {:noreply, assign_techniques(socket)}
+  end
+
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:breadcrumbs, [{"Techniques", ~p"/techniques"}])

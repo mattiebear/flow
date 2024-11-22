@@ -37,9 +37,12 @@ defmodule FlowWeb.Skills.TechniqueDetail do
           >
             <ul class="flex flex-col gap-y-2">
               <li>
-                <button class="flex justify-between items-center option">
+                <.link
+                  patch={~p"/techniques/#{@technique}/edit"}
+                  class="block flex justify-between items-center option"
+                >
                   Edit <.icon name="hero-pencil-square" />
-                </button>
+                </.link>
               </li>
 
               <li>
@@ -132,6 +135,8 @@ defmodule FlowWeb.Skills.TechniqueDetail do
   def handle_event("delete_technique", _params, socket) do
     Skills.delete_technique(socket.assigns.current_user, socket.assigns.technique.id)
 
+    send(self(), {:technique_deleted, socket.assigns.technique})
+
     socket =
       socket
       |> push_patch(to: ~p"/techniques")
@@ -140,6 +145,7 @@ defmodule FlowWeb.Skills.TechniqueDetail do
     {:noreply, socket}
   end
 
+  # TODO: Clean this up. I think this should be in a separate module.
   defp order_steps(technique) do
     technique.layout
     |> Enum.map(fn node ->
