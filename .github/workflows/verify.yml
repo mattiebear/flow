@@ -1,7 +1,7 @@
 name: Verify
 on:
-  pull_request:
-    branches: ['main']
+  push:
+    branches: ["main"]
 env:
   MIX_ENV: test
 permissions:
@@ -11,7 +11,7 @@ jobs:
     services:
       db:
         image: postgres:16.1
-        ports: ['5432:5432']
+        ports: ["5432:5432"]
         env:
           POSTGRES_PASSWORD: postgres
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -19,8 +19,8 @@ jobs:
     name: Test on OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
     strategy:
       matrix:
-        otp: ['26.0']
-        elixir: ['1.17.2']
+        otp: ["26.0"]
+        elixir: ["1.17.2"]
     steps:
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
