@@ -1,6 +1,9 @@
 <script>
   import { produce } from 'immer';
+  import { onMount, onDestroy } from 'svelte';
+  import { fade, scale } from 'svelte/transition';
 
+  import { waitForElement } from '../js/utils/dom';
   import { className } from '../js/utils/style';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
   import StepCard from './StepCard.svelte';
@@ -10,6 +13,9 @@
   export let technique;
 
   let form = { ...technique };
+  let isLabelMenuOpen = false;
+  let listener;
+  let labelMenu;
 
   $: orderedSteps = form.layout.map((node) => {
     let index = form.steps.findIndex(
@@ -20,6 +26,22 @@
       ...form.steps[index],
       errors: errors.steps ? errors.steps[index] : {},
     };
+  });
+
+  onMount(() => {
+    listener = (e) => {
+      if (labelMenu && !labelMenu.contains(e.target)) {
+        isLabelMenuOpen = false;
+      }
+    };
+
+    document.addEventListener('click', listener);
+  });
+
+  onDestroy(() => {
+    if (listener) {
+      document.removeEventListener('click', listener);
+    }
   });
 
   function addStep() {
@@ -74,9 +96,7 @@
   }
 
   async function navigateToStep(number) {
-    const getEl = () => document.getElementById(`step-description-${number}`);
-
-    let el = getEl();
+    let el = document.getElementById(`step-description-${number}`);
 
     if (el) {
       return el.focus();
@@ -84,19 +104,8 @@
 
     addStep();
 
-    let observer = new MutationObserver((mutations) => {
-      let el = getEl();
-
-      if (el) {
-        observer.disconnect();
-        el.focus();
-      }
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
+    el = await waitForElement(`#step-description-${number}`);
+    el.focus();
   }
 </script>
 
@@ -158,6 +167,47 @@
         )}
         placeholder="Describe the starting position for this technique"
       />
+
+      <div class="flex justify-end relative" bind:this={labelMenu}>
+        <button
+          aria-label="Add positions or labels to technique"
+          class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+          type="button"
+          on:click={async () => {
+            isLabelMenuOpen = !isLabelMenuOpen;
+            let el = await waitForElement('#technique-label-input');
+            el.focus();
+          }}
+        >
+          <span class="hero-tag" />
+        </button>
+
+        {#if isLabelMenuOpen}
+          <div
+            class="menu lg absolute right-[-80px] bottom-[calc(100%_+_10px)]"
+            transition:scale={{
+              duration: 100,
+              opacity: 0,
+              start: 0.9,
+            }}
+          >
+            <div class="flex flex-row gap-x-2 items-center">
+              <input
+                class={className(
+                  'focus:ring-0 border border-solid border-indigo-700 rounded-md',
+                  'bg-none bg-transparent outline-none p-2 w-full'
+                )}
+                id="technique-label-input"
+                placeholder="guard/half"
+              />
+
+              <button aria-label="Add position" class="button sm" type="button">
+                Add
+              </button>
+            </div>
+          </div>
+        {/if}
+      </div>
     </div>
 
     {#each orderedSteps as step, index (step.layout_id)}

@@ -9,6 +9,14 @@
     @apply px-4 py-2 rounded-lg bg-indigo-700 text-neutral-200 hover:bg-indigo-800;
   }
 
+  .button.xs {
+    @apply px-2 py-1 text-xs;
+  }
+
+  .button.sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+
   /* Switch */
   .switch .slider {
     @apply block relative h-6 w-12 rounded-full cursor-pointer bg-zinc-200 drop-shadow-sm;
@@ -31,6 +39,10 @@
   /* Menu */
   .menu {
     @apply drop-shadow bg-zinc-100 dark:bg-zinc-800 w-[200px] p-3 rounded-xl;
+  }
+
+  .menu.lg {
+    @apply w-[300px];
   }
 
   .menu .option {

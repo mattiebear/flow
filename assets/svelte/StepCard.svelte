@@ -81,19 +81,18 @@
     </p>
   {/if}
 
-  <div class="flex justify-end relative">
+  <div class="flex justify-end relative" bind:this={menu}>
     <button
       aria-label="Edit step"
       class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
       type="button"
-      on:click|stopPropagation={() => (isOpen = !isOpen)}
+      on:click={() => (isOpen = !isOpen)}
     >
       <span class="hero-cog-6-tooth" />
     </button>
 
     {#if isOpen}
       <div
-        bind:this={menu}
         class="menu absolute right-[-80px] bottom-[calc(100%_+_10px)]"
         transition:scale={{
           duration: 100,
