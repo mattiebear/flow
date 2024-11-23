@@ -14,6 +14,8 @@ defmodule Flow.Skills.Technique do
 
     has_many :steps, Flow.Skills.Step
 
+    many_to_many :labels, Flow.Taxonomy.Label, join_through: "taxonomy_technique_labels"
+
     timestamps(type: :utc_datetime)
   end
 
@@ -21,6 +23,7 @@ defmodule Flow.Skills.Technique do
   def changeset(technique, attrs) do
     technique
     |> cast(attrs, [:description, :layout, :name])
+    |> cast_assoc(:labels)
     |> cast_assoc(:steps)
     |> validate_required([:layout, :name])
   end
