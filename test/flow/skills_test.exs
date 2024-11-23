@@ -38,7 +38,7 @@ defmodule Flow.SkillsTest do
       {:error, %Changeset{} = changeset} = Skills.create_technique(user, %{})
 
       assert changeset.valid? == false
-      assert changeset.errors[:name] == ["can't be blank"]
+      assert changeset.errors[:name] == {"can't be blank", [validation: :required]}
     end
   end
 end
