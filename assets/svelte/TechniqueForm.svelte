@@ -1,7 +1,6 @@
 <script>
   import { produce } from 'immer';
 
-  import { randomId } from '../js/utils/id';
   import { className } from '../js/utils/style';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
   import StepCard from './StepCard.svelte';
@@ -23,14 +22,14 @@
     };
   });
 
-  $: {
-    console.log({ orderedSteps });
-  }
-
   function addStep() {
     form = produce(form, (draft) => {
-      // TODO: Use a shorter ID strategy and loop to ensure uniqueness
-      let id = randomId();
+      // Find the highest layout ID and increment it to ensure uniqueness
+      let id =
+        (form.steps
+          .map((step) => Number(step.layout_id))
+          .sort((a, b) => a - b)
+          .pop() || 0) + 1;
 
       draft.steps.push({
         description: '',
@@ -74,8 +73,10 @@
     live.pushEventTo('#technique-form', 'save', { technique: form });
   }
 
-  function navigateToStep(number) {
-    let el = document.getElementById(`step-description-${number}`);
+  async function navigateToStep(number) {
+    const getEl = () => document.getElementById(`step-description-${number}`);
+
+    let el = getEl();
 
     if (el) {
       return el.focus();
@@ -83,8 +84,19 @@
 
     addStep();
 
-    // Wait for the next tick to ensure the new step is rendered
-    return Promise.resolve().then(() => navigateToStep(number));
+    let observer = new MutationObserver((mutations) => {
+      let el = getEl();
+
+      if (el) {
+        observer.disconnect();
+        el.focus();
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
   }
 </script>
 
