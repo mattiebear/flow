@@ -54,6 +54,7 @@ defmodule FlowWeb.Router do
     post "/users/log_in", UserSessionController, :create
 
     live_session :redirect_if_user_is_authenticated,
+      layout: {FlowWeb.Layouts, :auth},
       on_mount: [
         {FlowWeb.UserAuth, :redirect_if_user_is_authenticated},
         {FlowWeb.Navigation, :mount_current_path}
@@ -93,6 +94,7 @@ defmodule FlowWeb.Router do
     delete "/users/log_out", UserSessionController, :delete
 
     live_session :current_user,
+      layout: {FlowWeb.Layouts, :auth},
       on_mount: [
         {FlowWeb.UserAuth, :mount_current_user},
         {FlowWeb.Navigation, :mount_current_path}

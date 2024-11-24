@@ -83,7 +83,7 @@ defmodule FlowWeb.Auth.UserSettingsLive do
           put_flash(socket, :error, "Email change link is invalid or it has expired.")
       end
 
-    {:ok, push_navigate(socket, to: ~p"/users/settings")}
+    {:ok, push_navigate(socket, to: ~p"/users/settings"), layout: {FlowWeb.Layouts, :auth}}
   end
 
   def mount(_params, _session, socket) do
