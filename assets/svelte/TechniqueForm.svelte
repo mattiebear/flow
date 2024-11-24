@@ -50,7 +50,7 @@
       // Find the highest layout ID and increment it to ensure uniqueness
       let id =
         (form.steps
-          .map((step) => Number(step.layout_id))
+          .map((step) => step.layout_id)
           .sort((a, b) => a - b)
           .pop() || 0) + 1;
 
@@ -109,8 +109,16 @@
     el.focus();
   }
 
-  function createLabel() {
-    live.pushEventTo('#technique-form', 'create_label', { tag: labelInput });
+  async function createLabel() {
+    let res = await fetch('/api/labels', {
+      method: 'POST',
+      body: JSON.stringify({ tag: labelInput }),
+    });
+
+    if (res.ok) {
+      let data = await res.json();
+      console.log({ data });
+    }
   }
 </script>
 

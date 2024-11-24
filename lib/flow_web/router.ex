@@ -17,6 +17,9 @@ defmodule FlowWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+    plug :fetch_current_user
+    plug :require_authenticated_api_user
   end
 
   scope "/", FlowWeb do
@@ -25,10 +28,11 @@ defmodule FlowWeb.Router do
     get "/", PageController, :home
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", FlowWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", FlowWeb do
+    pipe_through :api
+
+    resources "/labels", API.LabelController, only: [:create, :index]
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:flow, :dev_routes) do

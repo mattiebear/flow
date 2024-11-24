@@ -79,13 +79,11 @@ defmodule Flow.Skills do
   end
 
   def build_technique_draft do
-    layout_id = Flow.Util.Crypto.random_id()
-
     %Technique{
-      layout: [%{layout_id: layout_id}],
+      layout: [%{layout_id: 1}],
       labels: [],
       steps: [
-        %Step{layout_id: layout_id}
+        %Step{layout_id: 1}
       ]
     }
   end
