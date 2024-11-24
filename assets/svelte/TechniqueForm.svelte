@@ -16,6 +16,7 @@
   let isLabelMenuOpen = false;
   let listener;
   let labelMenu;
+  let labelInput = '';
 
   $: orderedSteps = form.layout.map((node) => {
     let index = form.steps.findIndex(
@@ -107,6 +108,10 @@
     el = await waitForElement(`#step-description-${number}`);
     el.focus();
   }
+
+  function createLabel() {
+    live.pushEventTo('#technique-form', 'create_label', { tag: labelInput });
+  }
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={submit}>
@@ -168,6 +173,7 @@
         placeholder="Describe the starting position for this technique"
       />
 
+      <!-- TODO: Create a popover component -->
       <div class="flex justify-end relative" bind:this={labelMenu}>
         <button
           aria-label="Add positions or labels to technique"
@@ -193,6 +199,7 @@
           >
             <div class="flex flex-row gap-x-2 items-center">
               <input
+                bind:value={labelInput}
                 class={className(
                   'focus:ring-0 border border-solid border-indigo-700 rounded-md',
                   'bg-none bg-transparent outline-none p-2 w-full'
@@ -201,7 +208,12 @@
                 placeholder="guard/half"
               />
 
-              <button aria-label="Add position" class="button sm" type="button">
+              <button
+                aria-label="Add position"
+                class="button sm"
+                type="button"
+                on:click={createLabel}
+              >
                 Add
               </button>
             </div>

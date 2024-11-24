@@ -29,6 +29,11 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
     save_technique(socket, socket.assigns.action, technique_params)
   end
 
+  def handle_event("create_label", %{"tag" => tag}, socket) do
+    dbg(tag)
+    {:noreply, socket}
+  end
+
   defp save_technique(socket, :new, params) do
     case Skills.create_technique(socket.assigns.current_user, params) do
       {:ok, technique} ->
