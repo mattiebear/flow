@@ -9,7 +9,7 @@ defmodule Flow.Repo.Migrations.CreateTaxonomyLabels do
       timestamps(type: :utc_datetime)
     end
 
-    create index(:taxonomy_labels, [:user_id])
+    create index(:taxonomy_labels, [:tag])
     create unique_index(:taxonomy_labels, [:user_id, :tag])
   end
 end

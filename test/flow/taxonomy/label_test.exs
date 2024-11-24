@@ -17,22 +17,8 @@ defmodule Flow.Taxonomy.LabelTest do
     assert changeset.valid? == true
   end
 
-  test "changeset/2 with dashed string tag" do
-    attrs = %{tag: "foo-bar"}
-    changeset = Label.changeset(%Label{}, attrs)
-
-    assert changeset.valid? == true
-  end
-
   test "changeset/2 with split string tag" do
     attrs = %{tag: "foo/bar"}
-    changeset = Label.changeset(%Label{}, attrs)
-
-    assert changeset.valid? == true
-  end
-
-  test "changeset/2 with splits and dashes" do
-    attrs = %{tag: "foo-bar/bar-baz"}
     changeset = Label.changeset(%Label{}, attrs)
 
     assert changeset.valid? == true
@@ -54,6 +40,13 @@ defmodule Flow.Taxonomy.LabelTest do
 
   test "changeset/2 with numbers" do
     attrs = %{tag: "foo/1"}
+    changeset = Label.changeset(%Label{}, attrs)
+
+    assert changeset.valid? == false
+  end
+
+  test "changeset/2 with sequential slashes" do
+    attrs = %{tag: "foo//1"}
     changeset = Label.changeset(%Label{}, attrs)
 
     assert changeset.valid? == false

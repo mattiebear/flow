@@ -15,7 +15,9 @@ defmodule Flow.Taxonomy.Label do
     label
     |> cast(attrs, [:tag])
     |> validate_required([:tag])
-    |> validate_format(:tag, ~r/^[a-z][a-z-]*(?:\/[a-z][a-z-]*)?$/)
+    |> validate_length(:tag, max: 30)
+    |> validate_format(:tag, ~r/^[a-z]+(?:\/[a-z]+)?$/)
+    |> unsafe_validate_unique(:tag, Flow.Repo)
     |> unique_constraint([:user_id, :tag])
   end
 end
