@@ -113,12 +113,13 @@
     let res = await fetch('/api/labels', {
       method: 'POST',
       body: JSON.stringify({ tag: labelInput }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
-    if (res.ok) {
-      let data = await res.json();
-      console.log({ data });
-    }
+    let data = await res.json();
+    console.log({ data });
   }
 </script>
 

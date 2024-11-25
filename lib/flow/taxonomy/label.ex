@@ -1,5 +1,6 @@
 defmodule Flow.Taxonomy.Label do
   use Ecto.Schema
+
   import Ecto.Changeset
 
   schema "taxonomy_labels" do
