@@ -119,7 +119,24 @@
     });
 
     let data = await res.json();
-    console.log({ data });
+
+    if (res.ok) {
+      form = produce(form, (draft) => {
+        draft.labels.push(data);
+      });
+
+      labelInput = '';
+      isLabelMenuOpen = false;
+      document.getElementById('description').focus();
+    } else {
+      console.error('TODO: Implement this');
+    }
+  }
+
+  async function openLabelMenu() {
+    isLabelMenuOpen = !isLabelMenuOpen;
+    let el = await waitForElement('#technique-label-input');
+    el.focus();
   }
 </script>
 
@@ -171,6 +188,9 @@
           if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
             navigateToStep(1);
+          } else if (e.key === '#') {
+            e.preventDefault();
+            openLabelMenu();
           }
         }}
         value={form.description}
@@ -183,51 +203,66 @@
       />
 
       <!-- TODO: Create a popover component -->
-      <div class="flex justify-end relative" bind:this={labelMenu}>
-        <button
-          aria-label="Add positions or labels to technique"
-          class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-          type="button"
-          on:click={async () => {
-            isLabelMenuOpen = !isLabelMenuOpen;
-            let el = await waitForElement('#technique-label-input');
-            el.focus();
-          }}
-        >
-          <span class="hero-tag" />
-        </button>
+      <div class="flex justify-between">
+        <div class="flex flex-row gap-x-2 grow">
+          {#each form.labels as label (label.id)}
+            <span
+              class={className(
+                'inline-block px-3 rounded-full leading-7 bg-indigo-800',
+                'border border-solid border-zinc-500 dark:border-zinc-300'
+              )}>{label.tag}</span
+            >
+          {/each}
+        </div>
 
-        {#if isLabelMenuOpen}
-          <div
-            class="menu lg absolute right-[-80px] bottom-[calc(100%_+_10px)]"
-            transition:scale={{
-              duration: 100,
-              opacity: 0,
-              start: 0.9,
-            }}
+        <div class="relative pt-1" bind:this={labelMenu}>
+          <button
+            aria-label="Add positions or labels to technique"
+            class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+            type="button"
+            on:click={openLabelMenu}
           >
-            <div class="flex flex-row gap-x-2 items-center">
-              <input
-                bind:value={labelInput}
-                class={className(
-                  'focus:ring-0 border border-solid border-indigo-700 rounded-md',
-                  'bg-none bg-transparent outline-none p-2 w-full'
-                )}
-                id="technique-label-input"
-                placeholder="guard/half"
-              />
+            <span class="hero-tag" />
+          </button>
 
-              <button
-                aria-label="Add position"
-                class="button sm"
-                type="button"
-                on:click={createLabel}
-              >
-                Add
-              </button>
+          {#if isLabelMenuOpen}
+            <div
+              class="menu lg absolute right-[-80px] bottom-[calc(100%_+_10px)]"
+              transition:scale={{
+                duration: 100,
+                opacity: 0,
+                start: 0.9,
+              }}
+            >
+              <div class="flex flex-row gap-x-2 items-center">
+                <input
+                  bind:value={labelInput}
+                  class={className(
+                    'focus:ring-0 border border-solid border-indigo-700 rounded-md',
+                    'bg-none bg-transparent outline-none p-2 w-full'
+                  )}
+                  id="technique-label-input"
+                  on:keypress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      createLabel();
+                    }
+                  }}
+                  placeholder="guard/half"
+                />
+
+                <button
+                  aria-label="Add position"
+                  class="button sm"
+                  type="button"
+                  on:click={createLabel}
+                >
+                  Add
+                </button>
+              </div>
             </div>
-          </div>
-        {/if}
+          {/if}
+        </div>
       </div>
     </div>
 
