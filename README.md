@@ -1,6 +1,6 @@
 # Flow
 
-Start the development database with `docker compose up`. The first time it is started you will need to run `mix ecto.create && mix ecto.migrate` to set all migrations.
+Start the development database with `docker compose up`. Then run `mix setup` to download deps and initialize the database.
 
 Start the server with `mix phx.server`
 
