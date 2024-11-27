@@ -2,13 +2,13 @@
   import { produce } from 'immer';
   import { onMount, onDestroy } from 'svelte';
   import { scale } from 'svelte/transition';
-  import { useMutation } from '@sveltestack/svelte-query';
 
   import { waitForElement } from '../../js/utils/dom';
   import { className } from '../../js/utils/style';
   import AutoResizeTextarea from './AutoResizeTextarea.svelte';
+  import LabelPopover from './LabelPopover.svelte';
   import StepCard from './StepCard.svelte';
-  import Popover from '../global/Popover.svelte';
+  import Popover from '../components/Popover.svelte';
 
   export let errors = {};
   export let live;
@@ -16,7 +16,6 @@
 
   let form = { ...technique };
   let isLabelMenuOpen = false;
-  let labelInput = '';
 
   $: orderedSteps = form.layout.map((node) => {
     let index = form.steps.findIndex(
@@ -98,6 +97,15 @@
     let el = await waitForElement('#technique-label-input');
     el.focus();
   }
+
+  function addLabel(label) {
+    form = produce(form, (draft) => {
+      draft.labels.push(label);
+    });
+
+    isLabelMenuOpen = false;
+    document.getElementById('description').focus();
+  }
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={submit}>
@@ -174,44 +182,7 @@
           {/each}
         </div>
 
-        <Popover isOpen={isLabelMenuOpen}>
-          <button
-            aria-label="Add positions or labels to technique"
-            class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-            type="button"
-            on:click={openLabelMenu}
-            slot="trigger"
-          >
-            <span class="hero-tag" />
-          </button>
-
-          <div class="flex flex-row gap-x-2 items-center" slot="content">
-            <input
-              bind:value={labelInput}
-              class={className(
-                'focus:ring-0 border border-solid border-indigo-700 rounded-md',
-                'bg-none bg-transparent outline-none p-2 w-full'
-              )}
-              id="technique-label-input"
-              on:keypress={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  createLabel();
-                }
-              }}
-              placeholder="guard/half"
-            />
-
-            <button
-              aria-label="Add position"
-              class="button sm"
-              type="button"
-              on:click={createLabel}
-            >
-              Add
-            </button>
-          </div>
-        </Popover>
+        <LabelPopover isOpen={isLabelMenuOpen} onAddLabel={addLabel} />
       </div>
     </div>
 
