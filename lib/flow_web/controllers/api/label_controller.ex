@@ -4,15 +4,21 @@ defmodule FlowWeb.API.LabelController do
   alias Flow.Schema.Error
   alias Flow.Taxonomy
 
-  def index(conn, %{"tag" => tag}) do
-    labels = Taxonomy.search_labels(conn.assigns.current_user, tag)
+  def index(conn, params) do
+    limit = Map.get(params, "limit", "10") |> String.to_integer()
+    search = Map.get(params, "search", "")
+
+    labels =
+      Taxonomy.search_labels(
+        conn.assigns.current_user,
+        limit: limit,
+        search: search
+      )
 
     render(conn, :index, labels: labels)
   end
 
   def create(conn, params) do
-    dbg(params)
-
     case Taxonomy.create_label(conn.assigns.current_user, params) do
       {:ok, label} ->
         render(conn, :show, label: label)

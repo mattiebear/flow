@@ -20,9 +20,15 @@ defmodule Flow.Taxonomy do
   Searches for labels by tag
   """
 
-  def search_labels(%User{} = user, tag) do
-    Repo.all(
-      from l in Label, where: l.user_id == ^user.id and fragment("? ILIKE ?", l.tag, ^"%#{tag}%")
-    )
+  def search_labels(%User{} = user, opts) do
+    limit = Keyword.get(opts, :limit, 100)
+
+    query = from l in Label, where: l.user_id == ^user.id, limit: ^limit
+
+    if search = Keyword.get(opts, :search) do
+      query = from l in query, where: fragment("? ILIKE ?", l.tag, ^"%#{search}%")
+    end
+
+    Repo.all(query)
   end
 end
