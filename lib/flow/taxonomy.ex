@@ -25,9 +25,11 @@ defmodule Flow.Taxonomy do
 
     query = from l in Label, where: l.user_id == ^user.id, limit: ^limit
 
-    if search = Keyword.get(opts, :search) do
-      query = from l in query, where: fragment("? ILIKE ?", l.tag, ^"%#{search}%")
-    end
+    query =
+      case Keyword.get(opts, :search, "") do
+        "" -> query
+        search -> from l in query, where: fragment("? ILIKE ?", l.tag, ^"%#{search}%")
+      end
 
     Repo.all(query)
   end

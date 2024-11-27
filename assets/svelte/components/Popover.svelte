@@ -1,6 +1,7 @@
 <script>
-  import { onMount, onDestroy } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { scale } from 'svelte/transition';
+
   import { className } from '../../js/utils/style';
 
   export let isOpen = false;
@@ -35,7 +36,7 @@
   {#if isOpen}
     <div
       bind:this={content}
-      class={className('menu absolute', size)}
+      class={className('menu absolute z-popover', size)}
       transition:scale={{
         duration: 100,
         opacity: 0,
