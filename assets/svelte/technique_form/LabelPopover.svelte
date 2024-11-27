@@ -1,5 +1,6 @@
 <script>
   import { createMutation, createQuery } from '@tanstack/svelte-query';
+  import { derived, writable } from 'svelte/store';
 
   import { className } from '../../js/utils/style';
   import Popover from '../components/Popover.svelte';
@@ -7,7 +8,7 @@
   export let isOpen = false;
   export let onAddLabel;
 
-  let value;
+  let tag = writable('');
 
   let mutation = createMutation({
     mutationFn: async (tag) => {
@@ -30,13 +31,19 @@
     },
   });
 
-  let query = createQuery({
-    queryKey: ['labels', { tag: value }],
-    queryFn: async ({ queryKey }) => {
-      return [];
-    },
-    initialData: [],
-  });
+  let query = createQuery(
+    derived(tag, ($tag) => ({
+      queryKey: ['labels', { tag }],
+      queryFn: async () => {
+        console.log('fetching labels');
+        let res = await fetch(`/api/labels?tag=${tag}`);
+        let data = await res.json();
+        return data;
+      },
+      initialData: [],
+      enabled: $tag.length > 0,
+    }))
+  );
 </script>
 
 <Popover {isOpen} size="lg">
@@ -52,7 +59,7 @@
 
   <div class="flex flex-row gap-x-2 items-center" slot="content">
     <input
-      bind:value
+      bind:value={$tag}
       class={className(
         'focus:ring-0 border border-solid border-indigo-700 rounded-md',
         'bg-none bg-transparent outline-none p-2 w-full'
@@ -61,7 +68,7 @@
       on:keypress={(e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
-          $mutation.mutate(value);
+          $mutation.mutate($tag);
         }
       }}
       placeholder="guard/half"
@@ -70,7 +77,7 @@
     <button
       aria-label="Add position"
       class="button sm"
-      on:click={() => $mutation.mutate(value)}
+      on:click={() => $mutation.mutate($tag)}
       type="button"
     >
       Add
