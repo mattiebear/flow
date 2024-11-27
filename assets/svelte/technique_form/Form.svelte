@@ -5,7 +5,7 @@
 
   import { waitForElement } from '../../js/utils/dom';
   import { className } from '../../js/utils/style';
-  import AutoResizeTextarea from './AutoResizeTextarea.svelte';
+  import AutoResizeTextarea from '../components/AutoResizeTextarea.svelte';
   import LabelPopover from './LabelPopover.svelte';
   import StepCard from './StepCard.svelte';
   import Popover from '../components/Popover.svelte';

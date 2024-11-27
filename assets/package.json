@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
     "@savvywombat/tailwindcss-grid-areas": "^4.0.0",
     "broadcast-channel": "^4.20.2",
     "esbuild": "^0.16.17",

@@ -1,7 +1,8 @@
 <script>
-  import { createMutation } from '@tanstack/svelte-query';
-  import Popover from '../components/Popover.svelte';
+  import { createMutation, createQuery } from '@tanstack/svelte-query';
+
   import { className } from '../../js/utils/style';
+  import Popover from '../components/Popover.svelte';
 
   export let isOpen = false;
   export let onAddLabel;
@@ -27,6 +28,14 @@
 
       onAddLabel(data);
     },
+  });
+
+  let query = createQuery({
+    queryKey: ['labels', { tag: value }],
+    queryFn: async ({ queryKey }) => {
+      return [];
+    },
+    initialData: [],
   });
 </script>
 

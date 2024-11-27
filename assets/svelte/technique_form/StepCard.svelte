@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { fade, scale } from 'svelte/transition';
   import { className } from '../../js/utils/style';
-  import AutoResizeTextarea from './AutoResizeTextarea.svelte';
+  import AutoResizeTextarea from '../components/AutoResizeTextarea.svelte';
 
   export let canMoveDown;
   export let canMoveUp;
