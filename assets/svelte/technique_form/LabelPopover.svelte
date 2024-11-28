@@ -30,7 +30,7 @@
         throw new Error(data.errors.tag.join(', '));
       }
 
-      onAddLabel(data);
+      selectLabel(data);
     },
   });
 
@@ -53,6 +53,19 @@
     },
     initialData: [],
     enabled: search.length > 0,
+  });
+
+  function selectLabel(label) {
+    onAddLabel(label);
+
+    tag = search = '';
+    isOpen = false;
+  }
+
+  onDestroy(() => {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
   });
 </script>
 
@@ -95,10 +108,20 @@
       </button>
     </div>
 
-    {#each $query.data as label (label.id)}
-      <div class="flex flex-row gap-x-2 items-center">
-        <span class="text-sm">{label.tag}</span>
-      </div>
-    {/each}
+    {#if $query.data.length > 0}
+      <ul class="flex flex-col gap-y-2">
+        {#each $query.data as label (label.id)}
+          <li>
+            <button
+              class="option text-left"
+              on:click={() => selectLabel(label)}
+              type="button"
+            >
+              #{label.tag}
+            </button>
+          </li>
+        {/each}
+      </ul>
+    {/if}
   </div>
 </Popover>

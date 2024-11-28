@@ -1,14 +1,14 @@
 <script>
   import { produce } from 'immer';
-  import { onMount, onDestroy } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { scale } from 'svelte/transition';
 
   import { waitForElement } from '../../js/utils/dom';
   import { className } from '../../js/utils/style';
   import AutoResizeTextarea from '../components/AutoResizeTextarea.svelte';
+  import Popover from '../components/Popover.svelte';
   import LabelPopover from './LabelPopover.svelte';
   import StepCard from './StepCard.svelte';
-  import Popover from '../components/Popover.svelte';
 
   export let errors = {};
   export let live;
@@ -177,7 +177,7 @@
               class={className(
                 'inline-block px-3 rounded-full leading-7 bg-indigo-800',
                 'border border-solid border-zinc-500 dark:border-zinc-300'
-              )}>{label.tag}</span
+              )}>#{label.tag}</span
             >
           {/each}
         </div>
