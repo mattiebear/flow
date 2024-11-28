@@ -29,6 +29,7 @@
 
       if (!res.ok) {
         // TODO: Add something to parse the error messages automatically
+        // TODO: Handle label already exists by adding it
         throw new Error(data.errors.tag.join(', '));
       }
 
@@ -85,8 +86,23 @@
     if (e.key === 'Enter') {
       e.preventDefault();
 
+      let label;
+
+      if (selected !== -1) {
+        let label = $query.data[selected];
+      }
+
       if (tag.length > 0 && (!$query.data.length || selected === -1)) {
-        return $mutation.mutate(tag);
+        // Find an existing label if it is in the listener
+        let existing = $query.data.find((label) => label.tag === tag);
+
+        if (existing) {
+          selectLabel(existing);
+        } else {
+          $mutation.mutate(tag);
+        }
+
+        return;
       }
 
       if (selected !== -1) {

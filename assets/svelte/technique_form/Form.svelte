@@ -17,6 +17,10 @@
   let form = { ...technique };
   let isLabelMenuOpen = false;
 
+  $: {
+    console.log({ errors });
+  }
+
   $: orderedSteps = form.layout.map((node) => {
     let index = form.steps.findIndex(
       (step) => step.layout_id === node.layout_id
@@ -106,6 +110,12 @@
     isLabelMenuOpen = false;
     document.getElementById('description').focus();
   }
+
+  function removeLabel(id) {
+    form = produce(form, (draft) => {
+      draft.labels = draft.labels.filter((label) => label.id !== id);
+    });
+  }
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={submit}>
@@ -173,12 +183,19 @@
       <div class="flex justify-between">
         <div class="flex flex-row gap-x-2 grow">
           {#each form.labels as label (label.id)}
-            <span
+            <button
               class={className(
-                'inline-block px-3 rounded-full leading-7 bg-indigo-800',
+                'inline-flex gap-x-0.5 items-center px-3 rounded-full leading-7 bg-indigo-800',
                 'border border-solid border-zinc-500 dark:border-zinc-300'
-              )}>#{label.tag}</span
+              )}
+              on:click={() => removeLabel(label.id)}
+              type="button"
             >
+              <span class="text-zinc-300">#{label.tag}</span>
+              <span
+                class="hero-x-mark-micro text-zinc-500 hover:text-zinc-300"
+              />
+            </button>
           {/each}
         </div>
 

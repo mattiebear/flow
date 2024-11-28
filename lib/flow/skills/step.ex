@@ -7,7 +7,7 @@ defmodule Flow.Skills.Step do
 
   schema "skills_steps" do
     field :description, :string
-    field :layout_id, :string
+    field :layout_id, :integer
 
     belongs_to :technique, Flow.Skills.Technique
 
