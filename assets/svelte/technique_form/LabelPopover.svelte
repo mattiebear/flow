@@ -1,6 +1,6 @@
 <script>
   import { createMutation, createQuery } from '@tanstack/svelte-query';
-  import { onDestroy } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { derived, writable } from 'svelte/store';
 
   import { className } from '../../js/utils/style';
@@ -12,6 +12,8 @@
   let tag = '';
   let search = '';
   let timeout;
+  let selected = -1;
+  let listener;
 
   let mutation = createMutation({
     mutationFn: async (tag) => {
@@ -49,6 +51,9 @@
     queryFn: async () => {
       let res = await fetch(`/api/labels?search=${search}&limit=5`);
       let data = await res.json();
+
+      selected = -1;
+
       return data;
     },
     initialData: [],
@@ -60,9 +65,59 @@
 
     tag = search = '';
     isOpen = false;
+    selected = -1;
   }
 
+  function clampOverflow(n, total) {
+    if (n < 0) {
+      return total - 1;
+    }
+
+    if (n >= total) {
+      return 0;
+    }
+
+    return n;
+  }
+
+  // TODO: Adjust accessibility to handle active selections
+  function inputKeyPress(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+
+      if (tag.length > 0 && (!$query.data.length || selected === -1)) {
+        return $mutation.mutate(tag);
+      }
+
+      if (selected !== -1) {
+        let label = $query.data[selected];
+
+        if (label) {
+          selectLabel(label);
+        }
+      }
+    }
+  }
+
+  onMount(() => {
+    listener = (e) => {
+      if (e.key === 'ArrowDown') {
+        selected = clampOverflow(selected + 1, $query.data.length);
+      }
+
+      if (e.key === 'ArrowUp') {
+        selected = clampOverflow(selected - 1, $query.data.length);
+      }
+    };
+
+    document.addEventListener('keydown', listener);
+  });
+
   onDestroy(() => {
+    if (listener) {
+      document.removeEventListener('keydown', listener);
+    }
+
     if (timeout) {
       clearTimeout(timeout);
     }
@@ -89,12 +144,7 @@
           'bg-none bg-transparent outline-none p-2 w-full'
         )}
         id="technique-label-input"
-        on:keypress={(e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            $mutation.mutate(tag);
-          }
-        }}
+        on:keypress={inputKeyPress}
         placeholder="guard/half"
       />
 
@@ -110,12 +160,13 @@
 
     {#if $query.data.length > 0}
       <ul class="flex flex-col gap-y-2">
-        {#each $query.data as label (label.id)}
+        {#each $query.data as label, index (label.id)}
           <li>
             <button
               class="option text-left"
               on:click={() => selectLabel(label)}
               type="button"
+              {...selected === index ? { 'data-selected': true } : {}}
             >
               #{label.tag}
             </button>
