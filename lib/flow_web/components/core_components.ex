@@ -653,7 +653,7 @@ defmodule FlowWeb.CoreComponents do
     assigns = assign(assigns, :active, active)
 
     ~H"""
-    <.link href={@href} class="block">
+    <.link patch={@href} class="block">
       <button class={[
         "p-[1px] rounded-xl",
         @active && "dark:text-zinc-300 bg-gradient-to-b from-zinc-600 to-transparent to-80%"
