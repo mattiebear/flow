@@ -78,11 +78,24 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
         <div class={[
           "rounded-xl w-full py-3 px-4 min-h-[6rem]",
           "border border-solid border-zinc-500",
-          "bg-gradient-to-br from-indigo-950 to-zinc-900 to-50%"
+          "bg-gradient-to-br from-indigo-950 to-zinc-900 to-50%",
+          "flex flex-col gap-y-4"
         ]}>
           <p class={[!@technique.description && "text-zinc-400 dark:text-zinc-600"]}>
             <%= @technique.description || "No starting description" %>
           </p>
+
+          <div :if={length(@technique.labels) > 0} class="flex flex-row gap-x-2">
+            <div
+              :for={label <- @technique.labels}
+              class={[
+                "gap-x-0.5 px-3 rounded-full leading-7 bg-indigo-800",
+                "border border-solid border-zinc-500 dark:border-zinc-300 text-zinc-300"
+              ]}
+            >
+              #<%= label.tag %>
+            </div>
+          </div>
         </div>
 
         <%= for {step, index} <- @ordered_steps do %>
