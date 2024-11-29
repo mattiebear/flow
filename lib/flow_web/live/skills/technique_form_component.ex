@@ -9,7 +9,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
     <div id="technique-form">
       <.svelte
         name="TechniqueForm"
-        props={%{errors: @errors, technique: @technique}}
+        props={%{action: @action, errors: @errors, technique: @technique}}
         socket={@socket}
       />
     </div>

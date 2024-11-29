@@ -10,16 +10,13 @@
   import LabelPopover from './LabelPopover.svelte';
   import StepCard from './StepCard.svelte';
 
+  export let action;
   export let errors = {};
   export let live;
   export let technique;
 
   let form = { ...technique };
   let isLabelMenuOpen = false;
-
-  $: {
-    console.log({ errors });
-  }
 
   $: orderedSteps = form.layout.map((node) => {
     let index = form.steps.findIndex(
@@ -231,7 +228,21 @@
     </div>
   </div>
 
-  <div class="flex justify-end mt-6">
-    <button class="button" type="submit">Submit</button>
+  <div class="flex justify-end mt-6 gap-x-2">
+    {#if action === 'edit'}
+      <a
+        class="button outlined"
+        href={`/techniques/${technique.id}`}
+        type="button"
+        data-phx-link="patch"
+        data-phx-link-state="push"
+      >
+        Cancel
+      </a>
+    {/if}
+
+    <button class="button" type="submit">
+      {action === 'new' ? 'Create' : 'Update'}
+    </button>
   </div>
 </form>

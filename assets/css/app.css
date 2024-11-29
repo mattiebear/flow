@@ -9,6 +9,10 @@
     @apply px-4 py-2 rounded-lg bg-indigo-700 text-neutral-200 hover:bg-indigo-800;
   }
 
+  .button.outlined {
+    @apply border border-indigo-700 bg-transparent text-indigo-700 hover:bg-indigo-700 hover:text-neutral-200;
+  }
+
   .button.xs {
     @apply px-2 py-1 text-xs;
   }
