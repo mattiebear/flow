@@ -3,6 +3,8 @@ defmodule Flow.Taxonomy.Label do
 
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, except: [:__meta__, :user]}
+
   schema "taxonomy_labels" do
     field :tag, :string
 

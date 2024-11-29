@@ -4,7 +4,7 @@ defmodule Flow.Repo.Migrations.CreateTaxonomyLabels do
   def change do
     create table(:taxonomy_labels) do
       add :tag, :string, null: false
-      add :user_id, references(:accounts_users, on_delete: :delete_all)
+      add :user_id, references(:accounts_users, on_delete: :delete_all), null: false
 
       timestamps(type: :utc_datetime)
     end

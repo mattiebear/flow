@@ -33,4 +33,9 @@ defmodule Flow.Taxonomy do
 
     Repo.all(query)
   end
+
+  def get_labels(label_ids) do
+    query = from l in Label, where: l.id in ^label_ids
+    Repo.all(query)
+  end
 end

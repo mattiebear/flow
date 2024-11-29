@@ -3,13 +3,15 @@ defmodule Flow.Skills.Step do
 
   import Ecto.Changeset
 
+  alias Flow.Skills.Technique
+
   @derive {Jason.Encoder, except: [:__meta__, :technique]}
 
   schema "skills_steps" do
     field :description, :string
     field :layout_id, :integer
 
-    belongs_to :technique, Flow.Skills.Technique
+    belongs_to :technique, Technique
 
     timestamps(type: :utc_datetime)
   end

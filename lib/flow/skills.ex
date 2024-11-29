@@ -70,8 +70,7 @@ defmodule Flow.Skills do
 
   def get_technique(%User{} = user, id) do
     Repo.get_by!(Technique, id: id, user_id: user.id)
-    |> Repo.preload(:labels)
-    |> Repo.preload(:steps)
+    |> Repo.preload([:labels, :steps])
   end
 
   def delete_technique(%Technique{} = technique) do
