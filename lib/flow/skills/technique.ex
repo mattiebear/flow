@@ -26,14 +26,21 @@ defmodule Flow.Skills.Technique do
 
   @doc false
   def changeset(technique, attrs) do
-    # FIXME: This shouldn't be happening here, but where?
-    label_ids = Enum.map(attrs["labels"], & &1["id"])
-    labels = Taxonomy.get_labels(label_ids)
-
     technique
     |> cast(attrs, [:description, :layout, :name])
     |> cast_assoc(:steps)
-    |> put_assoc(:labels, labels)
+    |> put_labels(attrs["labels"])
     |> validate_required([:layout, :name])
+  end
+
+  defp put_labels(changeset, nil) do
+    changeset
+  end
+
+  defp put_labels(changeset, labels) do
+    label_ids = Enum.map(labels, & &1["id"])
+    labels = Taxonomy.get_labels(label_ids)
+
+    put_assoc(changeset, :labels, labels)
   end
 end

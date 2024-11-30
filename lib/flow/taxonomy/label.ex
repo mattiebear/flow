@@ -5,6 +5,8 @@ defmodule Flow.Taxonomy.Label do
 
   @derive {Jason.Encoder, except: [:__meta__, :user]}
 
+  @tag_match ~r/^[a-z]+([a-z]|(-(?!-)(?=[a-z])))*(?:\/[a-z]+([a-z]|(-(?!-)(?=[a-z])))*)?$/
+
   schema "taxonomy_labels" do
     field :tag, :string
 
@@ -19,7 +21,7 @@ defmodule Flow.Taxonomy.Label do
     |> cast(attrs, [:tag])
     |> validate_required([:tag])
     |> validate_length(:tag, max: 30)
-    |> validate_format(:tag, ~r/^[a-z]+(?:\/[a-z]+)?$/)
+    |> validate_format(:tag, @tag_match)
     |> unsafe_validate_unique(:tag, Flow.Repo)
     |> unique_constraint([:user_id, :tag])
   end

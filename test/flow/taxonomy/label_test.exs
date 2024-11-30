@@ -51,4 +51,26 @@ defmodule Flow.Taxonomy.LabelTest do
 
     assert changeset.valid? == false
   end
+
+  test "allows dashes" do
+    attrs = %{tag: "foo-bar/baz-qux"}
+    changeset = Label.changeset(%Label{}, attrs)
+
+    assert changeset.valid? == true
+  end
+
+  test "does not allow double dashes" do
+    attrs = %{tag: "foo--bar/baz--qux"}
+    changeset = Label.changeset(%Label{}, attrs)
+
+    assert changeset.valid? == false
+  end
+
+  test "does not allow trailing dashes" do
+    attrs = %{tag: "foo-/bar"}
+
+    changeset = Label.changeset(%Label{}, attrs)
+
+    assert changeset.valid? == false
+  end
 end
