@@ -4,9 +4,29 @@ defmodule Flow.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias Flow.Repo
 
+  alias Flow.Repo
+  alias Ecto.Multi
   alias Flow.Accounts.{User, UserToken, UserNotifier}
+  alias Flow.Taxonomy.Label
+
+  @initial_tags [
+    "guard",
+    "guard/full",
+    "guard/half",
+    "guard/spider",
+    "standing",
+    "side-control",
+    "mount",
+    "takedown",
+    "submission",
+    "choke",
+    "joint-lock",
+    "sweep",
+    "pass",
+    "escape",
+    "throw"
+  ]
 
   ## Database getters
 
@@ -75,9 +95,39 @@ defmodule Flow.Accounts do
 
   """
   def register_user(attrs) do
-    %User{}
-    |> User.registration_changeset(attrs)
-    |> Repo.insert()
+    changeset =
+      %User{}
+      |> User.registration_changeset(attrs)
+
+    case Repo.insert(changeset) do
+      {:ok, user} ->
+        seed_initial_user_data(user)
+        {:ok, user}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  def seed_initial_user_data(%User{} = user) do
+    now =
+      DateTime.utc_now()
+      |> DateTime.truncate(:second)
+
+    labels =
+      Enum.map(@initial_tags, fn tag ->
+        %{
+          tag: tag,
+          user_id: user.id,
+          inserted_at: now,
+          updated_at: now
+        }
+      end)
+
+    # TODO: Add logging for failure but don't fail the registration
+    Multi.new()
+    |> Multi.insert_all(:labels, Label, labels)
+    |> Repo.transaction()
   end
 
   @doc """

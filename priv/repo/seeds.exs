@@ -3,13 +3,9 @@
 #     mix run priv/repo/seeds.exs
 #
 
-alias Flow.Accounts.User
-alias Flow.Repo
+alias Flow.Accounts
 
-{:ok, _user} =
-  %User{}
-  |> User.registration_changeset(%{
-    email: "user@example.com",
-    password: "password1234"
-  })
-  |> Repo.insert()
+Accounts.register_user(%{
+  email: "user@example.com",
+  password: "password1234"
+})
