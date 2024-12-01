@@ -700,6 +700,28 @@ defmodule FlowWeb.CoreComponents do
     """
   end
 
+  @doc """
+  Renders a switch
+  """
+  attr :slider_class, :string, default: ""
+  attr :rest, :global
+
+  def switch(assigns) do
+    ~H"""
+    <label {@rest}>
+      <input type="checkbox" class="hidden peer" />
+      <span class={[
+        "block relative h-6 w-12 rounded-full cursor-pointer bg-zinc-200 drop-shadow-sm",
+        "before:block before:h-8 before:w-8 before:p-1 before:absolute",
+        "before:bg-amber-500 before:-left-1 before:-top-1 before:rounded-full",
+        "before:transition-transform before:duration-200",
+        "peer-checked:before:translate-x-6 peer-checked:before:bg-zinc-900",
+        @slider_class
+      ]} />
+    </label>
+    """
+  end
+
   ## JS Commands
 
   def show(js \\ %JS{}, selector) do

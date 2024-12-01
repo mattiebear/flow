@@ -21,25 +21,6 @@
     @apply px-3 py-1.5 text-sm;
   }
 
-  /* Switch */
-  .switch .slider {
-    @apply block relative h-6 w-12 rounded-full cursor-pointer bg-zinc-200 drop-shadow-sm;
-  }
-
-  .switch .slider::before {
-    @apply block h-8 w-8 p-1 absolute bg-amber-500 -left-1 -top-1 rounded-full transition-all duration-200;
-    content: url('/icons/sun.svg');
-  }
-
-  .switch input {
-    display: none;
-  }
-
-  .switch input:checked + .slider::before {
-    @apply translate-x-6 bg-zinc-900 p-1.5;
-    content: url('/icons/moon.svg');
-  }
-
   /* Menu */
   .menu {
     @apply drop-shadow bg-zinc-100 dark:bg-zinc-800 w-[200px] p-3 rounded-xl;

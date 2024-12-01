@@ -64,10 +64,11 @@
                   <li>
                     <div class="flex row justify-between px-2 py-1.5">
                       Dark mode
-                      <label class="switch" id="mode-toggle" phx-hook="ModeToggle">
-                        <input type="checkbox" />
-                        <span class="slider" />
-                      </label>
+                      <.switch
+                        id="mode-toggle"
+                        phx-hook="ModeToggle"
+                        slider_class="before:content-[url('/icons/sun.svg')] peer-checked:before:content-[url('/icons/moon.svg')] peer-checked:before:p-1.5"
+                      />
                     </div>
                   </li>
                   <li>
