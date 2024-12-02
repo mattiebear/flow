@@ -26,17 +26,8 @@
 
         <div class="flex flex-row items-center gap-x-4">
           <%= if @current_user do %>
-            <div class="relative">
-              <div
-                class="rounded-full overflow-hidden cursor-pointer h-[64px]"
-                phx-click={
-                  JS.toggle(
-                    to: "#profile-menu",
-                    in: {"ease-out duration-100", "opacity-0 scale-90", "opacity-100 scale-100"},
-                    out: {"ease-out duration-100", "opacity-100 scale-100", "opacity-0 scale-90"}
-                  )
-                }
-              >
+            <.menu id="profile-menu">
+              <:trigger>
                 <div class="bg-indigo-900 h-full p-1.5 relative">
                   <div class="absolute right-2 h-full w-1.5 bg-gradient-to-b from-zinc-200 to-zinc-300 z-0" />
 
@@ -45,18 +36,9 @@
                     class="object-contain h-full rounded-full relative"
                   />
                 </div>
-              </div>
+              </:trigger>
 
-              <div
-                id="profile-menu"
-                class="menu hidden absolute top-[calc(100%_+_4px)] right-0"
-                phx-click-away={
-                  JS.hide(
-                    transition:
-                      {"ease-out duration-100", "opacity-100 scale-100", "opacity-0 scale-90"}
-                  )
-                }
-              >
+              <:content>
                 <span><%= @current_user.email %></span>
                 <hr class="my-2" />
 
@@ -72,19 +54,23 @@
                     </div>
                   </li>
                   <li>
-                    <.link href={~p"/users/settings"} class="option block">
-                      Settings
+                    <.link href={~p"/users/settings"} class="block">
+                      <.menu_option>
+                        Settings
+                      </.menu_option>
                     </.link>
                   </li>
 
                   <li>
-                    <.link href={~p"/users/log_out"} method="delete" class="option block">
-                      Log out
+                    <.link href={~p"/users/log_out"} method="delete" class="block">
+                      <.menu_option>
+                        Log out
+                      </.menu_option>
                     </.link>
                   </li>
                 </ul>
-              </div>
-            </div>
+              </:content>
+            </.menu>
           <% else %>
             <.link href={~p"/users/log_in"}>
               <.button size="md" color="primary" variant="outline">Log in</.button>
