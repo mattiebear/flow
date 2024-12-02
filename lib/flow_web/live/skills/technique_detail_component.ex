@@ -11,58 +11,37 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
           <%= @technique.name %>
         </h1>
 
-        <div class="relative">
-          <button
-            aria-label="Edit technique"
-            class="p-2 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400 transition-colors"
-            phx-click={
-              JS.toggle(
-                to: "#technique-menu",
-                in: {"ease-out duration-100", "opacity-0 scale-90", "opacity-100 scale-100"},
-                out: {"ease-out duration-100", "opacity-100 scale-100", "opacity-0 scale-90"}
-              )
-            }
-          >
-            <.icon name="hero-cog-6-tooth" />
-          </button>
+        <.menu id="technique-menu">
+          <:trigger>
+            <button
+              aria-label="Edit technique"
+              class="p-2 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400 transition-colors"
+            >
+              <.icon name="hero-cog-6-tooth" />
+            </button>
+          </:trigger>
 
-          <div
-            id="technique-menu"
-            class="menu hidden absolute top-[calc(100%_+_4px)] -translate-x-1/2"
-            phx-click-away={
-              JS.hide(
-                transition: {"ease-out duration-100", "opacity-100 scale-100", "opacity-0 scale-90"}
-              )
-            }
-          >
+          <:content>
             <ul class="flex flex-col gap-y-2">
               <li>
-                <.link
-                  patch={~p"/techniques/#{@technique}/edit"}
-                  class="block flex justify-between items-center option"
-                >
-                  Edit <.icon name="hero-pencil-square" />
+                <.link patch={~p"/techniques/#{@technique}/edit"}>
+                  <.menu_option>
+                    Edit <.icon name="hero-pencil-square" />
+                  </.menu_option>
                 </.link>
               </li>
 
               <li>
-                <button
-                  class="flex justify-between items-center option destructive"
-                  phx-click={
-                    JS.hide(
-                      to: "#technique-menu",
-                      transition:
-                        {"ease-out duration-100", "opacity-100 scale-100", "opacity-0 scale-90"}
-                    )
-                    |> show_modal("confirm-delete")
-                  }
+                <.menu_option
+                  variant="destructive"
+                  phx-click={hide("#technique-menu") |> show_modal("confirm-delete")}
                 >
                   Delete <.icon name="hero-trash" />
-                </button>
+                </.menu_option>
               </li>
             </ul>
-          </div>
-        </div>
+          </:content>
+        </.menu>
       </div>
 
       <div class="w-full grid grid-cols-[8rem_1fr] gap-4">
@@ -121,7 +100,9 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
         <p class="mb-6">This action cannot be undone.</p>
 
         <div class="flex justify-end gap-x-4">
-          <.button color="primary" variant="outline">Never mind</.button>
+          <.button color="primary" variant="outline" phx-click={hide_modal("confirm-delete")}>
+            Never mind
+          </.button>
           <.button
             color="destructive"
             variant="solid"

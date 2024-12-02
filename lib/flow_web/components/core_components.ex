@@ -764,6 +764,7 @@ defmodule FlowWeb.CoreComponents do
   @doc """
   Renders a menu item.
   """
+  attr :rest, :global
   attr :variant, :string, default: "default"
   slot :inner_block, required: true
 
@@ -777,12 +778,16 @@ defmodule FlowWeb.CoreComponents do
     assigns = assign(assigns, :styles, styles)
 
     ~H"""
-    <span class={[
-      "block px-2 py-1.5 rounded-lg hover:bg-indigo-500 hover:text-zinc-100 w-full",
-      @styles
-    ]}>
+    <button
+      class={[
+        "px-2 py-1.5 rounded-lg hover:bg-indigo-500 hover:text-zinc-100 w-full",
+        "flex justify-between items-center",
+        @styles
+      ]}
+      {@rest}
+    >
       <%= render_slot(@inner_block) %>
-    </span>
+    </button>
     """
   end
 
