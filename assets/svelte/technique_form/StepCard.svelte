@@ -1,8 +1,10 @@
 <script>
-  import { onMount, onDestroy } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { fade, scale } from 'svelte/transition';
+
   import { className } from '../../js/utils/style';
   import AutoResizeTextarea from '../components/AutoResizeTextarea.svelte';
+  import Popover from '../components/Popover.svelte';
 
   export let canMoveDown;
   export let canMoveUp;
@@ -13,25 +15,8 @@
   export let number;
   export let step;
 
-  let isOpen = false;
-  let menu;
-  let listener;
-
-  onMount(() => {
-    listener = (e) => {
-      if (menu && !menu.contains(e.target)) {
-        isOpen = false;
-      }
-    };
-
-    document.addEventListener('click', listener);
-  });
-
-  onDestroy(() => {
-    if (listener) {
-      document.removeEventListener('click', listener);
-    }
-  });
+  let isFocusModalOpen = false;
+  let isMenuOpen = false;
 
   function moveStep(direction) {
     isOpen = false;
@@ -81,64 +66,64 @@
     </p>
   {/if}
 
-  <div class="flex justify-end relative" bind:this={menu}>
+  <div class="flex justify-end gap-x-2">
     <button
-      aria-label="Edit step"
+      aria-label="Edit focuses"
       class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
       type="button"
-      on:click={() => (isOpen = !isOpen)}
     >
-      <span class="hero-cog-6-tooth" />
+      <span class="hero-exclamation-circle" />
     </button>
 
-    {#if isOpen}
-      <div
-        class="menu absolute right-[-80px] bottom-[calc(100%_+_10px)]"
-        transition:scale={{
-          duration: 100,
-          opacity: 0,
-          start: 0.9,
-        }}
+    <Popover isOpen={isMenuOpen}>
+      <button
+        aria-label="Edit step"
+        class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+        type="button"
+        on:click={() => (isMenuOpen = !isMenuOpen)}
+        slot="trigger"
       >
-        <ul class="flex flex-col gap-y-2">
-          {#if canMoveUp}
-            <li>
-              <button
-                class="option flex justify-between"
-                on:click={() => moveStep(-1)}
-                type="button"
-              >
-                Move Up
-                <span class="hero-arrow-up" />
-              </button>
-            </li>
-          {/if}
+        <span class="hero-cog-6-tooth" />
+      </button>
 
-          {#if canMoveDown}
-            <li>
-              <button
-                class="option flex justify-between"
-                on:click={() => moveStep(1)}
-                type="button"
-              >
-                Move Down
-                <span class="hero-arrow-down" />
-              </button>
-            </li>
-          {/if}
-
+      <ul class="flex flex-col gap-y-2" slot="content">
+        {#if canMoveUp}
           <li>
             <button
               class="option flex justify-between"
-              on:click={() => onDelete(step.layout_id)}
+              on:click={() => moveStep(-1)}
               type="button"
             >
-              Remove
-              <span class="hero-trash" />
+              Move Up
+              <span class="hero-arrow-up" />
             </button>
           </li>
-        </ul>
-      </div>
-    {/if}
+        {/if}
+
+        {#if canMoveDown}
+          <li>
+            <button
+              class="option flex justify-between"
+              on:click={() => moveStep(1)}
+              type="button"
+            >
+              Move Down
+              <span class="hero-arrow-down" />
+            </button>
+          </li>
+        {/if}
+
+        <li>
+          <button
+            class="option flex justify-between"
+            on:click={() => onDelete(step.layout_id)}
+            type="button"
+          >
+            Remove
+            <span class="hero-trash" />
+          </button>
+        </li>
+      </ul>
+    </Popover>
   </div>
 </div>
