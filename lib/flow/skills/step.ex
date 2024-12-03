@@ -3,7 +3,7 @@ defmodule Flow.Skills.Step do
 
   import Ecto.Changeset
 
-  alias Flow.Skills.Technique
+  alias Flow.Skills.{Focus, Technique}
 
   @derive {Jason.Encoder, except: [:__meta__, :technique]}
 
@@ -13,6 +13,8 @@ defmodule Flow.Skills.Step do
 
     belongs_to :technique, Technique
 
+    has_many :focuses, Focus
+
     timestamps(type: :utc_datetime)
   end
 
@@ -20,6 +22,7 @@ defmodule Flow.Skills.Step do
   def changeset(step, attrs) do
     step
     |> cast(attrs, [:description, :layout_id])
+    |> cast_assoc(:focuses)
     |> validate_required([:description, :layout_id])
   end
 end
