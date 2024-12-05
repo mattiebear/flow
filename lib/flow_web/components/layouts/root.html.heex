@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
     <.live_title suffix=" · Flow BJJ">
-      <%= assigns[:page_title] || "Flow" %>
+      {assigns[:page_title] || "Flow"}
     </.live_title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -39,7 +39,7 @@
               </:trigger>
 
               <:content>
-                <span><%= @current_user.email %></span>
+                <span>{@current_user.email}</span>
                 <hr class="my-2" />
 
                 <ul class="flex flex-col gap-y-2">
@@ -85,7 +85,7 @@
     </header>
 
     <div class="container m-auto px-4">
-      <%= @inner_content %>
+      {@inner_content}
     </div>
   </body>
 </html>

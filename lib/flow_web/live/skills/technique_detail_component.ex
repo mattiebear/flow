@@ -8,7 +8,7 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
     <div>
       <div class="mb-8 w-full flex justify-between items-center">
         <h1 class="px-3 py-4 text-6xl text-neutral-900 dark:text-neutral-300">
-          <%= @technique.name %>
+          {@technique.name}
         </h1>
 
         <.menu id="technique-menu">
@@ -61,7 +61,7 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
           "flex flex-col gap-y-4"
         ]}>
           <p class={[!@technique.description && "text-zinc-400 dark:text-zinc-600"]}>
-            <%= @technique.description || "No starting description" %>
+            {@technique.description || "No starting description"}
           </p>
 
           <div :if={length(@technique.labels) > 0} class="flex flex-row gap-x-2">
@@ -72,7 +72,7 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
                 "border border-solid border-zinc-500 dark:border-zinc-300 text-zinc-300"
               ]}
             >
-              #<%= label.tag %>
+              #{label.tag}
             </div>
           </div>
         </div>
@@ -83,13 +83,13 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
               "inline-block px-6 py-1 rounded-full",
               "border border-solid border-zinc-500 dark:border-zinc-300"
             ]}>
-              Step <%= index + 1 %>
+              Step {index + 1}
             </span>
           </div>
 
           <div class="min-h-[6rem] rounded-xl w-full py-2 px-3 border border-solid border-zinc-500">
             <p>
-              <%= step.description %>
+              {step.description}
             </p>
           </div>
         <% end %>
