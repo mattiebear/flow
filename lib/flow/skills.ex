@@ -86,4 +86,8 @@ defmodule Flow.Skills do
       ]
     }
   end
+
+  def change_technique(%Technique{} = technique, attrs \\ %{}) do
+    Technique.changeset(technique, attrs)
+  end
 end
