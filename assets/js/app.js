@@ -25,44 +25,55 @@ import { getHooks } from 'live_svelte';
 import * as Components from '../svelte/**/*.svelte';
 
 let Hooks = {
-  ModeToggle: {
-    mounted() {
-      const STORAGE_KEY = 'mode-toggle';
+	AutoResizeTextarea: {
+		mounted() {
+			this.el.style.height = this.el.scrollHeight + 'px';
+			this.el.style.overflowY = 'hidden';
 
-      let mode =
-        localStorage.getItem(STORAGE_KEY) === 'dark' ? 'dark' : 'light';
-      let input = this.el.querySelector('input');
-      let root = document.querySelector('html');
+			this.el.addEventListener('input', () => {
+				this.el.style.height = 'auto';
+				this.el.style.height = this.el.scrollHeight + 'px';
+			});
+		},
+	},
+	ModeToggle: {
+		mounted() {
+			const STORAGE_KEY = 'mode-toggle';
 
-      let setMode = (mode) => {
-        localStorage.setItem(STORAGE_KEY, mode);
-        root.className = mode;
-        this.el.dataset.mode = mode;
-      };
+			let mode =
+				localStorage.getItem(STORAGE_KEY) === 'dark' ? 'dark' : 'light';
+			let input = this.el.querySelector('input');
+			let root = document.querySelector('html');
 
-      setMode(mode);
+			let setMode = (mode) => {
+				localStorage.setItem(STORAGE_KEY, mode);
+				root.className = mode;
+				this.el.dataset.mode = mode;
+			};
 
-      if (!input) {
-        return;
-      }
+			setMode(mode);
 
-      input.checked = mode === 'dark';
+			if (!input) {
+				return;
+			}
 
-      input.addEventListener('change', (e) => {
-        let mode = e.target.checked ? 'dark' : 'light';
-        setMode(mode);
-      });
-    },
-  },
+			input.checked = mode === 'dark';
+
+			input.addEventListener('change', (e) => {
+				let mode = e.target.checked ? 'dark' : 'light';
+				setMode(mode);
+			});
+		},
+	},
 };
 
 let csrfToken = document
-  .querySelector("meta[name='csrf-token']")
-  .getAttribute('content');
+	.querySelector("meta[name='csrf-token']")
+	.getAttribute('content');
 let liveSocket = new LiveSocket('/live', Socket, {
-  hooks: { ...Hooks, ...getHooks(Components) },
-  longPollFallbackMs: 500,
-  params: { _csrf_token: csrfToken },
+	hooks: { ...Hooks, ...getHooks(Components) },
+	longPollFallbackMs: 500,
+	params: { _csrf_token: csrfToken },
 });
 
 // Show progress bar on live navigation and form submits
