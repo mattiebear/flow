@@ -28,11 +28,9 @@ defmodule FlowWeb.Router do
     get "/", PageController, :home
   end
 
-  scope "/api", FlowWeb do
-    pipe_through :api
-
-    resources "/labels", API.LabelController, only: [:create, :index]
-  end
+  # scope "/api", FlowWeb do
+  #   pipe_through :api
+  # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:flow, :dev_routes) do
