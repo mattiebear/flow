@@ -28,13 +28,15 @@
           <%= if @current_user do %>
             <.menu id="profile-menu">
               <:trigger>
-                <div class="bg-indigo-900 h-full p-1.5 relative">
-                  <div class="absolute right-2 h-full w-1.5 bg-gradient-to-b from-zinc-200 to-zinc-300 z-0" />
+                <div class="rounded-full overflow-hidden cursor-pointer h-[64px]">
+                  <div class="bg-indigo-900 h-full p-1.5 relative">
+                    <div class="absolute right-2 h-full w-1.5 bg-gradient-to-b from-zinc-200 to-zinc-300 z-0" />
 
-                  <img
-                    src={FlowWeb.Util.Avatar.url(@current_user.email)}
-                    class="object-contain h-full rounded-full relative"
-                  />
+                    <img
+                      src={FlowWeb.Util.Avatar.url(@current_user.email)}
+                      class="object-contain h-full rounded-full relative"
+                    />
+                  </div>
                 </div>
               </:trigger>
 

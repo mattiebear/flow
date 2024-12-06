@@ -742,7 +742,7 @@ defmodule FlowWeb.CoreComponents do
 
     ~H"""
     <div class="relative">
-      <div class="rounded-full overflow-hidden cursor-pointer h-[64px]" phx-click={show("##{@id}")}>
+      <div class="cursor-pointer" phx-click={show("##{@id}")}>
         {render_slot(@trigger)}
       </div>
 

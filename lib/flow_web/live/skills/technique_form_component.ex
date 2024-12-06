@@ -56,6 +56,26 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
                 "w-full resize-none min-h-[6rem] focus:ring-0"
               ]}
             />
+
+            <div class="flex justify-between">
+              <div class="flex flex-row gap-x-2 grow">
+                <!-- TODO: Labels go here -->
+              </div>
+
+              <.menu id="position-menu">
+                <:trigger>
+                  <button
+                    aria-label="Add positions or labels to technique"
+                    class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+                    type="button"
+                  >
+                    <span class="hero-tag" />
+                  </button>
+                </:trigger>
+
+                <:content></:content>
+              </.menu>
+            </div>
           </div>
         </div>
       </.form>
