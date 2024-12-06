@@ -62,7 +62,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
                 <!-- TODO: Labels go here -->
               </div>
 
-              <.menu id="position-menu">
+              <.menu id="position-menu" size="lg">
                 <:trigger>
                   <button
                     aria-label="Add positions or labels to technique"
@@ -73,7 +73,19 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
                   </button>
                 </:trigger>
 
-                <:content></:content>
+                <:content>
+                  <div class="flex flex-col gap-y-2">
+                    <div class="flex flex-row gap-x-2 items-center">
+                      <input class={[
+                        "focus:ring-0 border border-solid border-indigo-700 rounded-md",
+                        "bg-none bg-transparent outline-none p-2 w-full"
+                      ]} />
+                      <.button size="sm" type="button">
+                        Add
+                      </.button>
+                    </div>
+                  </div>
+                </:content>
               </.menu>
             </div>
           </div>
