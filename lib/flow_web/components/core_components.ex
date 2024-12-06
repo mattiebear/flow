@@ -784,6 +784,7 @@ defmodule FlowWeb.CoreComponents do
         "flex justify-between items-center",
         @styles
       ]}
+      type="button"
       {@rest}
     >
       {render_slot(@inner_block)}

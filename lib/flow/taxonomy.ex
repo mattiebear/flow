@@ -38,4 +38,8 @@ defmodule Flow.Taxonomy do
     query = from l in Label, where: l.id in ^label_ids
     Repo.all(query)
   end
+
+  def get_label!(%User{} = user, id) do
+    Repo.get_by!(Label, id: id, user_id: user.id)
+  end
 end
