@@ -90,4 +90,8 @@ defmodule Flow.Skills do
   def change_technique(%Technique{} = technique, attrs \\ %{}) do
     Technique.changeset(technique, attrs)
   end
+
+  def build_step(layout_id) do
+    %Step{layout_id: layout_id, focuses: []}
+  end
 end

@@ -51,7 +51,7 @@ defmodule FlowWeb.CoreComponents do
       phx-mounted={@show && show_modal(@id)}
       phx-remove={hide_modal(@id)}
       data-cancel={JS.exec(@on_cancel, "phx-remove")}
-      class="relative z-50 hidden"
+      class="relative z-modal hidden"
     >
       <div
         id={"#{@id}-bg"}
@@ -749,12 +749,12 @@ defmodule FlowWeb.CoreComponents do
       <div
         id={@id}
         class={[
-          "hidden absolute top-[calc(100%_+_4px)] right-0",
+          "hidden absolute top-[calc(100%_+_4px)] right-0 z-popover",
           "drop-shadow bg-zinc-100 dark:bg-zinc-800 p-3 rounded-xl",
           @size
         ]}
-        phx-click-away={JS.exec("phx-data-close", to: "##{@id}")}
-        data-close={hide("##{@id}")}
+        phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
+        data-cancel={hide("##{@id}")}
       >
         {render_slot(@content)}
       </div>
