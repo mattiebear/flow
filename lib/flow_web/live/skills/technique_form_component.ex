@@ -1,7 +1,6 @@
 defmodule FlowWeb.Skills.TechniqueFormComponent do
   use FlowWeb, :live_component
 
-  alias Flow.Schema.Error
   alias Flow.Skills
   alias Flow.Taxonomy
 
@@ -96,6 +95,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
                           "bg-none bg-transparent outline-none p-2 w-full"
                         ]}
                         name="tag"
+                        value={@label_search}
                         phx-change="search_labels"
                         phx-debounce="300"
                         phx-target={@myself}
@@ -136,6 +136,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
       |> assign(assigns)
       |> assign_form(changeset)
       |> assign(:label_results, [])
+      |> assign(:label_search, "")
       |> assign(:labels, assigns.technique.labels)
 
     {:ok,
@@ -149,12 +150,23 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
   end
 
   def handle_event("search_labels", %{"tag" => ""}, socket) do
-    {:noreply, assign(socket, :label_results, [])}
+    socket =
+      socket
+      |> assign(:label_results, [])
+      |> assign(:label_search, "")
+
+    {:noreply, socket}
   end
 
-  def handle_event("search_labels", %{"tag" => value}, socket) do
-    labels = Taxonomy.search_labels(socket.assigns.current_user, search: value, limit: 10)
-    {:noreply, assign(socket, :label_results, labels)}
+  def handle_event("search_labels", %{"tag" => tag}, socket) do
+    labels = Taxonomy.search_labels(socket.assigns.current_user, search: tag, limit: 10)
+
+    socket =
+      socket
+      |> assign(:label_results, labels)
+      |> assign(:label_search, tag)
+
+    {:noreply, socket}
   end
 
   def handle_event("create_label", %{"tag" => tag}, socket) do
@@ -163,7 +175,6 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
         {:noreply, assign_label(socket, label)}
 
       {:error, _changeset} ->
-        # TODO: Error handling
         {:noreply, socket}
     end
   end
@@ -191,7 +202,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
         {:noreply, socket}
 
       {:error, changeset} ->
-        {:noreply, assign(socket, :errors, Error.serialize_errors(changeset))}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
 
@@ -208,7 +219,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
         {:noreply, socket}
 
       {:error, changeset} ->
-        {:noreply, assign(socket, :errors, Error.serialize_errors(changeset))}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
 
@@ -217,6 +228,8 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
   end
 
   defp assign_label(socket, label) do
-    assign(socket, :labels, socket.assigns.labels ++ [label])
+    socket
+    |> assign(:labels, socket.assigns.labels ++ [label])
+    |> push_event("close_menu", %{id: "position-menu"})
   end
 end

@@ -89,3 +89,12 @@ liveSocket.connect();
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
+
+window.addEventListener('phx:close_menu', (e) => {
+	let id = e.detail.id;
+	let el = document.getElementById(id);
+
+	if (el) {
+		liveSocket.execJS(el, el.getAttribute('data-close'));
+	}
+});
