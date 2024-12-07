@@ -92,11 +92,11 @@ liveSocket.connect();
 window.liveSocket = liveSocket;
 
 // Core component socket event functionality
-window.addEventListener('phx:close_menu', (e) => {
+window.addEventListener('phx:close_popup', (e) => {
 	let id = e.detail.id;
 	let el = document.getElementById(id);
 
 	if (el) {
-		liveSocket.execJS(el, el.getAttribute('data-close'));
+		liveSocket.execJS(el, el.getAttribute('data-cancel'));
 	}
 });

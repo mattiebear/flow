@@ -26,6 +26,7 @@ module.exports = {
 				],
 			},
 			zIndex: {
+				modal: 900,
 				popover: 1000,
 			}
 		},

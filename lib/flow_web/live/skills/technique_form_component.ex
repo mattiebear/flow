@@ -179,6 +179,8 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
                 "hover:bg-zinc-300 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-200"
               ]}
               type="button"
+              phx-click="add_step"
+              phx-target={@myself}
             >
               <span class="hero-plus" />
             </button>
@@ -186,14 +188,14 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
         </div>
 
         <div class="flex justify-end mt-6 gap-x-2">
-          <.link :if={@action == :edit} to={~p"/techniques/#{@technique.id}"}>
+          <.link :if={@action == :edit} href={~p"/techniques/#{@technique.id}"}>
             <.button type="button" variant="outline">
               Cancel
             </.button>
           </.link>
 
           <.button type="submit">
-            {(@action == :new && "Create") || "Update"}
+            {if @action == :new, do: "Create", else: "Update"}
           </.button>
         </div>
       </.form>
@@ -263,6 +265,39 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
     {:noreply, assign(socket, :labels, labels)}
   end
 
+  def handle_event("add_step", _, socket) do
+    changeset = socket.assigns.form.source
+
+    layout = Changeset.get_field(changeset, :layout)
+    steps = Changeset.get_assoc(changeset, :steps)
+
+    layout_id = Enum.max(Enum.map(steps, &Changeset.get_field(&1, :layout_id))) + 1
+
+    changeset =
+      changeset
+      |> Changeset.put_assoc(:steps, steps ++ [Skills.build_step(layout_id)])
+      |> Changeset.put_change(:layout, layout ++ [%{layout_id: layout_id}])
+
+    # TODO: Add focus
+    socket =
+      socket
+      |> assign(:form, to_form(changeset))
+      |> assign_steps(changeset)
+
+    {:noreply, socket}
+  end
+
+  # def handle_event("remove_step", %{"label_id" => label_id}, socket) do
+  #   changeset = Skills.remove_step(socket.assigns.technique, label_id)
+  #
+  #   socket =
+  #     socket
+  #     |> assign_form(changeset)
+  #     |> assign_steps(changeset)
+  #
+  #   {:noreply, socket}
+  # end
+
   defp save_technique(socket, :new, params) do
     case Skills.create_technique(socket.assigns.current_user, params) do
       {:ok, technique} ->
@@ -321,6 +356,6 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
   defp assign_label(socket, label) do
     socket
     |> assign(:labels, socket.assigns.labels ++ [label])
-    |> push_event("close_menu", %{id: "position-menu"})
+    |> push_event("close_popup", %{id: "position-menu"})
   end
 end
