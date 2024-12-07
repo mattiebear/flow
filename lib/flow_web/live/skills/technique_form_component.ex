@@ -146,6 +146,28 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
                 placeholder="Describe the this step"
                 value={step[:description].value}
               />
+
+              <.error :for={msg <- step[:description].errors}>
+                {msg}
+              </.error>
+
+              <div class="flex justify-end gap-x-2">
+                <.menu id={"step-menu-#{index}"}>
+                  <:trigger>
+                    <button
+                      aria-label="Edit step"
+                      class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+                      type="button"
+                    >
+                      <span class="hero-cog-6-tooth" />
+                    </button>
+                  </:trigger>
+
+                  <:content>
+                    Content
+                  </:content>
+                </.menu>
+              </div>
             </div>
           <% end %>
 
