@@ -1,6 +1,7 @@
 defmodule FlowWeb.Skills.TechniqueFormComponent do
   use FlowWeb, :live_component
 
+  alias Ecto.Changeset
   alias Flow.Skills
   alias Flow.Taxonomy
 
@@ -122,6 +123,56 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
               </.menu>
             </div>
           </div>
+
+          <%= for {step, index} <- @steps do %>
+            <div class="flex justify-end items-start mt-[calc(3rem_-_16px)]">
+              <span class={[
+                "inline-block px-6 py-1 rounded-full",
+                "border border-solid border-zinc-500 dark:border-zinc-300"
+              ]}>
+                Step {index + 1}
+              </span>
+            </div>
+
+            <div class={[
+              "rounded-xl w-full py-2 px-3 border border-solid"
+            ]}>
+              <textarea
+                id={"step-description-#{index}"}
+                class={[
+                  "bg-none bg-transparent outline-none border-none p-1",
+                  "w-full resize-none min-h-[6rem] focus:ring-0"
+                ]}
+                placeholder="Describe the this step"
+                value={step[:description].value}
+              />
+            </div>
+          <% end %>
+
+          <div class="col-start-2 flex flex-row justify-center">
+            <button
+              aria-label="Add step"
+              class={[
+                "p-1 rounded-full border border-solid border-zinc-500 transition-colors",
+                "hover:bg-zinc-300 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-200"
+              ]}
+              type="button"
+            >
+              <span class="hero-plus" />
+            </button>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-6 gap-x-2">
+          <.link :if={@action == :edit} to={~p"/techniques/#{@technique.id}"}>
+            <.button type="button" variant="outline">
+              Cancel
+            </.button>
+          </.link>
+
+          <.button type="submit">
+            {(@action == :new && "Create") || "Update"}
+          </.button>
         </div>
       </.form>
     </div>
@@ -133,11 +184,12 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
 
     socket =
       socket
-      |> assign(assigns)
-      |> assign_form(changeset)
       |> assign(:label_results, [])
       |> assign(:label_search, "")
       |> assign(:labels, assigns.technique.labels)
+      |> assign(assigns)
+      |> assign_form(changeset)
+      |> assign_steps(changeset)
 
     {:ok,
      socket
@@ -225,6 +277,23 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     assign(socket, :form, to_form(changeset))
+  end
+
+  defp assign_steps(socket, %Ecto.Changeset{} = changeset) do
+    steps = Changeset.get_assoc(changeset, :steps)
+    layout = Changeset.get_field(changeset, :layout)
+
+    # TODO: Handle case where steps are not in the layout or vice versa
+    ordered_steps =
+      Enum.map(layout, fn node ->
+        Enum.find(steps, fn step ->
+          Changeset.get_field(step, :layout_id) == node.layout_id
+        end)
+        |> to_form()
+      end)
+      |> Enum.with_index()
+
+    assign(socket, :steps, ordered_steps)
   end
 
   defp assign_label(socket, label) do

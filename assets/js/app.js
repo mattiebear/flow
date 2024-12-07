@@ -70,6 +70,7 @@ let Hooks = {
 let csrfToken = document
 	.querySelector("meta[name='csrf-token']")
 	.getAttribute('content');
+
 let liveSocket = new LiveSocket('/live', Socket, {
 	hooks: { ...Hooks, ...getHooks(Components) },
 	longPollFallbackMs: 500,
@@ -90,6 +91,7 @@ liveSocket.connect();
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
 
+// Core component socket event functionality
 window.addEventListener('phx:close_menu', (e) => {
 	let id = e.detail.id;
 	let el = document.getElementById(id);
