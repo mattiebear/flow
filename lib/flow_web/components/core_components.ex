@@ -753,7 +753,8 @@ defmodule FlowWeb.CoreComponents do
           "drop-shadow bg-zinc-100 dark:bg-zinc-800 p-3 rounded-xl",
           @size
         ]}
-        phx-click-away={hide("##{@id}")}
+        phx-click-away={JS.exec("phx-data-close", to: "##{@id}")}
+        data-close={hide("##{@id}")}
       >
         {render_slot(@content)}
       </div>
