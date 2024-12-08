@@ -245,7 +245,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
       |> assign(:label_search, "")
       |> assign(:labels, assigns.technique.labels)
       |> assign(assigns)
-      |> assign_form(changeset)
+      |> combine_changes(changeset)
 
     {:ok, socket}
   end
@@ -255,7 +255,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
 
     dbg(changeset)
 
-    {:noreply, assign_form(socket, changeset)}
+    {:noreply, combine_changes(socket, changeset)}
   end
 
   def handle_event("save", %{"technique" => technique_params}, socket) do
@@ -285,7 +285,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
   def handle_event("create_label", %{"tag" => tag}, socket) do
     case Taxonomy.create_label(socket.assigns.current_user, %{tag: tag}) do
       {:ok, label} ->
-        {:noreply, assign_label(socket, label)}
+        {:noreply, add_label(socket, label)}
 
       {:error, _changeset} ->
         {:noreply, socket}
@@ -294,7 +294,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
 
   def handle_event("select_label", %{"id" => id}, socket) do
     label = Taxonomy.get_label!(socket.assigns.current_user, id)
-    {:noreply, assign_label(socket, label)}
+    {:noreply, add_label(socket, label)}
   end
 
   def handle_event("remove_label", %{"id" => id}, socket) do
@@ -312,7 +312,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
       |> Changeset.put_assoc(:steps, steps ++ [Skills.build_step(layout_id)])
       |> Changeset.put_change(:layout, layout ++ [%{layout_id: layout_id}])
 
-    {:noreply, assign_form(socket, changeset)}
+    {:noreply, combine_changes(socket, changeset)}
   end
 
   def handle_event("remove_step", %{"layout_id" => layout_id}, socket) do
@@ -327,7 +327,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
       )
       |> Changeset.put_change(:layout, Enum.reject(layout, &(&1.layout_id == layout_id)))
 
-    {:noreply, assign_form(socket, changeset)}
+    {:noreply, combine_changes(socket, changeset)}
   end
 
   def handle_event("move_step_up", %{"layout_id" => layout_id}, socket) do
@@ -355,7 +355,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
         {:noreply, socket}
 
       {:error, changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+        {:noreply, combine_changes(socket, changeset)}
     end
   end
 
@@ -372,8 +372,14 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
         {:noreply, socket}
 
       {:error, changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+        {:noreply, combine_changes(socket, changeset)}
     end
+  end
+
+  defp combine_changes(socket, %Ecto.Changeset{} = changeset) do
+    socket
+    |> assign_form(changeset)
+    |> assign_steps(changeset)
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
@@ -399,7 +405,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
     assign(socket, :steps, ordered_steps)
   end
 
-  defp assign_label(socket, label) do
+  defp add_label(socket, label) do
     socket
     |> assign(:labels, socket.assigns.labels ++ [label])
     |> push_event("close_popup", %{id: "position-menu"})
@@ -414,10 +420,11 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
     {changeset, layout, steps}
   end
 
-  def move_step(socket, layout_id, direction) do
+  def move_step(socket, layout_id, :up), do: move_step(socket, layout_id, -1)
+  def move_step(socket, layout_id, :down), do: move_step(socket, layout_id, 1)
+  def move_step(socket, layout_id, movement) when is_integer(movement) do
     {changeset, layout, _} = get_step_data(socket)
     layout_id = String.to_integer(layout_id)
-    movement = if direction == :up, do: -1, else: 1
 
     index = Enum.find_index(layout, &(&1.layout_id == layout_id))
     from = Enum.at(layout, index)
