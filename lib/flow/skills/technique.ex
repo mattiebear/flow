@@ -17,7 +17,7 @@ defmodule Flow.Skills.Technique do
 
     belongs_to :user, User
 
-    has_many :steps, Step
+    has_many :steps, Step, on_replace: :delete
 
     many_to_many :labels, Label, join_through: "taxonomy_technique_labels", on_replace: :delete
 
