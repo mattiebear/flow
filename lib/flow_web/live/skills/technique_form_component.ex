@@ -11,6 +11,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
       <.form autocomplete="off" for={@form} phx-change="validate" phx-target={@myself}>
         <div class="mb-8">
           <input
+            autofocus
             type="text"
             placeholder="Technique name"
             name={@form[:name].name}
@@ -26,7 +27,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
             phx-debounce="blur"
           />
 
-          <.error :for={msg <- @form[:name].errors}>
+          <.error :for={msg <- Enum.map(@form[:name].errors, &translate_error(&1))}>
             {msg}
           </.error>
         </div>
@@ -47,20 +48,16 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
             "bg-gradient-to-br from-indigo-950 to-zinc-900 to-50%"
           ]}>
             <textarea
-              autofocus
               placeholder="Describe the starting position for this technique"
               id={@form[:description].id}
               name={@form[:description].name}
               phx-hook="AutoResizeTextarea"
+              phx-debounce="blur"
               class={[
                 "bg-none bg-transparent outline-none border-none p-1",
                 "w-full resize-none min-h-[6rem] focus:ring-0"
               ]}
-              phx-debounce="blur"
-            >
-              <% # FIXME: This isn't working  %>
-              <%= Phoenix.HTML.Form.normalize_value("textarea", @form[:description].value) %>
-            </textarea>
+            ><%= Phoenix.HTML.Form.normalize_value("textarea", @form[:description].value) %></textarea>
 
             <div class="flex justify-between">
               <div class="flex flex-row gap-x-2 grow">
@@ -143,15 +140,15 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
             ]}>
               <textarea
                 id={"step-description-#{index}"}
+                name={"technique[steps][#{index}][description]"}
+                placeholder="Describe the this step"
                 class={[
                   "bg-none bg-transparent outline-none border-none p-1",
                   "w-full resize-none min-h-[6rem] focus:ring-0"
                 ]}
-                placeholder="Describe the this step"
-                value={step[:description].value}
-              />
+              ><%= Phoenix.HTML.Form.normalize_value("textarea", step[:description].value) %></textarea>
 
-              <.error :for={msg <- step[:description].errors}>
+              <.error :for={msg <- Enum.map(step[:description].errors, &translate_error(&1))}>
                 {msg}
               </.error>
 
@@ -251,9 +248,10 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
   end
 
   def handle_event("validate", %{"technique" => technique_params}, socket) do
-    changeset = Skills.change_technique(socket.assigns.technique, technique_params)
-
-    dbg(changeset)
+    changeset =
+      socket.assigns.technique
+      |> Skills.change_technique(technique_params)
+      |> Map.put(:action, :validate)
 
     {:noreply, combine_changes(socket, changeset)}
   end
@@ -422,6 +420,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
 
   def move_step(socket, layout_id, :up), do: move_step(socket, layout_id, -1)
   def move_step(socket, layout_id, :down), do: move_step(socket, layout_id, 1)
+
   def move_step(socket, layout_id, movement) when is_integer(movement) do
     {changeset, layout, _} = get_step_data(socket)
     layout_id = String.to_integer(layout_id)
