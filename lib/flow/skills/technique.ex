@@ -27,7 +27,7 @@ defmodule Flow.Skills.Technique do
   @doc false
   def changeset(technique, attrs) do
     technique
-    |> cast(attrs, [:description, :layout, :name])
+    |> cast(attrs, [:description, :name])
     |> cast_assoc(:steps)
     |> put_labels(attrs["labels"])
     |> validate_required([:layout, :name])
