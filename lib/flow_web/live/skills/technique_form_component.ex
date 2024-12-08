@@ -8,7 +8,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
   def render(assigns) do
     ~H"""
     <div id="technique-form">
-      <.form autocomplete="off" for={@form}>
+      <.form autocomplete="off" for={@form} phx-change="validate" phx-target={@myself}>
         <div class="mb-8">
           <input
             type="text"
@@ -23,6 +23,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
               @form[:name].errors != [] &&
                 "border-red-900 placeholder:text-red-400 dark:placeholder:text-red-300"
             ]}
+            phx-debounce="blur"
           />
 
           <.error :for={msg <- @form[:name].errors}>
@@ -50,13 +51,16 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
               placeholder="Describe the starting position for this technique"
               id={@form[:description].id}
               name={@form[:description].name}
-              value={@form[:description].value}
               phx-hook="AutoResizeTextarea"
               class={[
                 "bg-none bg-transparent outline-none border-none p-1",
                 "w-full resize-none min-h-[6rem] focus:ring-0"
               ]}
-            />
+              phx-debounce="blur"
+            >
+              <% # FIXME: This isn't working  %>
+              <%= Phoenix.HTML.Form.normalize_value("textarea", @form[:description].value) %>
+            </textarea>
 
             <div class="flex justify-between">
               <div class="flex flex-row gap-x-2 grow">
@@ -243,10 +247,15 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
       |> assign(assigns)
       |> assign_form(changeset)
 
-    {:ok,
-     socket
-     |> assign(assigns)
-     |> assign_form(changeset)}
+    {:ok, socket}
+  end
+
+  def handle_event("validate", %{"technique" => technique_params}, socket) do
+    changeset = Skills.change_technique(socket.assigns.technique, technique_params)
+
+    dbg(changeset)
+
+    {:noreply, assign_form(socket, changeset)}
   end
 
   def handle_event("save", %{"technique" => technique_params}, socket) do
@@ -321,31 +330,15 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
     {:noreply, assign_form(socket, changeset)}
   end
 
-  # TODO: Clean this up
   def handle_event("move_step_up", %{"layout_id" => layout_id}, socket) do
-    {changeset, layout, _} = get_step_data(socket)
-    layout_id = String.to_integer(layout_id)
-
-    index = Enum.find_index(layout, &(&1.layout_id == layout_id))
-    from = Enum.at(layout, index)
-    to = Enum.at(layout, index - 1)
-
-    layout =
-      layout
-      |> List.replace_at(index, to)
-      |> List.replace_at(index - 1, from)
-
-    changeset = Changeset.put_change(changeset, :layout, layout)
-
-    socket =
-      socket
-      |> assign_form(changeset)
-      |> push_event("close_popup", %{id: "step-menu-#{index}"})
+    socket = move_step(socket, layout_id, :up)
 
     {:noreply, socket}
   end
 
   def handle_event("move_step_down", %{"layout_id" => layout_id}, socket) do
+    socket = move_step(socket, layout_id, :down)
+
     {:noreply, socket}
   end
 
@@ -419,5 +412,26 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
     steps = Changeset.get_assoc(changeset, :steps)
 
     {changeset, layout, steps}
+  end
+
+  def move_step(socket, layout_id, direction) do
+    {changeset, layout, _} = get_step_data(socket)
+    layout_id = String.to_integer(layout_id)
+    movement = if direction == :up, do: -1, else: 1
+
+    index = Enum.find_index(layout, &(&1.layout_id == layout_id))
+    from = Enum.at(layout, index)
+    to = Enum.at(layout, index + movement)
+
+    layout =
+      layout
+      |> List.replace_at(index, to)
+      |> List.replace_at(index + movement, from)
+
+    changeset = Changeset.put_change(changeset, :layout, layout)
+
+    socket
+    |> assign_form(changeset)
+    |> push_event("close_popup", %{id: "step-menu-#{index}"})
   end
 end
