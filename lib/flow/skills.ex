@@ -79,11 +79,9 @@ defmodule Flow.Skills do
 
   def build_technique_draft do
     %Technique{
-      layout: [%{layout_id: 1}],
+      layout: [],
       labels: [],
-      steps: [
-        %Step{layout_id: 1, focuses: []}
-      ]
+      steps: []
     }
   end
 
