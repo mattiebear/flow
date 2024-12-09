@@ -373,18 +373,16 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
   end
 
   def handle_event("save", %{"technique" => technique_params}, socket) do
-    changeset =
-      Skills.change_technique(socket.assigns.technique, technique_params)
-      |> Changeset.put_change(:layout, socket.assigns.layout)
-      |> Changeset.put_assoc(:labels, socket.assigns.labels)
-      |> IO.inspect()
-
-    {:noreply, socket}
-    # save_technique(socket, socket.assigns.action, technique_params)
+    save_technique(socket, socket.assigns.action, technique_params)
   end
 
   defp save_technique(socket, :new, params) do
-    case Skills.create_technique(socket.assigns.current_user, params) do
+    case Skills.create_technique(
+           socket.assigns.current_user,
+           params,
+           socket.assigns.layout,
+           socket.assigns.labels
+         ) do
       {:ok, technique} ->
         send(self(), {:technique_added, technique})
 
