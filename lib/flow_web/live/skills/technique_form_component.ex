@@ -333,7 +333,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
 
     socket =
       socket
-      |> assign(:layout, layout ++ [%{layout_id: layout_id}])
+      |> assign(:layout, layout ++ [%{"layout_id" => layout_id}])
       |> resolve_changes(changeset)
 
     {:noreply, socket}
@@ -354,7 +354,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
 
     socket =
       socket
-      |> assign(:layout, Enum.reject(layout, &(Map.get(&1, :layout_id) == layout_id)))
+      |> assign(:layout, Enum.reject(layout, &(Map.get(&1, "layout_id") == layout_id)))
       |> resolve_changes(changeset)
 
     {:noreply, socket}
@@ -399,7 +399,12 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
   end
 
   defp save_technique(socket, :edit, params) do
-    case Skills.update_technique(socket.assigns.technique, params) do
+    case Skills.update_technique(
+           socket.assigns.technique,
+           params,
+           socket.assigns.layout,
+           socket.assigns.labels
+         ) do
       {:ok, technique} ->
         send(self(), {:technique_updated, technique})
 
@@ -437,7 +442,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
     ordered_steps =
       Enum.map(layout, fn node ->
         Enum.find(steps, fn step ->
-          Changeset.get_field(step, :layout_id) == node.layout_id
+          Changeset.get_field(step, :layout_id) == node["layout_id"]
         end)
         |> to_form()
       end)
@@ -454,7 +459,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
     layout = socket.assigns.layout
     layout_id = String.to_integer(layout_id)
 
-    index = Enum.find_index(layout, &(&1.layout_id == layout_id))
+    index = Enum.find_index(layout, &(&1["layout_id"] == layout_id))
     from = Enum.at(layout, index)
     to = Enum.at(layout, index + movement)
 

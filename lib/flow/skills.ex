@@ -38,9 +38,11 @@ defmodule Flow.Skills do
     |> Repo.insert()
   end
 
-  def update_technique(%Technique{} = technique, attrs) do
+  def update_technique(%Technique{} = technique, attrs, layout, labels) do
     technique
     |> Technique.changeset(attrs)
+    |> Changeset.put_change(:layout, layout)
+    |> Changeset.put_assoc(:labels, labels)
     |> Repo.update()
   end
 

@@ -89,9 +89,6 @@ defmodule FlowWeb do
       # Core UI components and translation
       import FlowWeb.CoreComponents
 
-      # Reactive client
-      import LiveSvelte
-
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
 
