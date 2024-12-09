@@ -1,6 +1,7 @@
 defmodule Flow.Skills do
   import Ecto.Query
 
+  alias Ecto.Changeset
   alias Flow.Repo
   alias Flow.Accounts.User
   alias Flow.Skills.Step
@@ -28,10 +29,12 @@ defmodule Flow.Skills do
       {:ok, %Technique{}}
 
   """
-  def create_technique(%User{} = user, attrs) do
+  def create_technique(%User{} = user, attrs, layout, labels) do
     %Technique{}
     |> Technique.changeset(attrs)
-    |> Ecto.Changeset.put_assoc(:user, user)
+    |> Changeset.put_change(:layout, layout)
+    |> Changeset.put_assoc(:labels, labels)
+    |> Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
 
