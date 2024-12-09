@@ -8,7 +8,13 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
   def render(assigns) do
     ~H"""
     <div id="technique-form">
-      <.form autocomplete="off" for={@form} phx-change="validate" phx-target={@myself}>
+      <.form
+        autocomplete="off"
+        for={@form}
+        phx-change="validate"
+        phx-submit="save"
+        phx-target={@myself}
+      >
         <div class="mb-8">
           <input
             autofocus
@@ -127,7 +133,11 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
 
           <%= for {step, index} <- @steps do %>
             <input type="hidden" name={"technique[steps][#{index}][id]"} value={step[:id].value} />
-            <input type="hidden" name={"technique[steps][#{index}][layout_id]"} value={step[:layout_id].value} />
+            <input
+              type="hidden"
+              name={"technique[steps][#{index}][layout_id]"}
+              value={step[:layout_id].value}
+            />
 
             <div class="flex justify-end items-start mt-[calc(3rem_-_16px)]">
               <span class={[
@@ -335,16 +345,17 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
     steps = Changeset.get_assoc(changeset, :steps)
     layout_id = String.to_integer(layout_id)
 
-    changeset = Changeset.put_assoc(
+    changeset =
+      Changeset.put_assoc(
         changeset,
         :steps,
         Enum.reject(steps, &(Changeset.get_field(&1, :layout_id) == layout_id))
       )
 
-      socket =
-        socket
-        |> assign(:layout, Enum.reject(layout, &(Map.get(&1, :layout_id) == layout_id)))
-        |> resolve_changes(changeset)
+    socket =
+      socket
+      |> assign(:layout, Enum.reject(layout, &(Map.get(&1, :layout_id) == layout_id)))
+      |> resolve_changes(changeset)
 
     {:noreply, socket}
   end
@@ -362,7 +373,14 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
   end
 
   def handle_event("save", %{"technique" => technique_params}, socket) do
-    save_technique(socket, socket.assigns.action, technique_params)
+    changeset =
+      Skills.change_technique(socket.assigns.technique, technique_params)
+      |> Changeset.put_change(:layout, socket.assigns.layout)
+      |> Changeset.put_assoc(:labels, socket.assigns.labels)
+      |> IO.inspect()
+
+    {:noreply, socket}
+    # save_technique(socket, socket.assigns.action, technique_params)
   end
 
   defp save_technique(socket, :new, params) do
@@ -447,10 +465,9 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
       |> List.replace_at(index, to)
       |> List.replace_at(index + movement, from)
 
-    changeset = Changeset.put_change(changeset, :layout, layout)
-
     socket
-    |> assign_form(changeset)
+    |> assign(:layout, layout)
+    |> resolve_changes(changeset)
     |> push_event("close_popup", %{id: "step-menu-#{index}"})
   end
 
