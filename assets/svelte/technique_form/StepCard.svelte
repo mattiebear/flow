@@ -4,6 +4,7 @@
 
   import { className } from '../../js/utils/style';
   import AutoResizeTextarea from '../components/AutoResizeTextarea.svelte';
+  import Modal from '../components/Modal.svelte';
   import Popover from '../components/Popover.svelte';
 
   export let canMoveDown;
@@ -67,9 +68,12 @@
   {/if}
 
   <div class="flex justify-end gap-x-2">
+    <Modal isOpen={isFocusModalOpen} size="md">The content</Modal>
+
     <button
       aria-label="Edit focuses"
       class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+      on:click|stopPropagation={() => (isFocusModalOpen = true)}
       type="button"
     >
       <span class="hero-exclamation-circle" />
