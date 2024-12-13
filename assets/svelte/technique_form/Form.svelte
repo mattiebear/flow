@@ -1,7 +1,5 @@
 <script>
   import { produce } from 'immer';
-  import { onDestroy, onMount } from 'svelte';
-  import { scale } from 'svelte/transition';
 
   import { waitForElement } from '../../js/utils/dom';
   import { className } from '../../js/utils/style';

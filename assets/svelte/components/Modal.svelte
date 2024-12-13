@@ -5,6 +5,7 @@
   import { className } from '../../js/utils/style';
 
   export let isOpen = false;
+  export let onClose;
   export let size = 'md';
 
   let listener;
@@ -13,7 +14,7 @@
   onMount(() => {
     listener = (e) => {
       if (modal && !modal.contains(e.target)) {
-        isOpen = false;
+        onClose();
       }
     };
 
@@ -59,7 +60,7 @@
               <button
                 type="button"
                 class="-m-3 flex-none p-3 opacity-20 hover:opacity-40"
-                on:click={() => (isOpen = false)}
+                on:click={onClose}
                 aria-label="close"
               >
                 <span class="hero-x-mark-solid h-5 w-5" />
