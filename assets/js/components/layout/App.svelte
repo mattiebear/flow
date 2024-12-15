@@ -1,3 +1,7 @@
+<script>
+  let { children } = $props();
+</script>
+
 <!-- <.flash_group flash={@flash} /> -->
 
 <div class="grid grid-cols-12 gap-x-6">
@@ -15,5 +19,5 @@
     </nav>
   </aside>
 
-  <!-- <%= @inner_content %> -->
+  {@render children()}
 </div>

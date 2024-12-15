@@ -1,3 +1,7 @@
+<script>
+  let { children } = $props();
+</script>
+
 <body
   class="bg-stone-300 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 font-body tracking-wide"
 >
@@ -16,7 +20,6 @@
       </div>
 
       <div class="flex flex-row items-center gap-x-4">
-        menu
         <!-- <%= if @current_user do %>
           <.menu id="profile-menu">
             <:trigger>
@@ -77,6 +80,6 @@
   </header>
 
   <div class="container m-auto px-4">
-    <!-- <%= @inner_content %> -->
+    {@render children()}
   </div>
 </body>
