@@ -53,7 +53,7 @@ defmodule FlowWeb.Router do
 
   ## Authentication routes
 
-  scope "/", FlowWeb do
+  scope "/", FlowWeb.Auth do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     get "/users/register", UserRegistrationController, :new
@@ -66,7 +66,7 @@ defmodule FlowWeb.Router do
     put "/users/reset_password/:token", UserResetPasswordController, :update
   end
 
-  scope "/", FlowWeb do
+  scope "/", FlowWeb.Auth do
     pipe_through [:browser, :require_authenticated_user]
 
     get "/users/settings", UserSettingsController, :edit
@@ -74,7 +74,7 @@ defmodule FlowWeb.Router do
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
   end
 
-  scope "/", FlowWeb do
+  scope "/", FlowWeb.Auth do
     pipe_through [:browser]
 
     delete "/users/log_out", UserSessionController, :delete

@@ -1,4 +1,4 @@
-defmodule FlowWeb.UserSettingsController do
+defmodule FlowWeb.Auth.UserSettingsController do
   use FlowWeb, :controller
 
   alias Flow.Accounts

@@ -1,4 +1,4 @@
-defmodule FlowWeb.UserConfirmationController do
+defmodule FlowWeb.Auth.UserConfirmationController do
   use FlowWeb, :controller
 
   alias Flow.Accounts

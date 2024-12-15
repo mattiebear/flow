@@ -1,4 +1,4 @@
-defmodule FlowWeb.UserResetPasswordController do
+defmodule FlowWeb.Auth.UserResetPasswordController do
   use FlowWeb, :controller
 
   alias Flow.Accounts
