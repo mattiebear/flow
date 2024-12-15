@@ -1,22 +1,15 @@
 {
-  "devDependencies": {
+  "type": "module",
+  "dependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
+    "@inertiajs/svelte": "^2.0.0",
     "@savvywombat/tailwindcss-grid-areas": "^4.0.0",
-    "broadcast-channel": "^4.20.2",
-    "esbuild": "^0.16.17",
-    "esbuild-plugin-import-glob": "^0.1.1",
-    "esbuild-svelte": "^0.8.2",
+    "@tanstack/svelte-query": "^5.62.7",
+    "esbuild": "^0.24.0",
+    "esbuild-svelte": "^0.9.0",
+    "immer": "^10.1.1",
     "prettier": "^3.3.3",
     "prettier-plugin-svelte": "^3.3.2",
-    "svelte": "^4.2.19",
-    "svelte-preprocess": "^6.0.3"
-  },
-  "dependencies": {
-    "@tanstack/svelte-query": "^4.0.0",
-    "immer": "^10.1.1",
-    "live_svelte": "file:../deps/live_svelte",
-    "phoenix": "file:../deps/phoenix",
-    "phoenix_html": "file:../deps/phoenix_html",
-    "phoenix_live_view": "file:../deps/phoenix_live_view"
+    "svelte": "^5.14.0"
   }
 }

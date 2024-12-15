@@ -7,7 +7,12 @@ const path = require('path');
 
 module.exports = {
   darkMode: 'selector',
-  content: ['./js/**/*.js', '../lib/flow_web.ex', '../lib/flow_web/**/*.*ex'],
+  content: [
+    './js/**/*.{js,svelte}',
+    // TODO: We might be able to remove these paths after liveview is removed
+    '../lib/flow_web.ex',
+    '../lib/flow_web/**/*.*ex',
+  ],
   theme: {
     fontFamily: {
       body: ['Cabin', 'sans-serif'],

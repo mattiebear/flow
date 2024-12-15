@@ -1,3 +1,5 @@
+/*
+
 // If you want to use Phoenix channels, run `mix help phx.gen.channel`
 // to get started and then uncomment the line below.
 // import "./user_socket.js"
@@ -78,3 +80,21 @@ liveSocket.connect();
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
+
+*/
+
+import { createInertiaApp } from '@inertiajs/svelte';
+import { mount } from 'svelte';
+
+createInertiaApp({
+  resolve: (name) => {
+    const pages = import.meta.glob('./components/pages/**/*.svelte', {
+      eager: true,
+    });
+
+    return pages[`./pages/${name}.svelte`];
+  },
+  setup({ el, App, props }) {
+    mount(App, { target: el, props });
+  },
+});
