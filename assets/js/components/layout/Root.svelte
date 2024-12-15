@@ -1,5 +1,82 @@
 <body
   class="bg-stone-300 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 font-body tracking-wide"
 >
-  The root layout
+  <header class="border-b border-b-zinc-800 border-b-solid">
+    <div
+      class="container m-auto py-2 px-4 flex flex-row justify-between h-[80px]"
+    >
+      <div class="w-[64px]">
+        <a href="/">
+          <img
+            src="/images/logo.png"
+            alt="Flow BBJ logo"
+            class="h-full w-auto"
+          />
+        </a>
+      </div>
+
+      <div class="flex flex-row items-center gap-x-4">
+        menu
+        <!-- <%= if @current_user do %>
+          <.menu id="profile-menu">
+            <:trigger>
+              <div class="bg-indigo-900 h-full p-1.5 relative">
+                <div class="absolute right-2 h-full w-1.5 bg-gradient-to-b from-zinc-200 to-zinc-300 z-0" />
+
+                <img
+                  src={FlowWeb.Util.Avatar.url(@current_user.email)}
+                  class="object-contain h-full rounded-full relative"
+                />
+              </div>
+            </:trigger>
+
+            <:content>
+              <span><%= @current_user.email %></span>
+              <hr class="my-2" />
+
+              <ul class="flex flex-col gap-y-2">
+                <li>
+                  <div class="flex row justify-between px-2 py-1.5">
+                    Dark mode
+                    <.switch
+                      id="mode-toggle"
+                      phx-hook="ModeToggle"
+                      slider_class="before:content-[url('/icons/sun.svg')] peer-checked:before:content-[url('/icons/moon.svg')] peer-checked:before:p-1.5"
+                    />
+                  </div>
+                </li>
+                <li>
+                  <.link href={~p"/users/settings"} class="block">
+                    <.menu_option>
+                      Settings
+                    </.menu_option>
+                  </.link>
+                </li>
+
+                <li>
+                  <.link href={~p"/users/log_out"} method="delete" class="block">
+                    <.menu_option>
+                      Log out
+                    </.menu_option>
+                  </.link>
+                </li>
+              </ul>
+            </:content>
+          </.menu>
+        <% else %>
+          <.link href={~p"/users/log_in"}>
+            <.button size="md" color="primary" variant="outline">Log in</.button>
+          </.link>
+
+          <.link href={~p"/users/register"}>
+            <.button size="md" color="primary" variant="solid">Sign up</.button>
+          </.link>
+        <% end %> -->
+      </div>
+    </div>
+  </header>
+
+  <div class="container m-auto px-4">
+    <!-- <%= @inner_content %> -->
+  </div>
 </body>
