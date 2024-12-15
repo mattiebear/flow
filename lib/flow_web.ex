@@ -87,9 +87,6 @@ defmodule FlowWeb do
       import FlowWeb.CoreComponents
       import FlowWeb.Gettext
 
-      # Reactive client
-      import LiveSvelte
-
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
 

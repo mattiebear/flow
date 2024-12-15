@@ -6,13 +6,6 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
 
   def render(assigns) do
     ~H"""
-    <div id="technique-form">
-      <.svelte
-        name="TechniqueForm"
-        props={%{action: @action, errors: @errors, technique: @technique}}
-        socket={@socket}
-      />
-    </div>
     """
   end
 
