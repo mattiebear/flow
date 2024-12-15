@@ -13,6 +13,7 @@ defmodule FlowWeb.Router do
     plug :put_secure_browser_headers
     plug :fetch_current_user
     plug :fetch_current_path
+    plug Inertia.Plug
   end
 
   pipeline :api do
@@ -25,6 +26,7 @@ defmodule FlowWeb.Router do
   scope "/", FlowWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
+    # TODO: Update this
     get "/", PageController, :home
   end
 
