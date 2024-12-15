@@ -213,16 +213,6 @@ defmodule FlowWeb.UserAuth do
     end
   end
 
-  def require_authenticated_api_user(conn, _opts) do
-    if conn.assigns[:current_user] do
-      conn
-    else
-      conn
-      |> send_resp(:unauthorized, "Not authorized")
-      |> halt()
-    end
-  end
-
   defp put_token_in_session(conn, token) do
     conn
     |> put_session(:user_token, token)
@@ -235,5 +225,5 @@ defmodule FlowWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  defp signed_in_path(_conn), do: ~p"/training"
+  defp signed_in_path(_conn), do: ~p"/"
 end

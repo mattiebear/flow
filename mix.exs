@@ -32,7 +32,7 @@ defmodule Flow.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.18"},
+      {:phoenix_live_view, "~> 1.0"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
@@ -52,7 +52,8 @@ defmodule Flow.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
-      {:inertia, "~> 1.0.0-beta.3"}
+      # TODO: Update version when the deps are updated
+      {:inertia, github: "inertiajs/inertia-phoenix"}
     ]
   end
 

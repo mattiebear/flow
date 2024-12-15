@@ -2,10 +2,9 @@ defmodule Flow.AccountsTest do
   use Flow.DataCase
 
   alias Flow.Accounts
-  alias Flow.Accounts.User
-  alias Flow.Accounts.UserToken
 
   import Flow.AccountsFixtures
+  alias Flow.Accounts.{User, UserToken}
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do

@@ -1,4 +1,4 @@
-defmodule Flow.Repo.Migrations.CreateUsersAuthTables do
+defmodule Flow.Repo.Migrations.CreateAccountsUsersAuthTables do
   use Ecto.Migration
 
   def change do
