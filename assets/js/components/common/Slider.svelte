@@ -1,10 +1,10 @@
 <script>
   import { className } from '../../utils/style';
 
-  let { class: classes, ...rest } = $props();
+  let { class: classes, ref = $bindable(), ...rest } = $props();
 </script>
 
-<label {...rest}>
+<label {...rest} bind:this={ref}>
   <input type="checkbox" class="hidden peer" />
   <span
     class={className([

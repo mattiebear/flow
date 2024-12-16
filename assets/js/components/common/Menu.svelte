@@ -6,18 +6,18 @@
 
   let {
     content,
+    isLazy,
     isOpen = $bindable(false),
     size = $bindable('md'),
     trigger,
   } = $props();
 
-  let listener = $state();
-  let popover = $state();
+  let el;
+  let listener;
 
-  // TODO: Use JS to calculate positioning
   onMount(() => {
     listener = (e) => {
-      if (popover && !popover.contains(e.target)) {
+      if (el && !el.contains(e.target)) {
         isOpen = false;
       }
     };
@@ -32,12 +32,11 @@
   });
 </script>
 
-<div class="relative" bind:this={popover}>
+<div class="relative" bind:this={el}>
   {@render trigger()}
 
   {#if isOpen}
     <div
-      bind:this={content}
       class={className('menu absolute z-popover', size)}
       transition:scale={{
         duration: 100,
