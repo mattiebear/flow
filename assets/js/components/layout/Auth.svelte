@@ -1,5 +1,9 @@
+<script>
+  let { children } = $props();
+</script>
+
 <!-- flash -->
 
 <main>
-  <!-- content -->
+  {@render children()}
 </main>
