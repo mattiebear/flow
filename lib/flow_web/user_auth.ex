@@ -95,9 +95,16 @@ defmodule FlowWeb.UserAuth do
     {user_token, conn} = ensure_user_token(conn)
     user = user_token && Accounts.get_user_by_session_token(user_token)
 
+    current_user_avatar_url = if user do
+      FlowWeb.Util.Avatar.url(user.email)
+    else
+      nil
+    end
+
     conn
       |> assign(:current_user, user)
       |> assign_prop(:current_user, user)
+      |> assign_prop(:current_user_avatar_url, current_user_avatar_url)
   end
 
   defp ensure_user_token(conn) do
