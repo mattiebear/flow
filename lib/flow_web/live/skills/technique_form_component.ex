@@ -30,7 +30,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
         socket =
           socket
           |> put_flash(:info, "Technique added to library!")
-          |> push_patch(to: ~p"/techniques/#{technique}")
+          |> push_patch(to: "/techniques/#{technique.id}")
 
         {:noreply, socket}
 
@@ -47,7 +47,7 @@ defmodule FlowWeb.Skills.TechniqueFormComponent do
         socket =
           socket
           |> put_flash(:info, "Technique updated!")
-          |> push_patch(to: ~p"/techniques/#{technique}")
+          |> push_patch(to: "/techniques/#{technique.id}")
 
         {:noreply, socket}
 

@@ -24,7 +24,7 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
           <:content>
             <ul class="flex flex-col gap-y-2">
               <li>
-                <.link patch={~p"/techniques/#{@technique}/edit"}>
+                <.link patch={"/techniques/#{@technique.id}/edit"}>
                   <.menu_option>
                     Edit <.icon name="hero-pencil-square" />
                   </.menu_option>
@@ -133,7 +133,7 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
 
     socket =
       socket
-      |> push_patch(to: ~p"/techniques")
+      |> push_patch(to: "/techniques")
       |> put_flash(:info, "Technique removed from library!")
 
     {:noreply, socket}

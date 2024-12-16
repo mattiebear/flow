@@ -1,8 +1,9 @@
 defmodule FlowWeb.UserAuth do
   use FlowWeb, :verified_routes
 
-  import Plug.Conn
+  import Inertia.Controller
   import Phoenix.Controller
+  import Plug.Conn
 
   alias Flow.Accounts
 
@@ -93,7 +94,10 @@ defmodule FlowWeb.UserAuth do
   def fetch_current_user(conn, _opts) do
     {user_token, conn} = ensure_user_token(conn)
     user = user_token && Accounts.get_user_by_session_token(user_token)
-    assign(conn, :current_user, user)
+
+    conn
+      |> assign(:current_user, user)
+      |> assign_prop(:current_user, user)
   end
 
   defp ensure_user_token(conn) do

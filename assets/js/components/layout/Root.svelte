@@ -2,25 +2,12 @@
   let { children } = $props();
 </script>
 
-<body
-  class="bg-stone-300 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 font-body tracking-wide"
->
-  <header class="border-b border-b-zinc-800 border-b-solid">
-    <div
-      class="container m-auto py-2 px-4 flex flex-row justify-between h-[80px]"
-    >
-      <div class="w-[64px]">
-        <a href="/">
-          <img
-            src="/images/logo.png"
-            alt="Flow BBJ logo"
-            class="h-full w-auto"
-          />
-        </a>
-      </div>
-
-      <div class="flex flex-row items-center gap-x-4">
-        <!-- <%= if @current_user do %>
+<header class="border-b border-b-zinc-800 border-b-solid">
+  <div
+    class="container m-auto py-2 px-4 flex flex-row justify-between h-[80px]"
+  >
+    <div class="flex flex-row items-center gap-x-4">
+      <!-- <%= if @current_user do %>
           <.menu id="profile-menu">
             <:trigger>
               <div class="bg-indigo-900 h-full p-1.5 relative">
@@ -75,11 +62,10 @@
             <.button size="md" color="primary" variant="solid">Sign up</.button>
           </.link>
         <% end %> -->
-      </div>
     </div>
-  </header>
-
-  <div class="container m-auto px-4">
-    {@render children()}
   </div>
-</body>
+</header>
+
+<div class="container m-auto px-4">
+  {@render children()}
+</div>

@@ -53,15 +53,15 @@ defmodule FlowWeb.Skills.TechniqueLive do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:breadcrumbs, [{"Techniques", ~p"/techniques"}])
+    |> assign(:breadcrumbs, [{"Techniques", "/techniques"}])
     |> assign(:technique, nil)
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:breadcrumbs, [
-      {"Techniques", ~p"/techniques"},
-      {"Add a technique", ~p"/techniques/new"}
+      {"Techniques", "/techniques"},
+      {"Add a technique", "/techniques/new"}
     ])
     |> assign(:errors, %{})
     |> assign(:technique, Skills.build_technique_draft())
@@ -72,8 +72,8 @@ defmodule FlowWeb.Skills.TechniqueLive do
 
     socket
     |> assign(:breadcrumbs, [
-      {"Techniques", ~p"/techniques"},
-      {technique.name, ~p"/techniques/#{technique}"}
+      {"Techniques", "/techniques"},
+      {technique.name, "/techniques/#{technique.id}"}
     ])
     |> assign(:technique, technique)
   end
@@ -83,9 +83,9 @@ defmodule FlowWeb.Skills.TechniqueLive do
 
     socket
     |> assign(:breadcrumbs, [
-      {"Techniques", ~p"/techniques"},
-      {technique.name, ~p"/techniques/#{technique}"},
-      {"Edit", ~p"/techniques/#{technique}/edit"}
+      {"Techniques", "/techniques"},
+      {technique.name, "/techniques/#{technique.id}"},
+      {"Edit", "/techniques/#{technique.id}/edit"}
     ])
     |> assign(:errors, %{})
     |> assign(:technique, technique)

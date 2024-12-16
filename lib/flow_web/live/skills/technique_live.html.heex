@@ -45,7 +45,7 @@
 
   <div class="grid-in-techniques py-6">
     <div class="mb-6">
-      <.link patch={~p"/techniques/new"}>
+      <.link patch={"/techniques/new"}>
         <.button class="w-full" size="sm">
           Add Technique
         </.button>
@@ -59,8 +59,8 @@
     <nav>
       <ul class="flex flex-col gap-y-2">
         <li :for={technique <- @techniques}>
-          <% active = String.contains?(@url, ~p"/techniques/#{technique.id}") %>
-          <.link patch={~p"/techniques/#{technique.id}"} class="block">
+          <% active = String.contains?(@url, "/techniques/#{technique.id}") %>
+          <.link patch={"/techniques/#{technique.id}"} class="block">
             <button class={[
               "p-[1px] rounded-xl w-full",
               active && "dark:text-zinc-300 bg-gradient-to-b from-zinc-600 to-transparent to-80%"
@@ -101,7 +101,7 @@
         Select or create a technique to get started
       </h2>
 
-      <.link patch={~p"/techniques/new"}>
+      <.link patch={"/techniques/new"}>
         <.button>
           Add Technique
         </.button>

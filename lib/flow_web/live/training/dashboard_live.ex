@@ -7,7 +7,7 @@ defmodule FlowWeb.Training.DashboardLive do
       <div :if={@technique_count == 0}>
         <h2>No techniques created</h2>
         <p>Add a new technique to your library to start training</p>
-        <.link navigate={~p"/techniques/new"}>Add Technique</.link>
+        <.link navigate={"/techniques/new"}>Add Technique</.link>
       </div>
     </div>
     """
