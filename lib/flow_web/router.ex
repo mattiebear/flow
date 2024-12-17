@@ -83,4 +83,12 @@ defmodule FlowWeb.Router do
     get "/users/confirm/:token", UserConfirmationController, :edit
     post "/users/confirm/:token", UserConfirmationController, :update
   end
+
+  ## Application routes
+
+  scope "/", FlowWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    resources "/techniques", Skills.TechniqueController, only: [:index, :show]
+  end
 end
