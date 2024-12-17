@@ -1,4 +1,8 @@
 <script>
+  import { inertia, Link, page } from '@inertiajs/svelte';
+
+  import NavLink from '../widgets/NavLink.svelte';
+
   let { children } = $props();
 </script>
 
@@ -8,13 +12,13 @@
   <aside class="py-4">
     <nav class="m-auto flex justify-center">
       <ul class="flex flex-col gap-y-4">
-        <!-- <li>
-          <.nav_link href={~p"/training"} icon="hero-squares-2x2" path={@current_path} />
+        <li>
+          <NavLink href="/training" icon="hero-squares-2x2" />
         </li>
 
         <li>
-          <.nav_link href={~p"/techniques"} icon="hero-pencil" path={@current_path} />
-        </li> -->
+          <NavLink href="/techniques" icon="hero-pencil" />
+        </li>
       </ul>
     </nav>
   </aside>

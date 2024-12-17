@@ -1,6 +1,6 @@
 <script>
   import { Link } from '@inertiajs/svelte';
-  import { onDestroy, onMount } from 'svelte';
+  import { onMount } from 'svelte';
 
   import Button from '../common/Button.svelte';
   import Menu from '../common/Menu.svelte';
