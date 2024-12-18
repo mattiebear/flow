@@ -68,7 +68,7 @@ defmodule FlowWeb.Skills.TechniqueLive do
   end
 
   defp apply_action(socket, :show, %{"id" => id}) do
-    technique = Skills.get_technique(socket.assigns.current_user, id)
+    technique = Skills.get_technique!(socket.assigns.current_user, id)
 
     socket
     |> assign(:breadcrumbs, [
@@ -79,7 +79,7 @@ defmodule FlowWeb.Skills.TechniqueLive do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    technique = Skills.get_technique(socket.assigns.current_user, id)
+    technique = Skills.get_technique!(socket.assigns.current_user, id)
 
     socket
     |> assign(:breadcrumbs, [

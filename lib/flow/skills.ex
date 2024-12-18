@@ -68,7 +68,7 @@ defmodule Flow.Skills do
     )
   end
 
-  def get_technique(%User{} = user, id) do
+  def get_technique!(%User{} = user, id) do
     Repo.get_by!(Technique, id: id, user_id: user.id)
     |> Repo.preload([:labels, steps: [:focuses]])
   end
