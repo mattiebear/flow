@@ -2,7 +2,6 @@ defmodule FlowWeb.Router do
   use FlowWeb, :router
 
   import FlowWeb.UserAuth
-  import FlowWeb.Navigation
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -12,7 +11,6 @@ defmodule FlowWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
-    plug :fetch_current_path
     plug Inertia.Plug
   end
 
@@ -89,6 +87,6 @@ defmodule FlowWeb.Router do
   scope "/", FlowWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    resources "/techniques", Skills.TechniqueController, only: [:index, :show]
+    resources "/techniques", Skills.TechniqueController
   end
 end
