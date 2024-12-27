@@ -36,28 +36,16 @@
 
     onChange(step.layout_id, 'focuses', focuses);
   }
-
-  async function navigateToFocus(number) {
-    // let el = document.getElementById(`step-description-${number}`);
-    // if (el) {
-    //   return el.focus();
-    // }
-    // addStep();
-    // el = await waitForElement(`#step-description-${number}`);
-    // el.focus();
-  }
 </script>
 
 <div
   class="flex justify-end items-start mt-[calc(3rem_-_16px)]"
-  transition:fade={{ duration: 100 }}
->
+  transition:fade={{ duration: 100 }}>
   <span
     class={className(
       'inline-block px-6 py-1 rounded-full',
       'border border-solid border-zinc-500 dark:border-zinc-300'
-    )}>Step {number}</span
-  >
+    )}>Step {number}</span>
 </div>
 
 <div
@@ -65,8 +53,7 @@
     'rounded-xl w-full py-2 px-3 border navigateToStepborder-solid',
     step.errors.description ? 'border-red-900' : 'border-zinc-500'
   )}
-  transition:fade={{ duration: 100 }}
->
+  transition:fade={{ duration: 100 }}>
   <AutoResizeTextarea
     id={`step-description-${number}`}
     on:change={(e) => onChange(step.layout_id, 'description', e.target.value)}
@@ -81,8 +68,7 @@
       'w-full resize-none min-h-[6rem] focus:ring-0'
     )}
     placeholder="Describe the this step"
-    value={step.description}
-  />
+    value={step.description} />
 
   {#if step.errors.description}
     <p class="text-red-700 dark:text-red-300 text-sm mt-1">
@@ -94,13 +80,11 @@
     <Modal
       isOpen={isFocusModalOpen}
       onClose={() => (isFocusModalOpen = false)}
-      size="md"
-    >
+      size="md">
       <div class="flex flex-col gap-y-2">
         <p class="text-lg">At this point:</p>
         <div
-          class="rounded-xl w-full py-2 px-3 border border-solid border-zinc-500"
-        >
+          class="rounded-xl w-full py-2 px-3 border border-solid border-zinc-500">
           <p class="text-zinc-500 italic">
             {step.description || 'No description given...'}
           </p>
@@ -113,14 +97,12 @@
         {#each step.focuses as focus, index}
           <div
             class="flex justify-end items-start mt-4"
-            transition:fade={{ duration: 100 }}
-          >
+            transition:fade={{ duration: 100 }}>
             <span
               class={className(
                 'inline-block px-2 py-0.5 rounded-full text-sm',
                 'border border-solid border-zinc-500 dark:border-zinc-300'
-              )}>Focus {index + 1}</span
-            >
+              )}>Focus {index + 1}</span>
           </div>
 
           <div
@@ -128,8 +110,7 @@
               'rounded-xl w-full py-2 px-3 border border-solid',
               'border-amber-500'
             )}
-            transition:fade={{ duration: 100 }}
-          >
+            transition:fade={{ duration: 100 }}>
             <AutoResizeTextarea
               id={`step-description-${number}`}
               on:change={(e) => updateFocus(index, e.target.value)}
@@ -141,11 +122,25 @@
               }}
               class={className(
                 'bg-none bg-transparent outline-none border-none p-1',
-                'w-full resize-none min-h-[6rem] focus:ring-0'
+                'w-full resize-none min-h-[4rem] focus:ring-0'
               )}
               placeholder="What is your focus?"
-              value={focus.description}
-            />
+              value={focus.description} />
+
+            <div class="flex justify-end">
+              <button
+                aria-label="Remove focus"
+                class="transition-colors text-zinc-500 hover:text-red-500"
+                type="button"
+                on:click={() =>
+                  onChange(
+                    step.layout_id,
+                    'focuses',
+                    step.focuses.filter((_, i) => i !== index)
+                  )}>
+                <span class="hero-trash" />
+              </button>
+            </div>
           </div>
         {/each}
 
@@ -157,8 +152,7 @@
               'hover:bg-zinc-300 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-200'
             )}
             on:click={addFocus}
-            type="button"
-          >
+            type="button">
             <span class="hero-plus" />
           </button>
         </div>
@@ -167,10 +161,14 @@
 
     <button
       aria-label="Edit focuses"
-      class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+      class={className('transition-colors', {
+        'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300':
+          !step.focuses.length,
+        'text-amber-500 hover:text-amber-700 dark:hover:text-amber-300':
+          step.focuses.length,
+      })}
       on:click|stopPropagation={() => (isFocusModalOpen = true)}
-      type="button"
-    >
+      type="button">
       <span class="hero-exclamation-circle" />
     </button>
 
@@ -180,8 +178,7 @@
         class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
         type="button"
         on:click={() => (isMenuOpen = !isMenuOpen)}
-        slot="trigger"
-      >
+        slot="trigger">
         <span class="hero-cog-6-tooth" />
       </button>
 
@@ -191,8 +188,7 @@
             <button
               class="option flex justify-between"
               on:click={() => moveStep(-1)}
-              type="button"
-            >
+              type="button">
               Move Up
               <span class="hero-arrow-up" />
             </button>
@@ -204,8 +200,7 @@
             <button
               class="option flex justify-between"
               on:click={() => moveStep(1)}
-              type="button"
-            >
+              type="button">
               Move Down
               <span class="hero-arrow-down" />
             </button>
@@ -216,8 +211,7 @@
           <button
             class="option flex justify-between"
             on:click={() => onDelete(step.layout_id)}
-            type="button"
-          >
+            type="button">
             Remove
             <span class="hero-trash" />
           </button>
