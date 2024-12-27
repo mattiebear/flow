@@ -2,7 +2,6 @@
   import { produce } from 'immer';
   import { fade } from 'svelte/transition';
 
-  import { waitForElement } from '../../js/utils/dom';
   import { className } from '../../js/utils/style';
   import AutoResizeTextarea from '../components/AutoResizeTextarea.svelte';
   import Modal from '../components/Modal.svelte';
