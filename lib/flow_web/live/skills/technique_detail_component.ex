@@ -8,7 +8,7 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
     <div>
       <div class="mb-8 w-full flex justify-between items-center">
         <h1 class="px-3 py-4 text-6xl text-neutral-900 dark:text-neutral-300">
-          <%= @technique.name %>
+          {@technique.name}
         </h1>
 
         <.menu id="technique-menu">
@@ -61,7 +61,7 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
           "flex flex-col gap-y-4"
         ]}>
           <p class={[!@technique.description && "text-zinc-400 dark:text-zinc-600"]}>
-            <%= @technique.description || "No starting description" %>
+            {@technique.description || "No starting description"}
           </p>
 
           <div :if={length(@technique.labels) > 0} class="flex flex-row gap-x-2">
@@ -72,7 +72,7 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
                 "border border-solid border-zinc-500 dark:border-zinc-300 text-zinc-300"
               ]}
             >
-              #<%= label.tag %>
+              #{label.tag}
             </div>
           </div>
         </div>
@@ -83,14 +83,70 @@ defmodule FlowWeb.Skills.TechniqueDetailComponent do
               "inline-block px-6 py-1 rounded-full",
               "border border-solid border-zinc-500 dark:border-zinc-300"
             ]}>
-              Step <%= index + 1 %>
+              Step {index + 1}
             </span>
           </div>
 
-          <div class="min-h-[6rem] rounded-xl w-full py-2 px-3 border border-solid border-zinc-500">
-            <p>
-              <%= step.description %>
+          <div class={[
+            "min-h-[6rem] rounded-xl w-full py-2 px-3 border border-solid border-zinc-500",
+            "flex flex-col gap-y-4 w-full"
+          ]}>
+            <p class="grow">
+              {step.description}
             </p>
+
+            <div :if={length(step.focuses) > 0} class="flex flex-row gap-x-2 justify-end">
+              <.modal id={"step-focuses-#{step.id}"}>
+                <div class="flex flex-col gap-y-2">
+                  <p class="text-lg">At this point:</p>
+                  <div class="rounded-xl w-full py-2 px-3 border border-solid border-zinc-500">
+                    <p class="text-zinc-500 italic">
+                      {step.description || "No description given..."}
+                    </p>
+                  </div>
+
+                  <p class="text-lg">focus on:</p>
+
+                  <div class="w-full grid grid-cols-[5rem_1fr] gap-4">
+                    <%= for {focus, index} <- Enum.with_index(step.focuses) do %>
+                      <div class="flex justify-end items-start mt-4">
+                        <span class={[
+                          "inline-block px-2 py-0.5 rounded-full text-sm",
+                          "border border-solid border-zinc-500 dark:border-zinc-300"
+                        ]}>
+                          Focus {index + 1}
+                        </span>
+                      </div>
+
+                      <div class={[
+                        "rounded-xl w-full py-2 px-3 border border-solid",
+                        "border-amber-500"
+                      ]}>
+                        <p class={[
+                          "bg-none bg-transparent outline-none border-none p-1",
+                          "w-full resize-none min-h-[6rem] focus:ring-0"
+                        ]}>
+                          {focus.description}
+                        </p>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </.modal>
+
+              <button
+                aria-label="View focuses"
+                class={[
+                  "text-amber-500 hover:text-amber-700 dark:hover:text-amber-300 transition-colors",
+                  "flex items-center gap-x-1"
+                ]}
+                phx-click={show_modal("step-focuses-#{step.id}")}
+              >
+                <span class="hero-exclamation-circle" />
+
+                {length(step.focuses)}
+              </button>
+            </div>
           </div>
         <% end %>
       </div>

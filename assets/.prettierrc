@@ -1,6 +1,6 @@
 {
   "plugins": ["prettier-plugin-svelte", "@ianvs/prettier-plugin-sort-imports"],
-  "bracketSameLine": false,
+  "bracketSameLine": true,
   "bracketSpacing": true,
   "trailingComma": "es5",
   "tabWidth": 2,

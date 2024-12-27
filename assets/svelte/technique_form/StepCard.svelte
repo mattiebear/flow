@@ -29,6 +29,14 @@
     onChange(step.layout_id, 'focuses', [...step.focuses, { description: '' }]);
   }
 
+  function updateFocus(index, value) {
+    let focuses = produce(step.focuses, (draft) => {
+      draft[index].description = value;
+    });
+
+    onChange(step.layout_id, 'focuses', focuses);
+  }
+
   async function navigateToFocus(number) {
     // let el = document.getElementById(`step-description-${number}`);
     // if (el) {
@@ -124,8 +132,7 @@
           >
             <AutoResizeTextarea
               id={`step-description-${number}`}
-              on:change={(e) =>
-                onChange(step.layout_id, 'description', e.target.value)}
+              on:change={(e) => updateFocus(index, e.target.value)}
               on:keypress={(e) => {
                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                   e.preventDefault();
