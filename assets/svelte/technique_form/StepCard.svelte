@@ -7,17 +7,19 @@
   import Modal from '../components/Modal.svelte';
   import Popover from '../components/Popover.svelte';
 
-  export let canMoveDown;
-  export let canMoveUp;
-  export let onChange;
-  export let onDelete;
-  export let onMove;
-  export let onNext;
-  export let number;
-  export let step;
+  let {
+    canMoveDown,
+    canMoveUp,
+    onChange,
+    onDelete,
+    onMove,
+    onNext,
+    number,
+    step,
+  } = $props();
 
-  let isFocusModalOpen = false;
-  let isMenuOpen = false;
+  let isFocusModalOpen = $state(false);
+  let isMenuOpen = $state(false);
 
   function moveStep(direction) {
     isOpen = false;
@@ -131,13 +133,13 @@
                 aria-label="Remove focus"
                 class="transition-colors text-zinc-500 hover:text-red-500"
                 type="button"
-                on:click={() =>
+                onclick={() =>
                   onChange(
                     step.layout_id,
                     'focuses',
                     step.focuses.filter((_, i) => i !== index)
                   )}>
-                <span class="hero-trash" />
+                <span class="hero-trash"></span>
               </button>
             </div>
           </div>
@@ -150,9 +152,9 @@
               'p-1 rounded-full border border-solid border-zinc-500 transition-colors',
               'hover:bg-zinc-300 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-200'
             )}
-            on:click={addFocus}
+            onclick={addFocus}
             type="button">
-            <span class="hero-plus" />
+            <span class="hero-plus"></span>
           </button>
         </div>
       </div>
@@ -166,56 +168,62 @@
         'text-amber-500 hover:text-amber-700 dark:hover:text-amber-300':
           step.focuses.length,
       })}
-      on:click|stopPropagation={() => (isFocusModalOpen = true)}
+      onclick={(e) => {
+        e.stopPropagation();
+        isFocusModalOpen = true;
+      }}
       type="button">
-      <span class="hero-exclamation-circle" />
+      <span class="hero-exclamation-circle"></span>
     </button>
 
     <Popover isOpen={isMenuOpen}>
-      <button
-        aria-label="Edit step"
-        class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-        type="button"
-        on:click={() => (isMenuOpen = !isMenuOpen)}
-        slot="trigger">
-        <span class="hero-cog-6-tooth" />
-      </button>
+      {#snippet trigger()}
+        <button
+          aria-label="Edit step"
+          class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+          type="button"
+          onclick={() => (isMenuOpen = !isMenuOpen)}>
+          <span class="hero-cog-6-tooth"></span>
+        </button>
+      {/snippet}
 
-      <ul class="flex flex-col gap-y-2" slot="content">
-        {#if canMoveUp}
+      {#snippet content()}
+        <ul class="flex flex-col gap-y-2">
+          {#if canMoveUp}
+            <li>
+              <button
+                class="option flex justify-between"
+                onclick={() => moveStep(-1)}
+                type="button">
+                Move Up
+                <span class="hero-arrow-up"></span>
+              </button>
+            </li>
+          {/if}
+
+          {#if canMoveDown}
+            <li>
+              <button
+                class="option flex justify-between"
+                onclick={() => moveStep(1)}
+                type="button">
+                Move Down
+                <span class="hero-arrow-down"></span>
+              </button>
+            </li>
+          {/if}
+
           <li>
             <button
               class="option flex justify-between"
-              on:click={() => moveStep(-1)}
+              onclick={() => onDelete(step.layout_id)}
               type="button">
-              Move Up
-              <span class="hero-arrow-up" />
+              Remove
+              <span class="hero-trash"></span>
             </button>
           </li>
-        {/if}
-
-        {#if canMoveDown}
-          <li>
-            <button
-              class="option flex justify-between"
-              on:click={() => moveStep(1)}
-              type="button">
-              Move Down
-              <span class="hero-arrow-down" />
-            </button>
-          </li>
-        {/if}
-
-        <li>
-          <button
-            class="option flex justify-between"
-            on:click={() => onDelete(step.layout_id)}
-            type="button">
-            Remove
-            <span class="hero-trash" />
-          </button>
-        </li>
-      </ul>
+        </ul>
+      {/snippet}
     </Popover>
   </div>
 </div>

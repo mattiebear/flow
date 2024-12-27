@@ -7,23 +7,22 @@
   import LabelPopover from './LabelPopover.svelte';
   import StepCard from './StepCard.svelte';
 
-  export let action;
-  export let errors = {};
-  export let live;
-  export let technique;
+  let { action, errors = {}, live, technique } = $props();
 
-  let form = { ...technique };
-  let isLabelMenuOpen = false;
+  let form = $state(technique);
+  let isLabelMenuOpen = $state(false);
 
-  $: orderedSteps = form.layout.map((node) => {
-    let index = form.steps.findIndex(
-      (step) => step.layout_id === node.layout_id
-    );
+  let orderedSteps = $derived.by(() => {
+    return form.layout.map((node) => {
+      let index = form.steps.findIndex(
+        (step) => step.layout_id === node.layout_id
+      );
 
-    return {
-      ...form.steps[index],
-      errors: errors.steps ? errors.steps[index] : {},
-    };
+      return {
+        ...form.steps[index],
+        errors: errors.steps ? errors.steps[index] : {},
+      };
+    });
   });
 
   function addStep() {
@@ -73,7 +72,8 @@
     });
   }
 
-  function submit() {
+  function submit(e) {
+    e.stopPropagation();
     live.pushEventTo('#technique-form', 'save', { technique: form });
   }
 
@@ -112,11 +112,11 @@
   }
 </script>
 
-<form autocomplete="off" on:submit|preventDefault={submit}>
+<form autocomplete="off" onsubmit={submit}>
   <div class="mb-8">
     <input
-      on:change={(e) => (form.name = e.target.value)}
-      on:keydown={(e) => {
+      onchange={(e) => (form.name = e.target.value)}
+      onkeydown={(e) => {
         if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
           e.preventDefault();
           document.getElementById('description').focus();
@@ -184,11 +184,11 @@
                 'inline-flex gap-x-0.5 items-center px-3 rounded-full leading-7 bg-indigo-800',
                 'border border-solid border-zinc-500 dark:border-zinc-300'
               )}
-              on:click={() => removeLabel(label.id)}
+              onclick={() => removeLabel(label.id)}
               type="button">
               <span class="text-zinc-300">#{label.tag}</span>
-              <span
-                class="hero-x-mark-micro text-zinc-500 hover:text-zinc-300" />
+              <span class="hero-x-mark-micro text-zinc-500 hover:text-zinc-300"
+              ></span>
             </button>
           {/each}
         </div>
@@ -216,9 +216,9 @@
           'p-1 rounded-full border border-solid border-zinc-500 transition-colors',
           'hover:bg-zinc-300 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-200'
         )}
-        on:click={addStep}
+        onclick={addStep}
         type="button">
-        <span class="hero-plus" />
+        <span class="hero-plus"></span>
       </button>
     </div>
   </div>

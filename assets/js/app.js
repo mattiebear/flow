@@ -17,12 +17,14 @@
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import 'phoenix_html';
+
+import { getHooks } from 'live_svelte';
 // Establish Phoenix Socket and LiveView configuration.
 import { Socket } from 'phoenix';
 import { LiveSocket } from 'phoenix_live_view';
-import topbar from '../vendor/topbar';
-import { getHooks } from 'live_svelte';
+
 import * as Components from '../svelte/**/*.svelte';
+import topbar from '../vendor/topbar';
 
 let Hooks = {
   ModeToggle: {

@@ -4,12 +4,11 @@
 
   import { className } from '../../js/utils/style';
 
-  export let isOpen = false;
-  export let onClose;
-  export let size = 'md';
+  let { children, isOpen = false, onClose, size = 'md' } = $props();
+
+  let modal = $state();
 
   let listener;
-  let modal;
 
   onMount(() => {
     listener = (e) => {
@@ -33,12 +32,11 @@
     class="relative z-50"
     transition:fade={{
       duration: 100,
-    }}
-  >
+    }}>
     <div
       class="bg-zinc-50/90 dark:bg-zinc-800/90 fixed inset-0 transition-opacity"
-      aria-hidden="true"
-    />
+      aria-hidden="true">
+    </div>
     <div class="fixed inset-0 overflow-y-auto" role="dialog" aria-modal="true">
       <div class="flex min-h-full items-center justify-center">
         <div
@@ -51,23 +49,20 @@
               'max-w-3xl': size === 'xl',
             },
           ])}
-          bind:this={modal}
-        >
+          bind:this={modal}>
           <div
-            class="shadow-zinc-700/10 ring-zinc-700/10 relative rounded-2xl bg-stone-300 dark:bg-zinc-900 p-14 shadow-lg ring-1 transition"
-          >
+            class="shadow-zinc-700/10 ring-zinc-700/10 relative rounded-2xl bg-stone-300 dark:bg-zinc-900 p-14 shadow-lg ring-1 transition">
             <div class="absolute top-6 right-5">
               <button
                 type="button"
                 class="-m-3 flex-none p-3 opacity-20 hover:opacity-40"
-                on:click={onClose}
-                aria-label="close"
-              >
-                <span class="hero-x-mark-solid h-5 w-5" />
+                onclick={onClose}
+                aria-label="close">
+                <span class="hero-x-mark-solid h-5 w-5"></span>
               </button>
             </div>
             <div>
-              <slot></slot>
+              {@render children?.()}
             </div>
           </div>
         </div>

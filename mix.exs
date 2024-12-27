@@ -51,7 +51,7 @@ defmodule Flow.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
-      {:live_svelte, "~> 0.14.0"}
+      {:live_svelte, "~> 0.15.0-rc.6"}
     ]
   end
 

@@ -6,13 +6,13 @@
   import { className } from '../../js/utils/style';
   import Popover from '../components/Popover.svelte';
 
-  export let isOpen = false;
-  export let onAddLabel;
+  let { isOpen = false, onAddLabel } = $props();
 
-  let tag = '';
-  let search = '';
+  let tag = $state('');
+  let search = $state('');
+  let selected = $state(-1);
+
   let timeout;
-  let selected = -1;
   let listener;
 
   let mutation = createMutation({
@@ -37,7 +37,7 @@
     },
   });
 
-  $: {
+  $effect(() => {
     if (timeout && search !== tag) {
       clearTimeout(timeout);
     }
@@ -45,20 +45,22 @@
     timeout = setTimeout(() => {
       search = tag;
     }, 300);
-  }
+  });
 
-  $: query = createQuery({
-    queryKey: ['labels', { search }],
-    queryFn: async () => {
-      let res = await fetch(`/api/labels?search=${search}&limit=5`);
-      let data = await res.json();
+  const query = $derived.by(() => {
+    return createQuery({
+      queryKey: ['labels', { search }],
+      queryFn: async () => {
+        let res = await fetch(`/api/labels?search=${search}&limit=5`);
+        let data = await res.json();
 
-      selected = -1;
+        selected = -1;
 
-      return data;
-    },
-    initialData: [],
-    enabled: search.length > 0,
+        return data;
+      },
+      initialData: [],
+      enabled: search.length > 0,
+    });
   });
 
   function selectLabel(label) {
@@ -141,54 +143,53 @@
 </script>
 
 <Popover {isOpen} size="lg">
-  <button
-    aria-label="Add positions or labels to technique"
-    class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-    type="button"
-    on:click={() => (isOpen = !isOpen)}
-    slot="trigger"
-  >
-    <span class="hero-tag" />
-  </button>
+  {#snippet trigger()}
+    <button
+      aria-label="Add positions or labels to technique"
+      class="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+      type="button"
+      onclick={() => (isOpen = !isOpen)}>
+      <span class="hero-tag"></span>
+    </button>
+  {/snippet}
 
-  <div slot="content" class="flex flex-col gap-y-2">
-    <div class="flex flex-row gap-x-2 items-center">
-      <input
-        bind:value={tag}
-        class={className(
-          'focus:ring-0 border border-solid border-indigo-700 rounded-md',
-          'bg-none bg-transparent outline-none p-2 w-full'
-        )}
-        id="technique-label-input"
-        on:keypress={inputKeyPress}
-        placeholder="guard/half"
-      />
+  {#snippet content()}
+    <div class="flex flex-col gap-y-2">
+      <div class="flex flex-row gap-x-2 items-center">
+        <input
+          bind:value={tag}
+          class={className(
+            'focus:ring-0 border border-solid border-indigo-700 rounded-md',
+            'bg-none bg-transparent outline-none p-2 w-full'
+          )}
+          id="technique-label-input"
+          onkeypress={inputKeyPress}
+          placeholder="guard/half" />
 
-      <button
-        aria-label="Add position"
-        class="button sm"
-        on:click={() => $mutation.mutate(tag)}
-        type="button"
-      >
-        Add
-      </button>
+        <button
+          aria-label="Add position"
+          class="button sm"
+          onclick={() => $mutation.mutate(tag)}
+          type="button">
+          Add
+        </button>
+      </div>
+
+      {#if $query.data.length > 0}
+        <ul class="flex flex-col gap-y-2">
+          {#each $query.data as label, index (label.id)}
+            <li>
+              <button
+                class="option text-left"
+                onclick={() => selectLabel(label)}
+                type="button"
+                {...selected === index ? { 'data-selected': true } : {}}>
+                #{label.tag}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      {/if}
     </div>
-
-    {#if $query.data.length > 0}
-      <ul class="flex flex-col gap-y-2">
-        {#each $query.data as label, index (label.id)}
-          <li>
-            <button
-              class="option text-left"
-              on:click={() => selectLabel(label)}
-              type="button"
-              {...selected === index ? { 'data-selected': true } : {}}
-            >
-              #{label.tag}
-            </button>
-          </li>
-        {/each}
-      </ul>
-    {/if}
-  </div>
+  {/snippet}
 </Popover>
