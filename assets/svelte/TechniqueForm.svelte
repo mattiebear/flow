@@ -3,12 +3,8 @@
 
   import Form from './technique_form/Form.svelte';
 
-  export let action;
-  export let errors;
-  export let live;
-  export let technique;
-
   let client = new QueryClient();
+  let { action, errors, live, technique } = $props();
 </script>
 
 <QueryClientProvider {client}>

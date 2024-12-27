@@ -4,13 +4,10 @@
 
   import { className } from '../../js/utils/style';
 
-  export let isOpen = false;
-  export let size = 'md';
+  let { content, isOpen = false, size = 'md', trigger } = $props();
 
   let listener;
   let popover;
-  let trigger;
-  let content;
 
   // TODO: Use JS to calculate positioning
   onMount(() => {
@@ -31,19 +28,17 @@
 </script>
 
 <div class="relative" bind:this={popover}>
-  <slot name="trigger"></slot>
+  {@render trigger()}
 
   {#if isOpen}
     <div
-      bind:this={content}
       class={className('menu absolute z-popover', size)}
       transition:scale={{
         duration: 100,
         opacity: 0,
         start: 0.9,
-      }}
-    >
-      <slot name="content"></slot>
+      }}>
+      {@render content()}
     </div>
   {/if}
 </div>
