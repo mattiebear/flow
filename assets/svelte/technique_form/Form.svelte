@@ -116,6 +116,12 @@
   <div class="mb-8">
     <input
       on:change={(e) => (form.name = e.target.value)}
+      on:keydown={(e) => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          document.getElementById('description').focus();
+        }
+      }}
       value={form.name}
       class={className(
         'text-6xl px-3 py-4 h-[92px] placeholder:text-neutral-500 w-full outline-none border-b',
@@ -127,8 +133,7 @@
             !errors.name,
         }
       )}
-      placeholder="Technique name"
-    />
+      placeholder="Technique name" />
 
     {#if errors.name}
       <p class="text-red-700 dark:text-red-300 text-sm mt-1">{errors.name}</p>
@@ -141,8 +146,7 @@
         class={className(
           'inline-block px-6 py-1 rounded-full',
           'border border-solid border-zinc-500 dark:border-zinc-300'
-        )}>Start</span
-      >
+        )}>Start</span>
     </div>
 
     <div
@@ -150,8 +154,7 @@
         'rounded-xl w-full py-2 px-3',
         'border border-solid border-zinc-500',
         'bg-gradient-to-br from-indigo-950 to-zinc-900 to-50%'
-      )}
-    >
+      )}>
       <AutoResizeTextarea
         autofocus
         id="description"
@@ -171,8 +174,7 @@
           'bg-none bg-transparent outline-none border-none p-1',
           'w-full resize-none min-h-[6rem] focus:ring-0'
         )}
-        placeholder="Describe the starting position for this technique"
-      />
+        placeholder="Describe the starting position for this technique" />
 
       <div class="flex justify-between">
         <div class="flex flex-row gap-x-2 grow">
@@ -183,12 +185,10 @@
                 'border border-solid border-zinc-500 dark:border-zinc-300'
               )}
               on:click={() => removeLabel(label.id)}
-              type="button"
-            >
+              type="button">
               <span class="text-zinc-300">#{label.tag}</span>
               <span
-                class="hero-x-mark-micro text-zinc-500 hover:text-zinc-300"
-              />
+                class="hero-x-mark-micro text-zinc-500 hover:text-zinc-300" />
             </button>
           {/each}
         </div>
@@ -206,8 +206,7 @@
         onMove={moveStep}
         onNext={() => navigateToStep(index + 2)}
         number={index + 1}
-        {step}
-      />
+        {step} />
     {/each}
 
     <div class="col-start-2 flex flex-row justify-center">
@@ -218,8 +217,7 @@
           'hover:bg-zinc-300 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-200'
         )}
         on:click={addStep}
-        type="button"
-      >
+        type="button">
         <span class="hero-plus" />
       </button>
     </div>
@@ -232,8 +230,7 @@
         href={`/techniques/${technique.id}`}
         type="button"
         data-phx-link="patch"
-        data-phx-link-state="push"
-      >
+        data-phx-link-state="push">
         Cancel
       </a>
     {/if}
