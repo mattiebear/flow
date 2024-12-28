@@ -57,8 +57,8 @@
   transition:fade={{ duration: 100 }}>
   <AutoResizeTextarea
     id={`step-description-${number}`}
-    on:change={(e) => onChange(step.layout_id, 'description', e.target.value)}
-    on:keypress={(e) => {
+    onchange={(e) => onChange(step.layout_id, 'description', e.target.value)}
+    onkeypress={(e) => {
       if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         onNext();
@@ -114,8 +114,8 @@
             transition:fade={{ duration: 100 }}>
             <AutoResizeTextarea
               id={`step-description-${number}`}
-              on:change={(e) => updateFocus(index, e.target.value)}
-              on:keypress={(e) => {
+              onchange={(e) => updateFocus(index, e.target.value)}
+              onkeypress={(e) => {
                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                   e.preventDefault();
                   onNext();

@@ -8,8 +8,9 @@
 
   let { isOpen = false, onAddLabel } = $props();
 
+  let search = writable('');
+
   let tag = $state('');
-  let search = $state('');
   let selected = $state(-1);
 
   let timeout;
@@ -38,35 +39,37 @@
   });
 
   $effect(() => {
-    if (timeout && search !== tag) {
+    if (tag !== $search && timeout) {
       clearTimeout(timeout);
     }
 
     timeout = setTimeout(() => {
-      search = tag;
+      $search = tag;
     }, 300);
   });
 
-  const query = $derived.by(() => {
-    return createQuery({
-      queryKey: ['labels', { search }],
-      queryFn: async () => {
-        let res = await fetch(`/api/labels?search=${search}&limit=5`);
-        let data = await res.json();
+  let query = createQuery(
+    derived(search, ($search) => {
+      return {
+        queryKey: ['labels', { search: $search }],
+        queryFn: async () => {
+          let res = await fetch(`/api/labels?search=${$search}&limit=5`);
+          let data = await res.json();
 
-        selected = -1;
+          selected = -1;
 
-        return data;
-      },
-      initialData: [],
-      enabled: search.length > 0,
-    });
-  });
+          return data;
+        },
+        initialData: [],
+        enabled: $search.length > 0,
+      };
+    })
+  );
 
   function selectLabel(label) {
     onAddLabel(label);
 
-    tag = search = '';
+    tag = $search = '';
     isOpen = false;
     selected = -1;
   }
