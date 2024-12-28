@@ -63,6 +63,7 @@
   }
 
   function submit(e) {
+    e.preventDefault();
     e.stopPropagation();
     live.pushEventTo('#technique-form', 'save', { technique: form });
   }
