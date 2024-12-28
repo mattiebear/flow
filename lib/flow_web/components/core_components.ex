@@ -14,10 +14,10 @@ defmodule FlowWeb.CoreComponents do
 
   Icons are provided by [heroicons](https://heroicons.com). See `icon/1` for usage.
   """
+  use Gettext, backend: FlowWeb.Gettext
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import FlowWeb.Gettext
 
   @doc """
   Renders a modal.

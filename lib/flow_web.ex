@@ -38,12 +38,12 @@ defmodule FlowWeb do
 
   def controller do
     quote do
+      use Gettext, backend: FlowWeb.Gettext
       use Phoenix.Controller,
         formats: [:html, :json],
         layouts: [html: FlowWeb.Layouts]
 
       import Plug.Conn
-      import FlowWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -81,11 +81,12 @@ defmodule FlowWeb do
 
   defp html_helpers do
     quote do
+      use Gettext, backend: FlowWeb.Gettext
+
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
       import FlowWeb.CoreComponents
-      import FlowWeb.Gettext
 
       # Reactive client
       import LiveSvelte
