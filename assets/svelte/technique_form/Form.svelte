@@ -1,6 +1,4 @@
 <script>
-  import { produce } from 'immer';
-
   import { waitForElement } from '../../js/utils/dom';
   import { className } from '../../js/utils/style';
   import AutoResizeTextarea from '../components/AutoResizeTextarea.svelte';
@@ -9,7 +7,7 @@
 
   let { action, errors = {}, live, technique } = $props();
 
-  let form = $state(technique);
+  let form = $state({ ...technique });
   let isLabelMenuOpen = $state(false);
 
   let orderedSteps = $derived.by(() => {
@@ -26,37 +24,31 @@
   });
 
   function addStep() {
-    form = produce(form, (draft) => {
-      // Find the highest layout ID and increment it to ensure uniqueness
-      let id =
-        (form.steps
-          .map((step) => step.layout_id)
-          .sort((a, b) => a - b)
-          .pop() || 0) + 1;
+    let id =
+      (form.steps
+        .map((step) => step.layout_id)
+        .sort((a, b) => a - b)
+        .pop() || 0) + 1;
 
-      draft.steps.push({
-        description: '',
-        layout_id: id,
-      });
+    form.steps.push({
+      description: '',
+      layout_id: id,
+      focuses: [],
+    });
 
-      draft.layout.push({
-        layout_id: id,
-      });
+    form.layout.push({
+      layout_id: id,
     });
   }
 
   function deleteStep(id) {
-    form = produce(form, (draft) => {
-      draft.steps = draft.steps.filter((step) => step.layout_id !== id);
-      draft.layout = draft.layout.filter((child) => child.layout_id !== id);
-    });
+    form.steps = form.steps.filter((step) => step.layout_id !== id);
+    form.layout = form.layout.filter((child) => child.layout_id !== id);
   }
 
   function updateStep(id, key, value) {
-    form = produce(form, (draft) => {
-      let step = draft.steps.find((step) => step.layout_id === id);
-      step[key] = value;
-    });
+    let index = form.steps.findIndex((step) => step.layout_id === id);
+    form.steps[index][key] = value;
   }
 
   function moveStep(id, direction) {
@@ -67,9 +59,7 @@
       return;
     }
 
-    form = produce(form, (draft) => {
-      draft.layout.splice(newIndex, 0, draft.layout.splice(index, 1)[0]);
-    });
+    form.layout.splice(newIndex, 0, form.layout.splice(index, 1)[0]);
   }
 
   function submit(e) {
@@ -97,18 +87,13 @@
   }
 
   function addLabel(label) {
-    form = produce(form, (draft) => {
-      draft.labels.push(label);
-    });
-
+    form.labels.push(label);
     isLabelMenuOpen = false;
     document.getElementById('description').focus();
   }
 
   function removeLabel(id) {
-    form = produce(form, (draft) => {
-      draft.labels = draft.labels.filter((label) => label.id !== id);
-    });
+    form.labels = form.labels.filter((label) => label.id !== id);
   }
 </script>
 
@@ -158,8 +143,8 @@
       <AutoResizeTextarea
         autofocus
         id="description"
-        on:change={(e) => (form.description = e.target.value)}
-        on:keypress={(e) => {
+        onchange={(e) => (form.description = e.target.value)}
+        onkeypress={(e) => {
           if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
             navigateToStep(1);
