@@ -39,6 +39,7 @@ defmodule FlowWeb do
   def controller do
     quote do
       use Gettext, backend: FlowWeb.Gettext
+
       use Phoenix.Controller,
         formats: [:html, :json],
         layouts: [html: FlowWeb.Layouts]
