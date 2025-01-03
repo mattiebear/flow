@@ -740,7 +740,7 @@ defmodule FlowWeb.CoreComponents do
     assigns = assign(assigns, :size, size)
 
     ~H"""
-    <div class="relative" phx-hook="Popover" id={"#{@id}-container"}>
+    <div class="relative" phx-hook="Popover" id={"#{@id}-container"} data-cancel={JS.exec("phx-click-away", to: "##{@id}")}>
       <div class="rounded-full overflow-hidden cursor-pointer" phx-click={show("##{@id}")}>
         {render_slot(@trigger)}
       </div>

@@ -60,6 +60,7 @@ let Hooks = {
     mounted() {
       let trigger = this.el.children[0];
       let menu = this.el.children[1];
+      let initialized = false;
 
       this.el.watcher = new MutationObserver((mutations) => {
         for (let mutation of mutations) {
@@ -67,7 +68,8 @@ let Hooks = {
             mutation.type === 'attributes' &&
             mutation.attributeName === 'style'
           ) {
-            if (mutation.target.style.display === 'block') {
+            if (mutation.target.style.display === 'block' && !initialized) {
+              initialized = true;
               let triggerRect = trigger.getBoundingClientRect();
               let menuRect = menu.getBoundingClientRect();
 
@@ -76,6 +78,15 @@ let Hooks = {
 
               menu.style.top = `${top}px`;
               menu.style.left = `-${left}px`;
+
+              document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && menu.style.display === 'block') {
+                  liveSocket.execJS(
+                    this.el,
+                    this.el.getAttribute('data-cancel')
+                  );
+                }
+              });
             }
           }
         }
