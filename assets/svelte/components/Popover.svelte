@@ -9,7 +9,22 @@
   let listener;
   let popover;
 
-  // TODO: Use JS to calculate positioning
+  $effect(() => {
+    if (isOpen) {
+      let trigger = popover.children[0];
+      let menu = popover.children[1];
+
+      let triggerRect = trigger.getBoundingClientRect();
+      let menuRect = menu.getBoundingClientRect();
+
+      let top = triggerRect.height + 4;
+      let left = menuRect.width / 2 - triggerRect.width / 2;
+
+      menu.style.top = `${top}px`;
+      menu.style.left = `-${left}px`;
+    }
+  });
+
   onMount(() => {
     listener = (e) => {
       if (popover && !popover.contains(e.target)) {

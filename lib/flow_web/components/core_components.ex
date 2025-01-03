@@ -735,22 +735,20 @@ defmodule FlowWeb.CoreComponents do
     "lg" => "w-[300px]"
   }
 
-  # TODO: Use JS to position popover
   def menu(assigns) do
     size = @menu_size_matrix[assigns.size]
     assigns = assign(assigns, :size, size)
 
     ~H"""
-    <div class="relative">
-      <div class="rounded-full overflow-hidden cursor-pointer h-[64px]" phx-click={show("##{@id}")}>
+    <div class="relative" phx-hook="Popover" id={"#{@id}-container"}>
+      <div class="rounded-full overflow-hidden cursor-pointer" phx-click={show("##{@id}")}>
         {render_slot(@trigger)}
       </div>
 
       <div
         id={@id}
         class={[
-          "hidden absolute top-[calc(100%_+_4px)] right-0",
-          "drop-shadow bg-zinc-100 dark:bg-zinc-800 p-3 rounded-xl",
+          "hidden absolute drop-shadow bg-zinc-100 dark:bg-zinc-800 p-3 rounded-xl",
           @size
         ]}
         phx-click-away={hide("##{@id}")}

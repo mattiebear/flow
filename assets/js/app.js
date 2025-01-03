@@ -56,6 +56,34 @@ let Hooks = {
       });
     },
   },
+  Popover: {
+    mounted() {
+      let trigger = this.el.children[0];
+      let menu = this.el.children[1];
+
+      this.el.watcher = new MutationObserver((mutations) => {
+        for (let mutation of mutations) {
+          if (
+            mutation.type === 'attributes' &&
+            mutation.attributeName === 'style'
+          ) {
+            if (mutation.target.style.display === 'block') {
+              let triggerRect = trigger.getBoundingClientRect();
+              let menuRect = menu.getBoundingClientRect();
+
+              let top = triggerRect.height + 4;
+              let left = menuRect.width / 2 - triggerRect.width / 2;
+
+              menu.style.top = `${top}px`;
+              menu.style.left = `-${left}px`;
+            }
+          }
+        }
+      });
+
+      this.el.watcher.observe(menu, { attributes: true });
+    },
+  },
 };
 
 let csrfToken = document
