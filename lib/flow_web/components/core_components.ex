@@ -131,21 +131,43 @@ defmodule FlowWeb.CoreComponents do
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
       class={[
-        "fixed top-2 right-2 mr-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1",
-        @kind == :info && "bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900",
-        @kind == :error && "bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900"
+        "rounded-xl w-full py-3 px-4",
+        "border border-solid border-zinc-500",
+        "bg-zinc-50 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-300",
+        "flex flex-col gap-y-4",
+        "fixed top-2 right-2 mr-2 w-80 sm:w-96 z-50"
       ]}
       {@rest}
     >
-      <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
-        <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
-        <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
-        {@title}
-      </p>
-      <p class="mt-2 text-sm leading-5">{msg}</p>
-      <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
-        <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
-      </button>
+      <div class="flex gap-x-1">
+        <div class={[
+          @kind == :info && "text-indigo-500",
+          @kind == :error && "text-rose-600"
+        ]}>
+          <.icon :if={@kind == :info} name="hero-information-circle-mini" class="size-5" />
+          <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="size-5" />
+        </div>
+
+        <div class="grow">
+          <p
+            :if={@title}
+            class={[
+              "flex items-center gap-1.5 text-sm font-semibold leading-6",
+              @kind == :info && "text-indigo-500",
+              @kind == :error && "text-rose-600"
+            ]}
+          >
+            {@title}
+          </p>
+          <p class="mt-1 text-sm leading-5 text-zinc-500">{msg}</p>
+        </div>
+
+        <div>
+          <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
+            <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
+          </button>
+        </div>
+      </div>
     </div>
     """
   end
@@ -740,7 +762,12 @@ defmodule FlowWeb.CoreComponents do
     assigns = assign(assigns, :size, size)
 
     ~H"""
-    <div class="relative" phx-hook="Popover" id={"#{@id}-container"} data-cancel={JS.exec("phx-click-away", to: "##{@id}")}>
+    <div
+      class="relative"
+      phx-hook="Popover"
+      id={"#{@id}-container"}
+      data-cancel={JS.exec("phx-click-away", to: "##{@id}")}
+    >
       <div class="rounded-full overflow-hidden cursor-pointer" phx-click={show("##{@id}")}>
         {render_slot(@trigger)}
       </div>
