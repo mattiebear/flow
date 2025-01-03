@@ -8,22 +8,31 @@
 
   let modal = $state();
 
-  let listener;
+  let listeners = [];
 
   onMount(() => {
-    listener = (e) => {
+    let click = (e) => {
       if (modal && !modal.contains(e.target)) {
         onClose();
       }
     };
 
-    document.addEventListener('click', listener);
+    let keydown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        isOpen = false;
+      }
+    };
+
+    listeners.push(click, keydown);
+
+    document.addEventListener('click', click);
+    document.addEventListener('keydown', keydown);
   });
 
   onDestroy(() => {
-    if (listener) {
+    listeners.forEach((listener) => {
       document.removeEventListener('click', listener);
-    }
+    });
   });
 </script>
 

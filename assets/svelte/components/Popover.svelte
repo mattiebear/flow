@@ -6,7 +6,7 @@
 
   let { content, isOpen = false, size = 'md', trigger } = $props();
 
-  let listener;
+  let listeners = [];
   let popover;
 
   $effect(() => {
@@ -26,19 +26,28 @@
   });
 
   onMount(() => {
-    listener = (e) => {
+    let click = (e) => {
       if (popover && !popover.contains(e.target)) {
         isOpen = false;
       }
     };
 
-    document.addEventListener('click', listener);
+    let keydown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        isOpen = false;
+      }
+    };
+
+    listeners.push(click, keydown);
+
+    document.addEventListener('click', click);
+    document.addEventListener('keydown', keydown);
   });
 
   onDestroy(() => {
-    if (listener) {
+    listeners.forEach((listener) => {
       document.removeEventListener('click', listener);
-    }
+    });
   });
 </script>
 
