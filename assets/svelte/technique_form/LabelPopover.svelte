@@ -1,12 +1,13 @@
 <script>
   import { createMutation, createQuery } from '@tanstack/svelte-query';
+  import qs from 'qs';
   import { onDestroy, onMount } from 'svelte';
   import { derived, writable } from 'svelte/store';
 
   import { className } from '../../js/utils/style';
   import Popover from '../components/Popover.svelte';
 
-  let { isOpen = false, onAddLabel } = $props();
+  let { form, isOpen = false, onAddLabel } = $props();
 
   let search = writable('');
 
@@ -53,7 +54,15 @@
       return {
         queryKey: ['labels', { search: $search }],
         queryFn: async () => {
-          let res = await fetch(`/api/labels?search=${$search}&limit=5`);
+          let params = {
+            search: $search,
+            limit: 5,
+            exclude: form.labels.map((label) => label.id),
+          };
+
+          let res = await fetch(
+            `/api/labels?${qs.stringify(params, { arrayFormat: 'brackets' })}`
+          );
           let data = await res.json();
 
           selected = -1;

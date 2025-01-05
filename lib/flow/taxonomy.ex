@@ -22,14 +22,20 @@ defmodule Flow.Taxonomy do
 
   def search_labels(%User{} = user, opts) do
     limit = Keyword.get(opts, :limit, 100)
+    exclude = Keyword.get(opts, :exclude, [])
 
-    query = from l in Label, where: l.user_id == ^user.id, limit: ^limit
+    query = from l in Label,
+      where: l.user_id == ^user.id,
+      where: not(l.id in ^exclude),
+      limit: ^limit
 
     query =
       case Keyword.get(opts, :search, "") do
         "" -> query
         search -> from l in query, where: fragment("? ILIKE ?", l.tag, ^"%#{search}%")
       end
+
+
 
     Repo.all(query)
   end

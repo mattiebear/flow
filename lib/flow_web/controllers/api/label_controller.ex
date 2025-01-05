@@ -7,10 +7,12 @@ defmodule FlowWeb.API.LabelController do
   def index(conn, params) do
     limit = Map.get(params, "limit", "10") |> String.to_integer()
     search = Map.get(params, "search", "")
+    exclude = Map.get(params, "exclude", [])
 
     labels =
       Taxonomy.search_labels(
         conn.assigns.current_user,
+        exclude: exclude,
         limit: limit,
         search: search
       )

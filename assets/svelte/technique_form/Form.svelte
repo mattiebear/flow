@@ -179,7 +179,7 @@
           {/each}
         </div>
 
-        <LabelPopover isOpen={isLabelMenuOpen} onAddLabel={addLabel} />
+        <LabelPopover {form} isOpen={isLabelMenuOpen} onAddLabel={addLabel} />
       </div>
     </div>
 
